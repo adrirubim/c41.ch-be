@@ -1,0 +1,45 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Set the base path for the subdirectory
+    RewriteBase /cp3/activitat_39/
+
+    # Serve Vite build assets correctly.
+    # Vite genera rutas como /cp3/activitat_39/assets/... pero los archivos
+    # físicos están en public/build/assets, así que los redirigimos allí.
+    RewriteRule ^assets/(.*)$ public/build/assets/$1 [L]
+
+    # Serve static files from public/ directory (favicon, manifest, etc.)
+    # Estos archivos deben servirse directamente desde public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(favicon\.(ico|svg)|apple-touch-icon\.png|site\.webmanifest|robots\.txt)$ public/$1 [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Serve static files from public/ directory
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^/cp3/activitat_39/(build|favicon|storage|.*\.(ico|png|jpg|jpeg|gif|svg|css|js|woff|woff2|ttf|eot)) [NC]
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

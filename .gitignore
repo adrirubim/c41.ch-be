@@ -1,0 +1,54 @@
+# Dependencies
+/node_modules
+/vendor
+
+# Build & compiled
+/public/build
+/public/hot
+/bootstrap/ssr
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
+
+# Environment & secrets
+.env
+.env.backup
+.env.production
+.env.*.local
+!.env.example
+
+# Storage & cache
+/public/storage
+/storage/*.key
+/storage/pail
+
+# Testing & tools
+/.phpunit.cache
+.phpunit.result.cache
+.phpactor.json
+
+# IDE & editors
+.DS_Store
+Thumbs.db
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Logs & temp
+npm-debug.log*
+yarn-error.log
+yarn-debug.log*
+
+# Laravel / deployment
+Homestead.json
+Homestead.yaml
+/auth.json
+
+# Archives (do not commit vendor backups)
+*.tar.gz
+vendor.tar.gz
+
+# Accidental/junk files (e.g. shell output saved as file)
+/an db*
