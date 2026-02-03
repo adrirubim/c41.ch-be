@@ -70,7 +70,11 @@ export default function PostsShow({ post }: PostsShowProps) {
     const safeExcerpt = post.excerpt ? String(post.excerpt) : '';
     const safeContent = post.content ? String(post.content) : '';
     const cleanContent = safeContent
-        ? safeContent.replace(/<[^>]*>/g, '').substring(0, 160)
+        ? safeContent
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .substring(0, 160)
         : '';
     const description = safeExcerpt || cleanContent || '';
 
