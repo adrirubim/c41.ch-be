@@ -1,6 +1,6 @@
 # Contributing
 
-This is a proprietary project. For contributions or inquiries, please contact the author (see [README](README.md#-author)).
+This is an open-source project (MIT). For contributions or inquiries, please contact the author (see [README](README.md#-author)).
 
 ## Code standards
 

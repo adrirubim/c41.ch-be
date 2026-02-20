@@ -2,6 +2,10 @@
 
 Scripts y ayudas para despliegue y mantenimiento en entornos con acceso limitado (por ejemplo, hosting sin SSH).
 
+## Mantenimiento del repositorio
+
+- **update-license-year.sh** — Actualiza el año del copyright en `LICENSE` (mantiene el año inicial, pone el año actual al final del rango). Se ejecuta automáticamente al publicar un release (ver `.github/workflows/update-license-year.yml`) o manualmente: `./scripts/update-license-year.sh`.
+
 ## Uso local / desarrollo
 
 En desarrollo se recomienda usar los comandos de Artisan estándar:

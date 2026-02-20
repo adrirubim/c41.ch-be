@@ -1,0 +1,36 @@
+# Updates the copyright year in LICENSE when a release is published (or run manually).
+name: update-license-year
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update copyright year in LICENSE
+        run: |
+          chmod +x scripts/update-license-year.sh
+          ./scripts/update-license-year.sh
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet LICENSE; then
+            echo "LICENSE unchanged; nothing to commit."
+          else
+            git add LICENSE
+            git commit -m "chore: update LICENSE copyright year"
+            git push
+          fi

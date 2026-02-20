@@ -12,7 +12,7 @@
         "postgresql",
         "typescript"
     ],
-    "license": "proprietary",
+    "license": "MIT",
     "support": {
         "issues": "https://github.com/adrirubim/c41.ch-be/issues"
     },

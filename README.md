@@ -9,7 +9,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Tests](https://img.shields.io/badge/Tests-57%20passing-brightgreen?style=flat)](./tests)
-[![License](https://img.shields.io/badge/License-Proprietary-red?style=flat)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 
 ## 📋 Table of Contents
 
@@ -29,6 +29,7 @@
 - [Before Pushing to GitHub](#-before-pushing-to-github)
 - [Contributing](#-contributing)
 - [Author](#-author)
+- [License](#-license)
 
 ## 🎯 Overview
 
@@ -47,7 +48,7 @@ C41.ch Backend is a production-ready content management system designed for mode
 
 ### 🔐 Security & Stability
 
-- ✅ **Authorization Policies** - Granular access control (PostPolicy, CategoryPolicy)
+- ✅ **Authorization Policies** — Granular access control (PostPolicy, CategoryPolicy)
 - ✅ **Form Request Validation** - Comprehensive input validation and sanitization
 - ✅ **HTML Sanitization** - HTMLPurifier integration to prevent XSS attacks
 - ✅ **Rate Limiting** - Configurable throttling on sensitive endpoints
@@ -211,24 +212,28 @@ This command starts:
 
 ## 📚 Documentation
 
-Todo en **[docs/](docs/README.md)**:
+All repository documentation follows **current best practices**. Index:
 
-| Doc | Descripción |
+| Doc | Description |
 |-----|-------------|
-| [DEPLOYMENT_CDMON](docs/DEPLOYMENT_CDMON.md) | Despliegue CDMON / hosting compartido |
-| [DEPLOYMENT](docs/DEPLOYMENT.md) | Despliegue servidor con SSH |
-| [DEVELOPMENT_GUIDE](docs/DEVELOPMENT_GUIDE.md) | Arquitectura, convenciones |
-| [API](docs/API.md) | Endpoints y autenticación |
-| [MIGRATIONS_SEEDING](docs/MIGRATIONS_SEEDING.md) | BD, migraciones, seeders |
-| [FRONTEND_COMPONENTS](docs/FRONTEND_COMPONENTS.md) | Componentes React |
-| [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Hooks personalizados |
-| [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Errores y soluciones |
+| [docs/README.md](docs/README.md) | Documentation index |
+| [README_TEST_DATABASE.md](README_TEST_DATABASE.md) | Test database (SQLite / PostgreSQL) |
+| [docs/TEST_COVERAGE.md](docs/TEST_COVERAGE.md) | Test suites and coverage |
+| [docs/GIT_WHAT_TO_COMMIT.md](docs/GIT_WHAT_TO_COMMIT.md) | What to commit (and what not) |
+| [DEPLOYMENT_CDMON](docs/DEPLOYMENT_CDMON.md) | CDMON deployment / shared hosting |
+| [DEPLOYMENT](docs/DEPLOYMENT.md) | Server deployment with SSH |
+| [DEVELOPMENT_GUIDE](docs/DEVELOPMENT_GUIDE.md) | Architecture, conventions |
+| [API](docs/API.md) | Endpoints and authentication |
+| [MIGRATIONS_SEEDING](docs/MIGRATIONS_SEEDING.md) | Database, migrations, seeders |
+| [FRONTEND_COMPONENTS](docs/FRONTEND_COMPONENTS.md) | React components |
+| [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Custom hooks |
+| [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Errors and solutions |
 
-[CHANGELOG](CHANGELOG.md) · [ROADMAP](ROADMAP.md) · [LICENSE](LICENSE) · [SECURITY](SECURITY.md) · [Scripts](scripts/README.md)
+[SECURITY](SECURITY.md) · [LICENSE](LICENSE) · [VERSION_STACK](docs/VERSION_STACK.md)
 
 ## 🔄 CI/CD
 
-GitHub Actions ejecuta tests y lint en cada push y pull request (ramas `main` y `develop`):
+GitHub Actions runs **tests** and **lint** on every push and pull request to `main` and `develop`:
 
 - **Tests** (`.github/workflows/tests.yml`): PHP 8.4, Node 22, `composer install`, `npm run build`, `php artisan test`
 - **Lint** (`.github/workflows/lint.yml`): Laravel Pint, Prettier, ESLint, TypeScript type check
@@ -238,6 +243,9 @@ GitHub Actions ejecuta tests y lint en cada push y pull request (ramas `main` y 
 ### Run Tests
 
 ```bash
+# Build frontend first (required for Inertia/Vite in Feature tests)
+npm run build
+
 # Run all tests
 php artisan test
 
@@ -483,7 +491,7 @@ By default tests use SQLite (`:memory:`). To run them against PostgreSQL instead
 
 ## 🤝 Contributing
 
-This is a proprietary project. For contributions or inquiries, please contact the author. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for code standards and workflow.
+This is an open-source project (MIT). For contributions or inquiries, please contact the author. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for code standards and workflow.
 
 ### Code Standards
 
@@ -509,6 +517,10 @@ This is a proprietary project. For contributions or inquiries, please contact th
 
 ---
 
-**Last Updated:** January 30, 2026  
-**Version:** 3.0.0  
-**Status:** Production Ready ✅
+## 📄 License
+
+MIT. See [LICENSE](LICENSE) for details.
+
+---
+
+**Last Updated:** February 2026 · **Version:** 3.0.0 · **Status:** Production Ready ✅ · **Stack:** [docs/VERSION_STACK.md](docs/VERSION_STACK.md)
