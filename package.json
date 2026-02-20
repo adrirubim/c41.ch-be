@@ -55,11 +55,7 @@
         "@tailwindcss/vite": "^4.1.11",
         "@tiptap/extension-image": "^3.15.3",
         "@tiptap/extension-link": "^3.19.0",
-<<<<<<< HEAD
         "@tiptap/extension-table": "^3.19.0",
-=======
-        "@tiptap/extension-table": "^3.18.0",
->>>>>>> origin/dependabot/npm_and_yarn/tiptap/extension-link-3.19.0
         "@tiptap/extension-table-cell": "^3.15.3",
         "@tiptap/extension-table-header": "^3.15.3",
         "@tiptap/extension-table-row": "^3.15.3",
