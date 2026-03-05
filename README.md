@@ -102,7 +102,14 @@ C41.ch Backend is a production-ready content management system designed for mode
 - ✅ **English Documentation** - Code comments and docblocks in English
 - ✅ **Comprehensive Testing** - 57 tests, 241 assertions
 
-## 🛠️ Tech Stack
+### 👥 Target users & use cases
+
+- **Content / marketing teams**: organizations that need a **modern blog CMS** with rich editing, previews, SEO and publishing workflows, without having to build infrastructure from scratch.
+- **Agencies and freelancers**: developers who want a reusable, high-quality **Laravel + React (Inertia)** starter for content-heavy sites, with batteries included for auth, roles, SEO and media management.
+- **Product & growth teams**: teams that experiment frequently with blog content and landing pages and need real-time preview, command palette, advanced filters and analytics-ready data.
+- **Engineering teams (Laravel + SPA)**: teams looking for a reference implementation of layered architecture (Controller → Service → Repository → Model) with strong testing and CI/CD practices.
+
+## 🛠 Tech Stack
 
 ### Backend
 - **Framework**: Laravel 12
@@ -272,7 +279,7 @@ php artisan test --coverage
 - Automatically refreshed with `RefreshDatabase` trait
 - Isolated test environment
 
-## 🏗️ Architecture
+## 🏗 Architecture
 
 The project follows a **layered architecture** with clear separation of concerns:
 
@@ -323,7 +330,7 @@ Request → Controller → Service → Repository → Model
 - **Hooks** (`resources/js/hooks/`) - Custom React hooks
 - **Types** (`resources/js/types/`) - TypeScript type definitions
 
-## 📊 Project Status
+## 📊 Project status
 
 **Overall Score: 10/10** - Production-ready, optimized, well-structured, fully tested, and professionally documented
 
@@ -364,7 +371,7 @@ Request → Controller → Service → Repository → Model
 - All TypeScript/React comments translated to English
 - Consistent professional documentation
 
-## 👥 Default Users (development)
+## ⚠️ Default users (development)
 
 After `php artisan migrate:fresh --seed`, the application creates demo users for local development. Credentials are defined in `database/seeders/DatabaseSeeder.php`.
 
@@ -373,7 +380,7 @@ After `php artisan migrate:fresh --seed`, the application creates demo users for
 
 **Security:** Change or remove these users before deploying to production. Optional: set `SEEDER_ADMIN_PASSWORD` and `SEEDER_TEST_PASSWORD` in `.env` to override defaults (see [Security](#-security)).
 
-## 🛠️ Useful Commands
+## 🛠 Useful Commands
 
 ### Development
 
