@@ -130,13 +130,13 @@ C41.ch Backend is a production-ready content management system designed for mode
 
 ### Development Tools
 - **Testing**: PHPUnit 13
-- **Code Quality**: ESLint, Prettier, Laravel Pint
+- **Code Quality**: ESLint 9, Prettier, Laravel Pint
 - **Package Manager**: Composer, NPM
 - **Process Manager**: Concurrently
 
 ## 📦 Requirements
 
-- **PHP** >= 8.2
+- **PHP** >= 8.4
 - **PostgreSQL** >= 14
 - **Node.js** >= 18
 - **Composer** >= 2.0
