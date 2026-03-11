@@ -42,11 +42,11 @@ class UpdateCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'El nombre de la categoría es obligatorio.',
-            'name.unique' => 'Ya existe una categoría con este nombre.',
-            'slug.required' => 'El slug es obligatorio.',
-            'slug.unique' => 'Ya existe una categoría con este slug.',
-            'color.regex' => 'El color debe ser un código hexadecimal válido (ej: #FF5733).',
+            'name.required' => 'The category name is required.',
+            'name.unique' => 'A category with this name already exists.',
+            'slug.required' => 'The slug is required.',
+            'slug.unique' => 'A category with this slug already exists.',
+            'color.regex' => 'The color must be a valid hexadecimal code (e.g. #FF5733).',
         ];
     }
 

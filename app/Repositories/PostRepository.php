@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 class PostRepository
 {
     /**
-     * Obtener posts con filtros y paginación
+     * Retrieve posts applying filters and pagination.
      */
     public function getFiltered(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
@@ -34,7 +34,7 @@ class PostRepository
             });
         }
 
-        // Filtro por categoría
+        // Filter by category
         if (! empty($filters['category'])) {
             $query->whereHas('categories', function ($q) use ($filters) {
                 $q->where('categories.id', $filters['category']);

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->timestamps();
 
-            // Índice único para evitar duplicados
+            // Unique index to avoid duplicate relations
             $table->unique(['category_id', 'post_id']);
         });
     }

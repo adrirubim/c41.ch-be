@@ -28,8 +28,8 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        // Por ahora, todos pueden crear categorías
-        // En el futuro, puedes restringir a administradores
+        // For now, any authenticated user can create categories.
+        // In the future, this could be restricted to administrators.
         return true;
     }
 
@@ -38,8 +38,8 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category): bool
     {
-        // Por ahora, todos pueden actualizar categorías
-        // En el futuro, puedes restringir a administradores
+        // For now, any authenticated user can update categories.
+        // In the future, this could be restricted to administrators.
         return true;
     }
 

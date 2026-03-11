@@ -55,13 +55,13 @@ export function ConfirmDialog({
                     </div>
                 </AlertDialogHeader>
 
-                {preview && (
+                {preview != null && (
                     <div className="my-4 rounded-lg border bg-muted/50 p-4">
                         {preview}
                     </div>
                 )}
 
-                {details && details.length > 0 && (
+                {Array.isArray(details) && details.length > 0 && (
                     <div className="my-4 space-y-2">
                         {details.map((detail, index) => (
                             <div

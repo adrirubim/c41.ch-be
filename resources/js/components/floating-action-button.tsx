@@ -35,8 +35,10 @@ export function FloatingActionButton({
     }
 
     // Use provided props or defaults
-    const finalHref = href || defaultHref;
-    const finalLabel = label || defaultLabel;
+    const finalHref =
+        typeof href === 'string' && href !== '' ? href : defaultHref;
+    const finalLabel =
+        typeof label === 'string' && label.trim() !== '' ? label : defaultLabel;
 
     const buttonContent = (
         <Button

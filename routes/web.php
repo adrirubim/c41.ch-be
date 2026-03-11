@@ -15,13 +15,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blog', [PublicPostController::class, 'index'])->name('public.posts.index');
 Route::get('/blog/{slug}', [PublicPostController::class, 'show'])->name('public.posts.show');
 
-// Sitemap (público)
+// Public sitemap
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Subida de imágenes
+    // Image upload
     Route::post('upload-image', [ImageUploadController::class, 'upload'])
         ->middleware('throttle:posts')
         ->name('upload.image');
@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('throttle:posts')
         ->name('posts.destroy');
 
-    // Rutas de Categorías (prefijo dashboard para no chocar con /categories/{slug} público)
+    // Category routes (dashboard prefix to avoid clashing with public /categories/{slug})
     Route::get('dashboard/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('dashboard/categories/new', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('dashboard/categories', [CategoryController::class, 'store'])

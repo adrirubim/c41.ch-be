@@ -7,7 +7,12 @@ interface BarChartProps {
 }
 
 export function BarChart({ data, maxValue, className }: BarChartProps) {
-    const max = maxValue || Math.max(...data.map((d) => d.value), 1);
+    const safeMaxValue =
+        typeof maxValue === 'number' && !Number.isNaN(maxValue)
+            ? maxValue
+            : undefined;
+    const computedMax = Math.max(...data.map((d) => d.value), 1);
+    const max = safeMaxValue ?? computedMax;
 
     return (
         <div className={cn('space-y-2', className)}>
@@ -27,7 +32,10 @@ export function BarChart({ data, maxValue, className }: BarChartProps) {
                                 style={{
                                     width: `${percentage}%`,
                                     backgroundColor:
-                                        item.color || 'hsl(var(--primary))',
+                                        typeof item.color === 'string' &&
+                                        item.color.trim() !== ''
+                                            ? item.color
+                                            : 'hsl(var(--primary))',
                                 }}
                             />
                         </div>

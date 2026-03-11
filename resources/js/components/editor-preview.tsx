@@ -26,21 +26,27 @@ export function EditorPreview({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [splitView, setSplitView] = useState(false);
 
-    if (!content && !title) {
+    const hasContent = typeof content === 'string' && content.trim() !== '';
+    const hasTitle = typeof title === 'string' && title.trim() !== '';
+
+    if (!hasContent && !hasTitle) {
         return null;
     }
 
     const previewContent = (
         <div className="prose dark:prose-invert max-w-none">
-            {title && <h1 className="mb-4 text-3xl font-bold">{title}</h1>}
-            {excerpt && (
+            {hasTitle && <h1 className="mb-4 text-3xl font-bold">{title}</h1>}
+            {typeof excerpt === 'string' && excerpt.trim() !== '' && (
                 <p className="mb-6 text-lg text-muted-foreground italic">
                     {excerpt}
                 </p>
             )}
             <div
                 dangerouslySetInnerHTML={{
-                    __html: content || '<p>No content to preview</p>',
+                    __html:
+                        hasContent && typeof content === 'string'
+                            ? content
+                            : '<p>No content to preview</p>',
                 }}
             />
         </div>

@@ -73,7 +73,7 @@ export default function PostsCreate({
         excerpt: '',
         published: false,
         published_at: '',
-        user_id: defaultUserId ? String(defaultUserId) : '',
+        user_id: typeof defaultUserId === 'number' ? String(defaultUserId) : '',
         category: '',
         tags: [] as string[],
         featured: false,
@@ -141,7 +141,9 @@ export default function PostsCreate({
                                                     e.target.value,
                                                 );
                                                 if (
-                                                    !data.slug ||
+                                                    data.slug === undefined ||
+                                                    data.slug === null ||
+                                                    data.slug === '' ||
                                                     data.slug ===
                                                         generateSlug(data.title)
                                                 ) {
@@ -292,7 +294,9 @@ export default function PostsCreate({
                                                         onCheckedChange={(
                                                             checked,
                                                         ) => {
-                                                            if (checked) {
+                                                            if (
+                                                                checked === true
+                                                            ) {
                                                                 setData(
                                                                     'categories',
                                                                     [
@@ -320,8 +324,14 @@ export default function PostsCreate({
                                                             className="h-3 w-3 rounded-full"
                                                             style={{
                                                                 backgroundColor:
-                                                                    category.color ||
-                                                                    '#6B7280',
+                                                                    category.color !==
+                                                                        undefined &&
+                                                                    category.color !==
+                                                                        null &&
+                                                                    category.color !==
+                                                                        ''
+                                                                        ? category.color
+                                                                        : '#6B7280',
                                                             }}
                                                         />
                                                         {category.name}
@@ -363,8 +373,13 @@ export default function PostsCreate({
                                                     checked as boolean,
                                                 );
                                                 if (
-                                                    checked &&
-                                                    !data.published_at
+                                                    checked === true &&
+                                                    (data.published_at ===
+                                                        undefined ||
+                                                        data.published_at ===
+                                                            null ||
+                                                        data.published_at ===
+                                                            '')
                                                 ) {
                                                     setData(
                                                         'published_at',
@@ -383,7 +398,7 @@ export default function PostsCreate({
                                         </Label>
                                     </div>
 
-                                    {data.published && (
+                                    {Boolean(data.published) === true && (
                                         <div className="space-y-2">
                                             <Label htmlFor="published_at">
                                                 Publication date

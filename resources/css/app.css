@@ -378,7 +378,7 @@
     -webkit-transform: translateZ(0);
 }
 
-/* Reducir blur en móviles para mejor rendimiento */
+/* Reduce blur on mobile devices for better performance */
 @media (max-width: 768px) {
     .neon-background::before,
     .neon-background::after {
@@ -426,7 +426,7 @@
     -webkit-transform: translateZ(0);
 }
 
-/* Reducir blur, tamaño y desactivar animaciones en móviles */
+/* Reduce blur and size, and disable animations on mobile devices */
 @media (max-width: 768px) {
     .neon-orb {
         filter: blur(50px);
@@ -616,7 +616,7 @@
     animation-delay: 5s;
 }
 
-/* Desactivar TODAS las partículas flotantes en móviles para mejor rendimiento */
+/* Disable all floating particles on mobile devices for better performance */
 @media (max-width: 768px) {
     .neon-shape,
     .neon-shape-1,
@@ -653,7 +653,7 @@
     -webkit-transform: translateZ(0);
 }
 
-/* Reducir backdrop-filter en móviles (muy costoso) */
+/* Reduce backdrop-filter usage on mobile devices (expensive operation) */
 @media (max-width: 768px) {
     .neon-overlay {
         backdrop-filter: none;

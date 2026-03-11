@@ -55,7 +55,10 @@ export function PieChart({ data, size = 120, className }: PieChartProps) {
             ...acc,
             {
                 path: pathData,
-                color: item.color || `hsl(${(index * 137.5) % 360}, 70%, 50%)`,
+                color:
+                    typeof item.color === 'string' && item.color.trim() !== ''
+                        ? item.color
+                        : `hsl(${(index * 137.5) % 360}, 70%, 50%)`,
                 label: item.label,
                 value: item.value,
                 percentage: percentage.toFixed(1),

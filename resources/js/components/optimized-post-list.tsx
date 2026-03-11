@@ -91,28 +91,35 @@ const OptimizedPostItem = memo(
                         <span>{post.views_count} views</span>
                     </div>
 
-                    {post.categories && post.categories.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                            {post.categories.map((cat) => (
-                                <Badge
-                                    key={cat.id}
-                                    variant="outline"
-                                    className={cat.color ? 'font-medium' : ''}
-                                    style={
-                                        cat.color
-                                            ? {
-                                                  borderColor: cat.color,
-                                                  color: cat.color,
-                                                  backgroundColor: `${cat.color}15`,
-                                              }
-                                            : undefined
-                                    }
-                                >
-                                    {cat.name}
-                                </Badge>
-                            ))}
-                        </div>
-                    )}
+                    {Array.isArray(post.categories) &&
+                        post.categories.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                {post.categories.map((cat) => (
+                                    <Badge
+                                        key={cat.id}
+                                        variant="outline"
+                                        className={
+                                            typeof cat.color === 'string' &&
+                                            cat.color.length > 0
+                                                ? 'font-medium'
+                                                : ''
+                                        }
+                                        style={
+                                            typeof cat.color === 'string' &&
+                                            cat.color.length > 0
+                                                ? {
+                                                      borderColor: cat.color,
+                                                      color: cat.color,
+                                                      backgroundColor: `${cat.color}15`,
+                                                  }
+                                                : undefined
+                                        }
+                                    >
+                                        {cat.name}
+                                    </Badge>
+                                ))}
+                            </div>
+                        )}
                 </div>
 
                 <div className="flex items-center justify-end gap-2 sm:ml-4 sm:justify-start">

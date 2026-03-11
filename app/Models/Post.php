@@ -53,7 +53,7 @@ class Post extends Model
     }
 
     /**
-     * Relación belongsTo con User
+     * belongsTo relationship with user.
      */
     public function user()
     {
@@ -61,7 +61,7 @@ class Post extends Model
     }
 
     /**
-     * Relación many-to-many con Categories
+     * Many-to-many relationship with categories.
      */
     public function categories()
     {

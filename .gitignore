@@ -52,3 +52,7 @@ vendor.tar.gz
 
 # Accidental/junk files (e.g. shell output saved as file)
 /an db*
+
+# Enforce TS-only source under resources/js and src
+resources/js/**/*.js
+src/**/*.js

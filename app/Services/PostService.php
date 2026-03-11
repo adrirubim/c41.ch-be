@@ -119,7 +119,7 @@ class PostService
     }
 
     /**
-     * Limpiar caché relacionado con posts
+     * Clear cache entries related to posts.
      */
     private function clearCache(): void
     {

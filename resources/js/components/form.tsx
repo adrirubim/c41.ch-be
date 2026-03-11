@@ -5,20 +5,22 @@ import type { ComponentPropsWithoutRef } from 'react';
 type InertiaFormProps = ComponentPropsWithoutRef<typeof InertiaForm>;
 
 /**
- * Componente Form personalizado que automáticamente agrega el prefijo del subdirectorio
- * a la acción del formulario. Esto previene errores 404 cuando los formularios envían
- * a rutas sin el prefijo.
+ * Custom Form component that automatically adds the subdirectory prefix
+ * to the form action. This prevents 404 errors when forms submit
+ * to routes without the required prefix.
  *
- * Uso:
+ * Usage:
  *   <Form {...store.form()} action={store()}>
  *     ...
  *   </Form>
  *
- * La acción se corregirá automáticamente con el prefijo del subdirectorio.
+ * The action will be automatically corrected with the subdirectory prefix.
  */
 export function Form({ action, ...props }: InertiaFormProps) {
-    // Si hay una acción, agregar el prefijo del subdirectorio
-    const actionWithBase = action ? withBasePath(action) : action;
+    const actionWithBase =
+        typeof action === 'string' && action !== ''
+            ? withBasePath(action)
+            : action;
 
     return <InertiaForm action={actionWithBase} {...props} />;
 }

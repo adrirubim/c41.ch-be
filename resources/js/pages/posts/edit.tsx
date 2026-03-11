@@ -80,19 +80,22 @@ interface PostsEditProps {
 
 export default function PostsEdit({ post, categories, users }: PostsEditProps) {
     const { data, setData, put, processing, errors } = useForm({
-        title: post.title || '',
-        slug: post.slug || '',
-        content: post.content || '',
-        excerpt: post.excerpt || '',
-        published: post.published || false,
-        published_at: post.published_at
-            ? new Date(post.published_at).toISOString().slice(0, 16)
-            : '',
-        user_id: String(post.user_id || ''),
-        category: post.category || '',
-        tags: post.tags || [],
-        featured: post.featured || false,
-        categories: post.categories?.map((c) => c.id) || [],
+        title: post.title ?? '',
+        slug: post.slug ?? '',
+        content: post.content ?? '',
+        excerpt: post.excerpt ?? '',
+        published: post.published ?? false,
+        published_at:
+            post.published_at !== undefined &&
+            post.published_at !== null &&
+            post.published_at !== ''
+                ? new Date(post.published_at).toISOString().slice(0, 16)
+                : '',
+        user_id: typeof post.user_id === 'number' ? String(post.user_id) : '',
+        category: post.category ?? '',
+        tags: post.tags ?? [],
+        featured: post.featured ?? false,
+        categories: post.categories?.map((c) => c.id) ?? [],
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -153,7 +156,9 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                                     e.target.value,
                                                 );
                                                 if (
-                                                    !data.slug ||
+                                                    data.slug === undefined ||
+                                                    data.slug === null ||
+                                                    data.slug === '' ||
                                                     data.slug ===
                                                         generateSlug(data.title)
                                                 ) {
@@ -281,7 +286,9 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                                         onCheckedChange={(
                                                             checked,
                                                         ) => {
-                                                            if (checked) {
+                                                            if (
+                                                                checked === true
+                                                            ) {
                                                                 setData(
                                                                     'categories',
                                                                     [
@@ -309,8 +316,14 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                                             className="h-3 w-3 rounded-full"
                                                             style={{
                                                                 backgroundColor:
-                                                                    category.color ||
-                                                                    '#6B7280',
+                                                                    category.color !==
+                                                                        undefined &&
+                                                                    category.color !==
+                                                                        null &&
+                                                                    category.color !==
+                                                                        ''
+                                                                        ? category.color
+                                                                        : '#6B7280',
                                                             }}
                                                         />
                                                         {category.name}
@@ -352,8 +365,13 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                                     checked as boolean,
                                                 );
                                                 if (
-                                                    checked &&
-                                                    !data.published_at
+                                                    checked === true &&
+                                                    (data.published_at ===
+                                                        undefined ||
+                                                        data.published_at ===
+                                                            null ||
+                                                        data.published_at ===
+                                                            '')
                                                 ) {
                                                     setData(
                                                         'published_at',
@@ -372,7 +390,7 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                         </Label>
                                     </div>
 
-                                    {data.published && (
+                                    {Boolean(data.published) === true && (
                                         <div className="space-y-2">
                                             <Label htmlFor="published_at">
                                                 Publication date

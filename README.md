@@ -138,9 +138,9 @@ C41.ch Backend is a production-ready content management system designed for mode
 
 - **PHP** >= 8.4
 - **PostgreSQL** >= 14
-- **Node.js** >= 18
+- **Node.js** >= 20.19.0
 - **Composer** >= 2.0
-- **NPM** >= 9.0
+- **NPM** >= 10.0
 
 ## 🚀 Installation
 
@@ -226,12 +226,10 @@ All repository documentation follows **current best practices**. Index:
 | [docs/README.md](docs/README.md) | Documentation index |
 | [README_TEST_DATABASE.md](README_TEST_DATABASE.md) | Test database (SQLite / PostgreSQL) |
 | [docs/TEST_COVERAGE.md](docs/TEST_COVERAGE.md) | Test suites and coverage |
-| [docs/GIT_WHAT_TO_COMMIT.md](docs/GIT_WHAT_TO_COMMIT.md) | What to commit (and what not) |
-| [DEPLOYMENT_CDMON](docs/DEPLOYMENT_CDMON.md) | CDMON deployment / shared hosting |
 | [DEPLOYMENT](docs/DEPLOYMENT.md) | Server deployment with SSH |
 | [DEVELOPMENT_GUIDE](docs/DEVELOPMENT_GUIDE.md) | Architecture, conventions |
+| [ARCHITECTURE_GUIDELINES](docs/ARCHITECTURE_GUIDELINES.md#8-2026-enterprise-quality-checklist) | 2026 Enterprise Quality Checklist (mandatory) |
 | [API](docs/API.md) | Endpoints and authentication |
-| [MIGRATIONS_SEEDING](docs/MIGRATIONS_SEEDING.md) | Database, migrations, seeders |
 | [FRONTEND_COMPONENTS](docs/FRONTEND_COMPONENTS.md) | React components |
 | [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Custom hooks |
 | [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Errors and solutions |
@@ -240,10 +238,16 @@ All repository documentation follows **current best practices**. Index:
 
 ## 🔄 CI/CD
 
-GitHub Actions runs **tests** and **lint** on every push and pull request to `main` and `develop`:
+GitHub Actions runs **tests**, **lint**, **type-checking**, and **production builds** on every push and pull request to `main`:
 
-- **Tests** (`.github/workflows/tests.yml`): PHP 8.4, Node 22, `composer install`, `npm run build`, `php artisan test`
-- **Lint** (`.github/workflows/lint.yml`): Laravel Pint, Prettier, ESLint, TypeScript type check
+- **Tests** (`.github/workflows/tests.yml`): PHP 8.4, Node 22, `composer install`, `npm run build`, `php artisan test` against PostgreSQL `c41_test`
+- **Enterprise Quality & CI 2026** (`.github/workflows/lint.yml`):
+  - Laravel Pint (PHP)
+  - Prettier (frontend)
+  - ESLint (React 19 + TS)
+  - TypeScript `tsc --noEmit`
+  - `npm run build:frontend` (Vite)
+  - Auto-commit of style fixes with `stefanzweifel/git-auto-commit-action@v5`
 
 ## 🧪 Testing
 
@@ -503,7 +507,7 @@ This is an open-source project (MIT). For contributions or inquiries, please con
 ### Code Standards
 
 - Follow PSR-12 coding standards for PHP
-- Use TypeScript for all frontend code
+- Use TypeScript for all frontend code (no legacy `.js` for new components/pages)
 - Write tests for new features
 - Document all public methods
 - Keep code comments in English

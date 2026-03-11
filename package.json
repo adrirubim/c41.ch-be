@@ -12,9 +12,12 @@
         "url": "https://github.com/adrirubim/c41.ch-be/issues"
     },
     "scripts": {
-        "build": "vite build",
+        "dev": "concurrently \"tsc --watch\" \"node dist/core/server.js\"",
+        "dev:frontend": "vite",
+        "build": "tsc",
+        "build:frontend": "vite build",
         "build:ssr": "vite build && vite build --ssr",
-        "dev": "vite",
+        "start": "node dist/core/server.js",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
@@ -93,5 +96,8 @@
         "minimatch@^3.1.2": "3.1.4",
         "minimatch@^9.0.5": "9.0.7",
         "ajv@^6.12.0": "6.14.0"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     }
 }

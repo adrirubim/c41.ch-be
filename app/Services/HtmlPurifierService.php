@@ -40,7 +40,7 @@ class HtmlPurifierService
     }
 
     /**
-     * Sanitiza contenido HTML con configuración personalizada
+     * Sanitize HTML content with project-specific configuration.
      */
     public function purifyWithConfig(string $html, HTMLPurifier_Config $config): string
     {

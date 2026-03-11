@@ -1,21 +1,18 @@
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import { Form } from '@/components/form';
-import InputError from '@/components/input-error';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
-import { type BreadcrumbItem } from '@/types';
-import { Transition } from '@headlessui/react';
-import type { FormComponentSlotProps } from '@inertiajs/core';
-import { Head } from '@inertiajs/react';
-import { useRef } from 'react';
-
 import HeadingSmall from '@/components/heading-small';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import AppLayout from '@/layouts/app-layout';
+import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/user-password';
+import { Transition } from '@headlessui/react';
+import { Head } from '@inertiajs/react';
+import { usePasswordSettingsForm } from '@modules/settings/hooks/use-password-settings-form';
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = [
     {
         title: 'Password settings',
         href: edit(),
@@ -23,13 +20,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Password() {
-    const passwordInput = useRef<HTMLInputElement>(null);
-    const currentPasswordInput = useRef<HTMLInputElement>(null);
+    const { passwordInputRef, currentPasswordInputRef, handleErrorFocus } =
+        usePasswordSettingsForm();
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Password settings" />
-
             <h1 className="sr-only">Password Settings</h1>
 
             <SettingsLayout>
@@ -41,47 +37,45 @@ export default function Password() {
 
                     <Form
                         {...PasswordController.update.form()}
-                        options={{
-                            preserveScroll: true,
-                        }}
+                        options={{ preserveScroll: true }}
                         resetOnError={[
                             'password',
                             'password_confirmation',
                             'current_password',
                         ]}
                         resetOnSuccess
-                        onError={(errors: Record<string, unknown>) => {
-                            if (errors?.password) {
-                                passwordInput.current?.focus();
-                            }
-
-                            if (errors?.current_password) {
-                                currentPasswordInput.current?.focus();
-                            }
-                        }}
+                        onError={handleErrorFocus}
                         className="space-y-6"
                     >
                         {({
                             errors,
                             processing,
                             recentlySuccessful,
-                        }: FormComponentSlotProps) => (
+                        }: {
+                            [key: string]: unknown;
+                            errors: {
+                                [key: string]: unknown;
+                                current_password?: string;
+                                password?: string;
+                                password_confirmation?: string;
+                            };
+                            processing: boolean;
+                            recentlySuccessful: boolean;
+                        }) => (
                             <>
                                 <div className="grid gap-2">
                                     <Label htmlFor="current_password">
                                         Current password
                                     </Label>
-
                                     <Input
                                         id="current_password"
-                                        ref={currentPasswordInput}
+                                        ref={currentPasswordInputRef}
                                         name="current_password"
                                         type="password"
                                         className="mt-1 block w-full"
                                         autoComplete="current-password"
                                         placeholder="Current password"
                                     />
-
                                     <InputError
                                         message={errors.current_password}
                                     />
@@ -91,17 +85,15 @@ export default function Password() {
                                     <Label htmlFor="password">
                                         New password
                                     </Label>
-
                                     <Input
                                         id="password"
-                                        ref={passwordInput}
+                                        ref={passwordInputRef}
                                         name="password"
                                         type="password"
                                         className="mt-1 block w-full"
                                         autoComplete="new-password"
                                         placeholder="New password"
                                     />
-
                                     <InputError message={errors.password} />
                                 </div>
 
@@ -109,7 +101,6 @@ export default function Password() {
                                     <Label htmlFor="password_confirmation">
                                         Confirm password
                                     </Label>
-
                                     <Input
                                         id="password_confirmation"
                                         name="password_confirmation"
@@ -118,7 +109,6 @@ export default function Password() {
                                         autoComplete="new-password"
                                         placeholder="Confirm password"
                                     />
-
                                     <InputError
                                         message={errors.password_confirmation}
                                     />

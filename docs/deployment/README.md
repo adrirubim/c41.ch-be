@@ -1,7 +1,7 @@
-# Despliegue
+# Deployment
 
-- **[DEPLOYMENT_CDMON.md](../DEPLOYMENT_CDMON.md)** — CDMON / hosting compartido
-- **[DEPLOYMENT.md](../DEPLOYMENT.md)** — Servidor con SSH
-- **[TROUBLESHOOTING.md](../TROUBLESHOOTING.md)** — Errores y soluciones
+- **[DEPLOYMENT_CDMON.md](../DEPLOYMENT_CDMON.md)** — CDMON / shared hosting
+- **[DEPLOYMENT.md](../DEPLOYMENT.md)** — Server with SSH
+- **[TROUBLESHOOTING.md](../TROUBLESHOOTING.md)** — Errors and troubleshooting
 
-Scripts de utilidad: [scripts/README.md](../../scripts/README.md)
+Utility scripts: [scripts/README.md](../../scripts/README.md)

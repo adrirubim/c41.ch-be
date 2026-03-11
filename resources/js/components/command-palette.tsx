@@ -7,23 +7,25 @@ import {
 import { Input } from '@/components/ui/input';
 import { cn, withBasePath } from '@/lib/utils';
 import { router } from '@inertiajs/react';
+import type { LucideIcon } from 'lucide-react';
 import { FileText, Folder, LayoutGrid, Plus, Search } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import {
+    type KeyboardEvent as ReactKeyboardEvent,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
-interface CommandPaletteProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-}
-
-interface CommandItemType {
+type Command = {
     id: string;
     label: string;
-    icon: React.ComponentType<{ className?: string }>;
+    icon: LucideIcon;
     href: string;
     keywords?: string[];
-}
+};
 
-const commands: CommandItemType[] = [
+const commands: Command[] = [
     {
         id: 'dashboard',
         label: 'Go to Dashboard',
@@ -54,42 +56,61 @@ const commands: CommandItemType[] = [
     },
 ];
 
+export interface CommandPaletteProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     const [search, setSearch] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+                event.preventDefault();
                 onOpenChange(!open);
             }
-            if (e.key === 'Escape' && open) {
+
+            if (event.key === 'Escape' && open) {
                 onOpenChange(false);
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
     }, [open, onOpenChange]);
 
     useEffect(() => {
-        if (open && inputRef.current) {
+        if (open && inputRef.current !== null) {
             inputRef.current.focus();
         }
     }, [open]);
 
-    const filteredCommands = commands.filter((cmd) => {
-        if (!search) return true;
+    const filteredCommands = useMemo(() => {
+        if (search.trim() === '') {
+            return commands;
+        }
+
         const searchLower = search.toLowerCase();
-        return (
-            cmd.label.toLowerCase().includes(searchLower) ||
-            cmd.keywords?.some((keyword) =>
-                keyword.toLowerCase().includes(searchLower),
-            )
-        );
-    });
+
+        return commands.filter((command) => {
+            if (command.label.toLowerCase().includes(searchLower)) {
+                return true;
+            }
+
+            return (
+                command.keywords !== undefined &&
+                command.keywords.some((keyword) =>
+                    keyword.toLowerCase().includes(searchLower),
+                )
+            );
+        });
+    }, [search]);
 
     const setSearchAndResetIndex = (value: string) => {
         setSearch(value);
@@ -102,21 +123,36 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         setSearch('');
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            setSelectedIndex((prev) => (prev + 1) % filteredCommands.length);
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            setSelectedIndex(
-                (prev) =>
-                    (prev - 1 + filteredCommands.length) %
-                    filteredCommands.length,
+    const handleInputKeyDown = (
+        event: ReactKeyboardEvent<HTMLInputElement>,
+    ) => {
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setSelectedIndex((previousIndex) =>
+                filteredCommands.length === 0
+                    ? 0
+                    : (previousIndex + 1) % filteredCommands.length,
             );
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (filteredCommands[selectedIndex]) {
-                handleSelect(filteredCommands[selectedIndex].href);
+            return;
+        }
+
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            setSelectedIndex((previousIndex) =>
+                filteredCommands.length === 0
+                    ? 0
+                    : (previousIndex - 1 + filteredCommands.length) %
+                      filteredCommands.length,
+            );
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const selected = filteredCommands[selectedIndex];
+
+            if (selected !== undefined) {
+                handleSelect(selected.href);
             }
         }
     };
@@ -127,24 +163,27 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 <DialogHeader className="px-4 pt-4">
                     <DialogTitle>Command Palette</DialogTitle>
                 </DialogHeader>
+
                 <div className="p-4">
                     <div className="relative">
                         <label htmlFor="command-search" className="sr-only">
                             Search command
                         </label>
+
                         <Search
                             className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                             aria-hidden="true"
                         />
+
                         <Input
                             id="command-search"
                             ref={inputRef}
                             placeholder="Type a command or search..."
                             value={search}
-                            onChange={(e) =>
-                                setSearchAndResetIndex(e.target.value)
+                            onChange={(event) =>
+                                setSearchAndResetIndex(event.target.value)
                             }
-                            onKeyDown={handleKeyDown}
+                            onKeyDown={handleInputKeyDown}
                             className="pl-9"
                             aria-label="Search command or navigate"
                             aria-autocomplete="list"
@@ -152,6 +191,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                             aria-expanded={open}
                         />
                     </div>
+
                     <div
                         className="mt-4 max-h-[300px] overflow-y-auto"
                         role="listbox"
@@ -167,13 +207,15 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                             </div>
                         ) : (
                             <div className="space-y-1" role="listbox">
-                                {filteredCommands.map((cmd, index) => {
-                                    const Icon = cmd.icon;
+                                {filteredCommands.map((command, index) => {
+                                    const Icon = command.icon;
+
                                     return (
                                         <button
-                                            key={cmd.id}
+                                            key={command.id}
+                                            type="button"
                                             onClick={() =>
-                                                handleSelect(cmd.href)
+                                                handleSelect(command.href)
                                             }
                                             onMouseEnter={() =>
                                                 setSelectedIndex(index)
@@ -184,7 +226,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                                                     ? 'bg-accent text-accent-foreground'
                                                     : 'hover:bg-accent/50',
                                             )}
-                                            aria-label={cmd.label}
+                                            aria-label={command.label}
                                             role="option"
                                             aria-selected={
                                                 index === selectedIndex
@@ -194,7 +236,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                                                 className="h-4 w-4"
                                                 aria-hidden="true"
                                             />
-                                            <span>{cmd.label}</span>
+                                            <span>{command.label}</span>
                                         </button>
                                     );
                                 })}

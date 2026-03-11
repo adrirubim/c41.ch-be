@@ -6,7 +6,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 
-const appName = import.meta.env.VITE_APP_NAME || 'C41.ch Blog';
+const appName: string =
+    typeof import.meta.env.VITE_APP_NAME === 'string' &&
+    import.meta.env.VITE_APP_NAME.trim() !== ''
+        ? import.meta.env.VITE_APP_NAME
+        : 'C41.ch Blog';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

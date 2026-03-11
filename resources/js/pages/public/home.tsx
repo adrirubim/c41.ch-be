@@ -231,8 +231,12 @@ export default function Home({
                                                         <Star className="h-5 w-5 flex-shrink-0 text-yellow-500" />
                                                     </div>
                                                     <CardDescription className="line-clamp-2">
-                                                        {post.excerpt ||
-                                                            'No excerpt available'}
+                                                        {post.excerpt !==
+                                                            undefined &&
+                                                        post.excerpt !== null &&
+                                                        post.excerpt !== ''
+                                                            ? post.excerpt
+                                                            : 'No excerpt available'}
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent>
@@ -249,12 +253,23 @@ export default function Home({
                                                                         variant="secondary"
                                                                         style={{
                                                                             backgroundColor:
-                                                                                category.color
+                                                                                category.color !==
+                                                                                    undefined &&
+                                                                                category.color !==
+                                                                                    null &&
+                                                                                category.color !==
+                                                                                    ''
                                                                                     ? `${category.color}20`
                                                                                     : undefined,
                                                                             borderColor:
-                                                                                category.color ||
-                                                                                undefined,
+                                                                                category.color !==
+                                                                                    undefined &&
+                                                                                category.color !==
+                                                                                    null &&
+                                                                                category.color !==
+                                                                                    ''
+                                                                                    ? category.color
+                                                                                    : undefined,
                                                                         }}
                                                                         className="transition-opacity hover:opacity-80"
                                                                     >
@@ -317,7 +332,12 @@ export default function Home({
                                                                 className="flex h-12 w-12 items-center justify-center rounded-lg"
                                                                 style={{
                                                                     backgroundColor:
-                                                                        category.color
+                                                                        category.color !==
+                                                                            undefined &&
+                                                                        category.color !==
+                                                                            null &&
+                                                                        category.color !==
+                                                                            ''
                                                                             ? `${category.color}20`
                                                                             : undefined,
                                                                 }}
@@ -326,8 +346,14 @@ export default function Home({
                                                                     className="h-6 w-6"
                                                                     style={{
                                                                         color:
-                                                                            category.color ||
-                                                                            undefined,
+                                                                            category.color !==
+                                                                                undefined &&
+                                                                            category.color !==
+                                                                                null &&
+                                                                            category.color !==
+                                                                                ''
+                                                                                ? category.color
+                                                                                : undefined,
                                                                     }}
                                                                 />
                                                             </div>
@@ -392,8 +418,12 @@ export default function Home({
                                                         </Link>
                                                     </CardTitle>
                                                     <CardDescription className="line-clamp-2">
-                                                        {post.excerpt ||
-                                                            'No excerpt available'}
+                                                        {post.excerpt !==
+                                                            undefined &&
+                                                        post.excerpt !== null &&
+                                                        post.excerpt !== ''
+                                                            ? post.excerpt
+                                                            : 'No excerpt available'}
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent>
@@ -411,12 +441,23 @@ export default function Home({
                                                                         variant="secondary"
                                                                         style={{
                                                                             backgroundColor:
-                                                                                category.color
+                                                                                category.color !==
+                                                                                    undefined &&
+                                                                                category.color !==
+                                                                                    null &&
+                                                                                category.color !==
+                                                                                    ''
                                                                                     ? `${category.color}20`
                                                                                     : undefined,
                                                                             borderColor:
-                                                                                category.color ||
-                                                                                undefined,
+                                                                                category.color !==
+                                                                                    undefined &&
+                                                                                category.color !==
+                                                                                    null &&
+                                                                                category.color !==
+                                                                                    ''
+                                                                                    ? category.color
+                                                                                    : undefined,
                                                                         }}
                                                                         className="transition-opacity hover:opacity-80"
                                                                     >
@@ -518,7 +559,8 @@ export default function Home({
                                         Account
                                     </h3>
                                     <ul className="space-y-2 text-sm">
-                                        {auth?.user ? (
+                                        {auth?.user !== null &&
+                                        auth?.user !== undefined ? (
                                             <li>
                                                 <Link
                                                     href={dashboard()}

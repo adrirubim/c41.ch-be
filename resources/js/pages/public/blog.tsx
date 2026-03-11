@@ -83,19 +83,42 @@ function formatDate(dateString: string): string {
 
 export default function Blog({ posts, categories, filters }: BlogProps) {
     const { data, setData } = useForm({
-        search: filters.search || '',
-        category: filters.category || 'all',
-        featured: filters.featured || '',
-        sort_by: filters.sort_by || 'published_at',
-        sort_order: filters.sort_order || 'desc',
-        per_page: String(filters.per_page || 12),
+        search: typeof filters.search === 'string' ? filters.search : '',
+        category:
+            typeof filters.category === 'string' && filters.category !== ''
+                ? filters.category
+                : 'all',
+        featured: typeof filters.featured === 'string' ? filters.featured : '',
+        sort_by:
+            typeof filters.sort_by === 'string' && filters.sort_by !== ''
+                ? filters.sort_by
+                : 'published_at',
+        sort_order:
+            typeof filters.sort_order === 'string' && filters.sort_order !== ''
+                ? filters.sort_order
+                : 'desc',
+        per_page:
+            typeof filters.per_page === 'string' ||
+            typeof filters.per_page === 'number'
+                ? String(filters.per_page)
+                : '12',
     });
 
     const handleFilter = () => {
         const params: Record<string, string> = {};
-        if (data.search) params.search = data.search;
+        if (
+            data.search !== null &&
+            data.search !== undefined &&
+            data.search !== ''
+        )
+            params.search = data.search;
         if (data.category !== 'all') params.category = data.category;
-        if (data.featured) params.featured = data.featured;
+        if (
+            data.featured !== null &&
+            data.featured !== undefined &&
+            data.featured !== ''
+        )
+            params.featured = data.featured;
         if (data.sort_by !== 'published_at') params.sort_by = data.sort_by;
         if (data.sort_order !== 'desc') params.sort_order = data.sort_order;
         if (data.per_page !== '12') params.per_page = data.per_page;
@@ -257,13 +280,19 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                                                 {post.title}
                                                             </Link>
                                                         </CardTitle>
-                                                        {post.featured && (
+                                                        {Boolean(
+                                                            post.featured,
+                                                        ) === true && (
                                                             <Star className="h-5 w-5 flex-shrink-0 text-yellow-500" />
                                                         )}
                                                     </div>
                                                     <CardDescription className="line-clamp-2">
-                                                        {post.excerpt ||
-                                                            'No excerpt available'}
+                                                        {post.excerpt !==
+                                                            undefined &&
+                                                        post.excerpt !== null &&
+                                                        post.excerpt !== ''
+                                                            ? post.excerpt
+                                                            : 'No excerpt available'}
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent>
@@ -281,12 +310,23 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                                                         variant="secondary"
                                                                         style={{
                                                                             backgroundColor:
-                                                                                category.color
+                                                                                category.color !==
+                                                                                    null &&
+                                                                                category.color !==
+                                                                                    undefined &&
+                                                                                category.color !==
+                                                                                    ''
                                                                                     ? `${category.color}20`
                                                                                     : undefined,
                                                                             borderColor:
-                                                                                category.color ||
-                                                                                undefined,
+                                                                                category.color !==
+                                                                                    null &&
+                                                                                category.color !==
+                                                                                    undefined &&
+                                                                                category.color !==
+                                                                                    ''
+                                                                                    ? category.color
+                                                                                    : undefined,
                                                                         }}
                                                                         className="transition-opacity hover:opacity-80"
                                                                     >

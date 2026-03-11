@@ -64,7 +64,12 @@ export default function Categories({ categories }: CategoriesProps) {
                                                             className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg"
                                                             style={{
                                                                 backgroundColor:
-                                                                    category.color
+                                                                    category.color !==
+                                                                        null &&
+                                                                    category.color !==
+                                                                        undefined &&
+                                                                    category.color !==
+                                                                        ''
                                                                         ? `${category.color}20`
                                                                         : undefined,
                                                             }}
@@ -73,8 +78,14 @@ export default function Categories({ categories }: CategoriesProps) {
                                                                 className="h-8 w-8"
                                                                 style={{
                                                                     color:
-                                                                        category.color ||
-                                                                        undefined,
+                                                                        category.color !==
+                                                                            null &&
+                                                                        category.color !==
+                                                                            undefined &&
+                                                                        category.color !==
+                                                                            ''
+                                                                            ? category.color
+                                                                            : undefined,
                                                                 }}
                                                             />
                                                         </div>
@@ -94,13 +105,16 @@ export default function Categories({ categories }: CategoriesProps) {
                                                         </div>
                                                         <ArrowRight className="h-5 w-5 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                                                     </div>
-                                                    {category.description && (
-                                                        <CardDescription className="mt-2 line-clamp-2">
-                                                            {
-                                                                category.description
-                                                            }
-                                                        </CardDescription>
-                                                    )}
+                                                    {typeof category.description ===
+                                                        'string' &&
+                                                        category.description
+                                                            .length > 0 && (
+                                                            <CardDescription className="mt-2 line-clamp-2">
+                                                                {
+                                                                    category.description
+                                                                }
+                                                            </CardDescription>
+                                                        )}
                                                 </CardHeader>
                                             </Card>
                                         </Link>

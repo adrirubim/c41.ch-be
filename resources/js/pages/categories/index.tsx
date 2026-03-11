@@ -61,7 +61,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
     };
 
     const handleDeleteConfirm = () => {
-        if (deleteDialog.categoryId) {
+        if (deleteDialog.categoryId !== null) {
             router.delete(
                 withBasePath(
                     `/dashboard/categories/${deleteDialog.categoryId}`,
@@ -115,19 +115,28 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                                     className="h-4 w-4 flex-shrink-0 rounded-full"
                                                     style={{
                                                         backgroundColor:
-                                                            category.color ||
-                                                            '#6B7280',
+                                                            category.color !==
+                                                                null &&
+                                                            category.color !==
+                                                                undefined &&
+                                                            category.color !==
+                                                                ''
+                                                                ? category.color
+                                                                : '#6B7280',
                                                     }}
                                                 />
                                                 <h3 className="font-semibold">
                                                     {category.name}
                                                 </h3>
                                             </div>
-                                            {category.description && (
-                                                <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
-                                                    {category.description}
-                                                </p>
-                                            )}
+                                            {category.description !== null &&
+                                                category.description !==
+                                                    undefined &&
+                                                category.description !== '' && (
+                                                    <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
+                                                        {category.description}
+                                                    </p>
+                                                )}
                                             <div className="flex items-center gap-2">
                                                 <Badge
                                                     variant="outline"

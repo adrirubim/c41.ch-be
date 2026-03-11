@@ -95,15 +95,30 @@ export default function CategoryPage({
     filters,
 }: CategoryProps) {
     const { data, setData } = useForm({
-        search: filters.search || '',
-        sort_by: filters.sort_by || 'published_at',
-        sort_order: filters.sort_order || 'desc',
-        per_page: String(filters.per_page || 12),
+        search: typeof filters.search === 'string' ? filters.search : '',
+        sort_by:
+            typeof filters.sort_by === 'string' && filters.sort_by !== ''
+                ? filters.sort_by
+                : 'published_at',
+        sort_order:
+            typeof filters.sort_order === 'string' && filters.sort_order !== ''
+                ? filters.sort_order
+                : 'desc',
+        per_page:
+            typeof filters.per_page === 'string' ||
+            typeof filters.per_page === 'number'
+                ? String(filters.per_page)
+                : '12',
     });
 
     const handleFilter = () => {
         const params: Record<string, string> = {};
-        if (data.search) params.search = data.search;
+        if (
+            data.search !== null &&
+            data.search !== undefined &&
+            data.search !== ''
+        )
+            params.search = data.search;
         if (data.sort_by !== 'published_at') params.sort_by = data.sort_by;
         if (data.sort_order !== 'desc') params.sort_order = data.sort_order;
         if (data.per_page !== '12') params.per_page = data.per_page;
@@ -120,8 +135,11 @@ export default function CategoryPage({
                 <meta
                     name="description"
                     content={
-                        category.description ||
-                        `Posts in ${category.name} category`
+                        category.description !== undefined &&
+                        category.description !== null &&
+                        category.description !== ''
+                            ? category.description
+                            : `Posts in ${category.name} category`
                     }
                 />
             </Head>
@@ -147,15 +165,23 @@ export default function CategoryPage({
                                 <div
                                     className="flex h-16 w-16 items-center justify-center rounded-lg"
                                     style={{
-                                        backgroundColor: category.color
-                                            ? `${category.color}20`
-                                            : undefined,
+                                        backgroundColor:
+                                            category.color !== null &&
+                                            category.color !== undefined &&
+                                            category.color !== ''
+                                                ? `${category.color}20`
+                                                : undefined,
                                     }}
                                 >
                                     <Tag
                                         className="h-8 w-8"
                                         style={{
-                                            color: category.color || undefined,
+                                            color:
+                                                category.color !== null &&
+                                                category.color !== undefined &&
+                                                category.color !== ''
+                                                    ? category.color
+                                                    : undefined,
                                         }}
                                     />
                                 </div>
@@ -163,11 +189,12 @@ export default function CategoryPage({
                                     <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                                         {category.name}
                                     </h1>
-                                    {category.description && (
-                                        <p className="mt-2 text-lg text-muted-foreground">
-                                            {category.description}
-                                        </p>
-                                    )}
+                                    {typeof category.description === 'string' &&
+                                        category.description.length > 0 && (
+                                            <p className="mt-2 text-lg text-muted-foreground">
+                                                {category.description}
+                                            </p>
+                                        )}
                                     <p className="mt-2 text-sm text-muted-foreground">
                                         {posts.total}{' '}
                                         {posts.total === 1 ? 'post' : 'posts'}{' '}
@@ -260,13 +287,19 @@ export default function CategoryPage({
                                                                 {post.title}
                                                             </Link>
                                                         </CardTitle>
-                                                        {post.featured && (
+                                                        {Boolean(
+                                                            post.featured,
+                                                        ) === true && (
                                                             <Star className="h-5 w-5 flex-shrink-0 text-yellow-500" />
                                                         )}
                                                     </div>
                                                     <CardDescription className="line-clamp-2">
-                                                        {post.excerpt ||
-                                                            'No excerpt available'}
+                                                        {post.excerpt !==
+                                                            undefined &&
+                                                        post.excerpt !== null &&
+                                                        post.excerpt !== ''
+                                                            ? post.excerpt
+                                                            : 'No excerpt available'}
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent>
@@ -282,12 +315,23 @@ export default function CategoryPage({
                                                                         variant="secondary"
                                                                         style={{
                                                                             backgroundColor:
-                                                                                cat.color
+                                                                                cat.color !==
+                                                                                    undefined &&
+                                                                                cat.color !==
+                                                                                    null &&
+                                                                                cat.color !==
+                                                                                    ''
                                                                                     ? `${cat.color}20`
                                                                                     : undefined,
                                                                             borderColor:
-                                                                                cat.color ||
-                                                                                undefined,
+                                                                                cat.color !==
+                                                                                    undefined &&
+                                                                                cat.color !==
+                                                                                    null &&
+                                                                                cat.color !==
+                                                                                    ''
+                                                                                    ? cat.color
+                                                                                    : undefined,
                                                                         }}
                                                                         className="transition-opacity hover:opacity-80"
                                                                     >

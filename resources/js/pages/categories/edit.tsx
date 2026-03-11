@@ -45,10 +45,10 @@ interface CategoriesEditProps {
 
 export default function CategoriesEdit({ category }: CategoriesEditProps) {
     const { data, setData, put, processing, errors } = useForm({
-        name: category.name || '',
-        slug: category.slug || '',
-        description: category.description || '',
-        color: category.color || '#3B82F6',
+        name: category.name ?? '',
+        slug: category.slug ?? '',
+        description: category.description ?? '',
+        color: category.color ?? '#3B82F6',
     });
 
     const handleSubmit = (e: React.FormEvent) => {

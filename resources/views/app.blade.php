@@ -20,7 +20,7 @@
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
+        {{-- Inline style to set the HTML background color based on the theme defined in app.css --}}
         <style>
             html {
                 background-color: oklch(1 0 0);
@@ -33,7 +33,7 @@
 
         <title inertia>C41.ch Blog - {{ config('app.name', 'C41.ch Blog') }}</title>
 
-        {{-- Favicons y manifest: rutas absolutas desde public/ --}}
+        {{-- Favicons and web app manifest: absolute paths from the public/ directory --}}
         <link rel="icon" href="/cp3/activitat_39/favicon.ico" sizes="any">
         <link rel="icon" href="/cp3/activitat_39/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/cp3/activitat_39/apple-touch-icon.png">

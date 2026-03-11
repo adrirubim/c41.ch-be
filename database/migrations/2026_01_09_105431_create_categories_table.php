@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 100)->unique();
             $table->string('slug', 100)->unique();
             $table->text('description')->nullable();
-            $table->string('color', 7)->nullable(); // Para código hexadecimal
+            $table->string('color', 7)->nullable(); // Hex color code
             $table->timestamps();
         });
     }

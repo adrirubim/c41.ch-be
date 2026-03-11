@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            // Índices para filtros frecuentes
+            // Indexes for common filters
             $table->index('published', 'posts_published_index');
             $table->index('featured', 'posts_featured_index');
             $table->index('views_count', 'posts_views_count_index');
@@ -20,23 +20,23 @@ return new class extends Migration
             $table->index('created_at', 'posts_created_at_index');
             $table->index('published_at', 'posts_published_at_index');
 
-            // Índices compuestos para consultas frecuentes
+            // Composite indexes for frequent queries
             $table->index(['published', 'published_at'], 'posts_published_published_at_index');
             $table->index(['published', 'featured'], 'posts_published_featured_index');
             $table->index(['published', 'created_at'], 'posts_published_created_at_index');
 
-            // Índice para búsquedas en slug (ya tiene unique, pero agregamos index adicional para búsquedas LIKE)
-            // El unique ya crea un índice, pero este ayuda en búsquedas parciales
+            // Index for slug searches (an additional index for LIKE queries,
+            // even though the unique constraint already creates one)
         });
 
         Schema::table('categories', function (Blueprint $table) {
-            // Índices para búsquedas y ordenamiento
+            // Indexes for search and ordering
             $table->index('name', 'categories_name_index');
             $table->index('slug', 'categories_slug_index');
             $table->index('created_at', 'categories_created_at_index');
         });
 
-        // Índice en la tabla pivot para relaciones
+        // Index on the pivot table for relations
         Schema::table('category_post', function (Blueprint $table) {
             $table->index('category_id', 'category_post_category_id_index');
             $table->index('post_id', 'category_post_post_id_index');

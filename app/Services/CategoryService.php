@@ -99,7 +99,7 @@ class CategoryService
     }
 
     /**
-     * Limpiar caché relacionado con categorías
+     * Clear cache entries related to categories.
      */
     private function clearCache(): void
     {

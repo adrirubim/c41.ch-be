@@ -18,7 +18,7 @@ class Category extends Model
     ];
 
     /**
-     * Relación many-to-many con Posts
+     * Many-to-many relationship with posts.
      */
     public function posts()
     {

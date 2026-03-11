@@ -75,11 +75,26 @@ export default function Post({ post, relatedPosts }: PostProps) {
     return (
         <>
             <Head title={`${post.title} - C41.ch Blog`}>
-                <meta name="description" content={post.excerpt || post.title} />
+                <meta
+                    name="description"
+                    content={
+                        post.excerpt !== undefined &&
+                        post.excerpt !== null &&
+                        post.excerpt !== ''
+                            ? post.excerpt
+                            : post.title
+                    }
+                />
                 <meta property="og:title" content={post.title} />
                 <meta
                     property="og:description"
-                    content={post.excerpt || post.title}
+                    content={
+                        post.excerpt !== undefined &&
+                        post.excerpt !== null &&
+                        post.excerpt !== ''
+                            ? post.excerpt
+                            : post.title
+                    }
                 />
                 <meta property="og:type" content="article" />
             </Head>
@@ -113,12 +128,21 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                                 variant="secondary"
                                                 style={{
                                                     backgroundColor:
-                                                        category.color
+                                                        category.color !==
+                                                            undefined &&
+                                                        category.color !==
+                                                            null &&
+                                                        category.color !== ''
                                                             ? `${category.color}20`
                                                             : undefined,
                                                     borderColor:
-                                                        category.color ||
-                                                        undefined,
+                                                        category.color !==
+                                                            undefined &&
+                                                        category.color !==
+                                                            null &&
+                                                        category.color !== ''
+                                                            ? category.color
+                                                            : undefined,
                                                 }}
                                                 className="transition-opacity hover:opacity-80"
                                             >
@@ -126,7 +150,7 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                             </Badge>
                                         </Link>
                                     ))}
-                                    {post.featured && (
+                                    {Boolean(post.featured) === true && (
                                         <Badge
                                             variant="default"
                                             className="gap-1"
@@ -139,11 +163,12 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                 <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
                                     {post.title}
                                 </h1>
-                                {post.excerpt && (
-                                    <p className="mb-6 text-xl text-muted-foreground">
-                                        {post.excerpt}
-                                    </p>
-                                )}
+                                {typeof post.excerpt === 'string' &&
+                                    post.excerpt.length > 0 && (
+                                        <p className="mb-6 text-xl text-muted-foreground">
+                                            {post.excerpt}
+                                        </p>
+                                    )}
                                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                     <span className="flex items-center gap-2">
                                         <User className="h-4 w-4" />
@@ -218,8 +243,13 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                                     </Link>
                                                 </CardTitle>
                                                 <CardDescription className="line-clamp-2">
-                                                    {relatedPost.excerpt ||
-                                                        'No excerpt available'}
+                                                    {relatedPost.excerpt !==
+                                                        undefined &&
+                                                    relatedPost.excerpt !==
+                                                        null &&
+                                                    relatedPost.excerpt !== ''
+                                                        ? relatedPost.excerpt
+                                                        : 'No excerpt available'}
                                                 </CardDescription>
                                             </CardHeader>
                                             <CardContent>
@@ -237,12 +267,23 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                                                     variant="secondary"
                                                                     style={{
                                                                         backgroundColor:
-                                                                            category.color
+                                                                            category.color !==
+                                                                                undefined &&
+                                                                            category.color !==
+                                                                                null &&
+                                                                            category.color !==
+                                                                                ''
                                                                                 ? `${category.color}20`
                                                                                 : undefined,
                                                                         borderColor:
-                                                                            category.color ||
-                                                                            undefined,
+                                                                            category.color !==
+                                                                                undefined &&
+                                                                            category.color !==
+                                                                                null &&
+                                                                            category.color !==
+                                                                                ''
+                                                                                ? category.color
+                                                                                : undefined,
                                                                     }}
                                                                     className="transition-opacity hover:opacity-80"
                                                                 >
@@ -323,7 +364,8 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                     Account
                                 </h3>
                                 <ul className="space-y-2 text-sm">
-                                    {auth?.user ? (
+                                    {auth?.user !== null &&
+                                    auth?.user !== undefined ? (
                                         <li>
                                             <Link
                                                 href={dashboard()}

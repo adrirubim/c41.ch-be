@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { FormComponentSlotProps } from '@inertiajs/core';
 import { useRef } from 'react';
 
 export default function DeleteUser() {
@@ -63,11 +62,7 @@ export default function DeleteUser() {
                             resetOnSuccess
                             className="space-y-6"
                         >
-                            {({
-                                resetAndClearErrors,
-                                processing,
-                                errors,
-                            }: FormComponentSlotProps) => (
+                            {({ resetAndClearErrors, processing, errors }) => (
                                 <>
                                     <div className="grid gap-2">
                                         <Label

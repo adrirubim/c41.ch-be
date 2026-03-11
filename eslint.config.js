@@ -16,6 +16,7 @@ export default [
         languageOptions: {
             globals: {
                 ...globals.browser,
+                ...globals.node,
             },
         },
         rules: {
@@ -30,7 +31,33 @@ export default [
         },
     },
     {
-        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js'],
+        files: [
+            'resources/js/**/*.ts',
+            'resources/js/**/*.tsx',
+            'src/**/*.ts',
+            'src/**/*.tsx',
+        ],
+        languageOptions: {
+            parserOptions: {
+                project: ['./tsconfig.json'],
+                tsconfigRootDir: process.cwd(),
+            },
+        },
+        rules: {
+            '@typescript-eslint/strict-boolean-expressions': 'error',
+            '@typescript-eslint/no-explicit-any': 'error',
+            '@typescript-eslint/member-ordering': 'error',
+        },
+    },
+    {
+        ignores: [
+            'vendor',
+            'node_modules',
+            'public',
+            'bootstrap/ssr',
+            'tailwind.config.js',
+            'resources/js/**/*.js',
+        ],
     },
     prettier, // Turn off all rules that might conflict with Prettier
 ];

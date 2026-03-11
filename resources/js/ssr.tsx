@@ -3,7 +3,11 @@ import createServer from '@inertiajs/react/server';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import ReactDOMServer from 'react-dom/server';
 
-const appName = import.meta.env.VITE_APP_NAME || 'C41.ch Blog';
+const appName: string =
+    typeof import.meta.env.VITE_APP_NAME === 'string' &&
+    import.meta.env.VITE_APP_NAME.trim() !== ''
+        ? import.meta.env.VITE_APP_NAME
+        : 'C41.ch Blog';
 
 createServer((page) =>
     createInertiaApp({

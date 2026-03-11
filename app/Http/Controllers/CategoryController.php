@@ -49,7 +49,7 @@ class CategoryController extends Controller
         $this->categoryService->create($validated);
 
         return redirect()->route('categories.index')
-            ->with('success', 'Categoría creada exitosamente.');
+            ->with('success', 'Category created successfully.');
     }
 
     /**
@@ -84,7 +84,7 @@ class CategoryController extends Controller
         $this->categoryService->update($category, $validated);
 
         return redirect()->route('categories.index')
-            ->with('success', 'Categoría actualizada exitosamente.');
+            ->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -97,6 +97,6 @@ class CategoryController extends Controller
         $this->categoryService->delete($category);
 
         return redirect()->route('categories.index')
-            ->with('success', 'Categoría eliminada exitosamente.');
+            ->with('success', 'Category deleted successfully.');
     }
 }

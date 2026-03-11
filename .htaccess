@@ -5,16 +5,16 @@
 
     RewriteEngine On
 
-    # Set the base path for the subdirectory
+    # Set the base path for the application subdirectory
     RewriteBase /cp3/activitat_39/
 
     # Serve Vite build assets correctly.
-    # Vite genera rutas como /cp3/activitat_39/assets/... pero los archivos
-    # físicos están en public/build/assets, así que los redirigimos allí.
+    # Vite generates routes like /cp3/activitat_39/assets/... but the physical
+    # files live under public/build/assets, so we redirect requests there.
     RewriteRule ^assets/(.*)$ public/build/assets/$1 [L]
 
-    # Serve static files from public/ directory (favicon, manifest, etc.)
-    # Estos archivos deben servirse directamente desde public/
+    # Serve static files from the public/ directory (favicon, manifest, etc.)
+    # These files must be served directly from public/
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(favicon\.(ico|svg)|apple-touch-icon\.png|site\.webmanifest|robots\.txt)$ public/$1 [L]

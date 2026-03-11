@@ -3,23 +3,22 @@ import { Link as InertiaLink, InertiaLinkProps } from '@inertiajs/react';
 import { forwardRef } from 'react';
 
 /**
- * Componente Link personalizado que automáticamente agrega el prefijo del subdirectorio
- * a todas las rutas. Esto previene errores 404 cuando las rutas no incluyen el prefijo.
+ * Custom Link component that automatically adds the subdirectory prefix
+ * to all routes. This prevents 404 errors when routes do not include the prefix.
  *
- * Uso:
+ * Usage:
  *   <Link href={login()}>Log in</Link>
  *   <Link href="/dashboard">Dashboard</Link>
  *
- * Ambos funcionarán correctamente con el prefijo del subdirectorio.
+ * Both will work correctly with the subdirectory prefix.
  */
 export const Link = forwardRef<HTMLAnchorElement, InertiaLinkProps>(
     ({ href, ...props }, ref) => {
-        // Si href es undefined o null, pasarlo tal cual
-        if (!href) {
+        if (href == null) {
             return <InertiaLink ref={ref} href={href} {...props} />;
         }
 
-        // Agregar el prefijo del subdirectorio automáticamente
+        // Automatically add the subdirectory prefix
         const hrefWithBase = withBasePath(href);
 
         return <InertiaLink ref={ref} href={hrefWithBase} {...props} />;

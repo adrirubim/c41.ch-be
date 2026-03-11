@@ -8,48 +8,40 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
-import type { FormComponentSlotProps } from '@inertiajs/core';
+import { useTwoFactorRecoveryCodes } from '@modules/settings/hooks/use-two-factor-recovery-codes';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import AlertError from './alert-error';
 
-interface TwoFactorRecoveryCodesProps {
+export interface TwoFactorRecoveryCodesProps {
     recoveryCodesList: string[];
-    fetchRecoveryCodes: () => Promise<void>;
-    errors: string[];
+    fetchRecoveryCodes: () => Promise<void> | void;
+    errors?: string[] | undefined;
 }
 
-export default function TwoFactorRecoveryCodes({
+export function TwoFactorRecoveryCodes({
     recoveryCodesList,
     fetchRecoveryCodes,
     errors,
 }: TwoFactorRecoveryCodesProps) {
-    const [codesAreVisible, setCodesAreVisible] = useState<boolean>(false);
     const codesSectionRef = useRef<HTMLDivElement | null>(null);
-    const canRegenerateCodes = recoveryCodesList.length > 0 && codesAreVisible;
 
-    const toggleCodesVisibility = useCallback(async () => {
-        if (!codesAreVisible && !recoveryCodesList.length) {
-            await fetchRecoveryCodes();
-        }
-
-        setCodesAreVisible(!codesAreVisible);
-
-        if (!codesAreVisible) {
-            setTimeout(() => {
-                codesSectionRef.current?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'nearest',
-                });
-            });
-        }
-    }, [codesAreVisible, recoveryCodesList.length, fetchRecoveryCodes]);
+    const { codesAreVisible, canRegenerateCodes, toggleCodesVisibility } =
+        useTwoFactorRecoveryCodes({
+            recoveryCodesList,
+            fetchRecoveryCodes,
+        });
 
     useEffect(() => {
-        if (!recoveryCodesList.length) {
-            fetchRecoveryCodes();
+        if (!codesAreVisible) {
+            return;
         }
-    }, [recoveryCodesList.length, fetchRecoveryCodes]);
+
+        codesSectionRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        });
+    }, [codesAreVisible]);
 
     const RecoveryCodeIconComponent = codesAreVisible ? EyeOff : Eye;
 
@@ -65,6 +57,7 @@ export default function TwoFactorRecoveryCodes({
                     device. Store them in a secure password manager.
                 </CardDescription>
             </CardHeader>
+
             <CardContent>
                 <div className="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between">
                     <Button
@@ -86,26 +79,28 @@ export default function TwoFactorRecoveryCodes({
                             options={{ preserveScroll: true }}
                             onSuccess={fetchRecoveryCodes}
                         >
-                            {({ processing }: FormComponentSlotProps) => (
+                            {({ processing }: { processing: boolean }) => (
                                 <Button
                                     variant="secondary"
                                     type="submit"
                                     disabled={processing}
                                     aria-describedby="regenerate-warning"
                                 >
-                                    <RefreshCw /> Regenerate Codes
+                                    <RefreshCw />
+                                    {' Regenerate Codes'}
                                 </Button>
                             )}
                         </Form>
                     )}
                 </div>
+
                 <div
                     id="recovery-codes-section"
                     className={`relative overflow-hidden transition-all duration-300 ${codesAreVisible ? 'h-auto opacity-100' : 'h-0 opacity-0'}`}
                     aria-hidden={!codesAreVisible}
                 >
                     <div className="mt-3 space-y-3">
-                        {errors?.length ? (
+                        {errors !== undefined && errors.length > 0 ? (
                             <AlertError errors={errors} />
                         ) : (
                             <>
@@ -115,7 +110,7 @@ export default function TwoFactorRecoveryCodes({
                                     role="list"
                                     aria-label="Recovery codes"
                                 >
-                                    {recoveryCodesList.length ? (
+                                    {recoveryCodesList.length > 0 ? (
                                         recoveryCodesList.map((code, index) => (
                                             <div
                                                 key={index}

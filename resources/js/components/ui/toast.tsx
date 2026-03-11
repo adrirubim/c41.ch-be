@@ -26,8 +26,15 @@ interface ToastProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<
 }
 
 const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- onClose is part of API, omitted from DOM
   ({ className, variant, onClose, ...props }, ref) => {
+    React.useEffect(() => {
+      return () => {
+        if (onClose !== undefined) {
+          onClose()
+        }
+      }
+    }, [onClose])
+
     return (
       <div
         ref={ref}

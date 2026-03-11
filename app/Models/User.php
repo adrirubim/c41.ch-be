@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Relación hasMany con Posts
+     * hasMany relationship with posts.
      */
     public function posts()
     {

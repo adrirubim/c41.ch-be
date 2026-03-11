@@ -41,11 +41,14 @@ export function EmptyState({
                 <h3 className="mb-2 text-center text-lg font-semibold">
                     {title}
                 </h3>
-                <p className="mb-6 max-w-sm text-center text-sm text-muted-foreground">
-                    {description}
-                </p>
+                {typeof description === 'string' &&
+                    description.trim() !== '' && (
+                        <p className="mb-6 max-w-sm text-center text-sm text-muted-foreground">
+                            {description}
+                        </p>
+                    )}
                 {action &&
-                    (action.href ? (
+                    (typeof action.href === 'string' && action.href !== '' ? (
                         <Link href={action.href}>
                             <Button>
                                 <Plus className="mr-2 h-4 w-4" />

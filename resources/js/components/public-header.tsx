@@ -48,7 +48,7 @@ export function PublicHeader() {
 
                 {/* Right Side - Login/Auth */}
                 <div className="flex items-center space-x-4">
-                    {auth.user ? (
+                    {auth.user != null ? (
                         <Link href={dashboard()}>
                             <Button variant="default" size="sm">
                                 Dashboard
@@ -101,7 +101,7 @@ export function PublicHeader() {
                                     Categories
                                 </Link>
                                 <div className="border-t px-4 pt-4">
-                                    {auth.user ? (
+                                    {auth.user != null ? (
                                         <Link href={dashboard()}>
                                             <Button
                                                 variant="default"
