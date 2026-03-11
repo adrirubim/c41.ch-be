@@ -53,8 +53,8 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Build Assets
-        run: npm run build
+      - name: Build Frontend Assets (Vite manifest for tests)
+        run: npm run build:frontend
 
       - name: Copy Environment File
         run: cp .env.example .env
