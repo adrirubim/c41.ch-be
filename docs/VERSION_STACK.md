@@ -36,4 +36,33 @@ Exact versions used in this project (reference for development and CI). Update w
 | Prettier    | ^3.8    |
 | Laravel Pint| ^1.28   |
 
-For locked versions, run `composer show` and `npm list` in the project root.
+## Current environment snapshot (March 2026)
+
+These are the concrete versions currently used in the primary development environment. Treat them as reference values; CI and production should stay within the version ranges defined above.
+
+### Backend
+
+- PHP: **8.4.1** (`php -v`)
+- Laravel: **12.54.1** (`php artisan --version`)
+- PHPUnit: **13.0.5** (`./vendor/bin/phpunit --version`)
+- Inertia Laravel: **2.0.21** (`composer show inertiajs/inertia-laravel`)
+
+### Frontend
+
+- Node.js (local): **20.19.6** (`node -v`)
+- Node.js (CI): **22.x** (see `.github/workflows/*.yml`)
+- npm: **11.11.0** (`npm -v`)
+- React: **19.2.4** (`npm list react --depth=0`)
+- @inertiajs/react: **2.3.17**
+- TypeScript: **5.9.3**
+- Vite: **7.3.1**
+- Tailwind CSS: **4.2.1**
+- Tiptap React & extensions: **3.20.1**
+
+### Tooling & quality
+
+- ESLint: **9.39.4**
+- Prettier: **3.8.1**
+- Laravel Pint: **1.28.0**
+
+For locked versions beyond this snapshot, run `composer show` and `npm list` in the project root.
