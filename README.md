@@ -17,6 +17,7 @@
 
 ## 📋 Table of Contents
 
+- [Operational Quickstart](#-operational-quickstart)
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
@@ -34,6 +35,18 @@
 - [Contributing](#-contributing)
 - [Author](#-author)
 - [License](#-license)
+
+## ⚙️ Operational Quickstart
+
+Use these commands from the **repository root** as your main entrypoints:
+
+| Command | Purpose |
+|--------|---------|
+| `composer run dev` | Start Laravel server, Vite dev server, queue worker and logs for local development. |
+| `npm run build:frontend && php artisan test` | Build frontend assets (Vite manifest) and run the full PHPUnit test suite (Feature + Unit). |
+| `npm run lint && npm run types` | Run ESLint (strict rules) and TypeScript type checking (`tsc --noEmit`). |
+
+For a full local quality gate before pushing, see [Before Pushing to GitHub](#-before-pushing-to-github).
 
 ## 🎯 Overview
 
@@ -223,7 +236,7 @@ This command starts:
 
 ## 📚 Documentation
 
-All repository documentation follows **current best practices**. Index:
+All documentation lives under `docs/`. The main index is [docs/README.md](docs/README.md). This table lists the most important topics:
 
 | Doc | Description |
 |-----|-------------|
@@ -237,6 +250,8 @@ All repository documentation follows **current best practices**. Index:
 | [FRONTEND_COMPONENTS](docs/FRONTEND_COMPONENTS.md) | React components |
 | [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Custom hooks |
 | [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Errors and solutions |
+
+For a navigable, high-level overview, you can also use the [GitHub Wiki](https://github.com/adrirubim/c41.ch-be/wiki).
 
 [SECURITY](SECURITY.md) · [LICENSE](LICENSE) · [VERSION_STACK](docs/VERSION_STACK.md)
 
@@ -345,12 +360,12 @@ Request → Controller → Service → Repository → Model
 | Aspect | Status | Score | Notes |
 |--------|--------|-------|-------|
 | Security | ✅ Excellent | 9/10 | Policies, sanitization, rate limiting implemented |
-| Performance | ✅ Optimized | 9/10 | Caching, indexes, query optimization, React memoization |
+| Performance | ✅ Excellent | 9/10 | Caching, indexes, query optimization, React memoization |
 | Code Quality | ✅ Excellent | 10/10 | Clean architecture, SOLID principles, English documentation |
 | UX/UI | ✅ Excellent | 10/10 | Enhanced with Phase 1 + Phase 2 + Phase 3 + Public pages with animated background |
-| Functionality | ✅ Very Complete | 10/10 | All core features + public website implemented and tested |
+| Functionality | ✅ Excellent | 10/10 | All core features + public website implemented and tested |
 | Testing | ✅ Excellent | 10/10 | 57 tests, 241 assertions, comprehensive coverage |
-| Documentation | ✅ Complete | 10/10 | API docs, development guide, deployment guide, troubleshooting, frontend components, custom hooks, changelog, English code comments |
+| Documentation | ✅ Excellent | 10/10 | API docs, development guide, deployment guide, troubleshooting, frontend components, custom hooks, changelog, English code comments |
 
 ### Recent Improvements
 
