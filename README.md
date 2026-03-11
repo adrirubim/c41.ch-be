@@ -2,7 +2,7 @@
 
 > A modern, enterprise-grade blog management system built with Laravel 12, React 19 (Inertia.js), and PostgreSQL. Featuring a professional UI/UX, comprehensive security, and optimized performance.
 
-[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
+[![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -113,7 +113,7 @@ C41.ch Backend is a production-ready content management system designed for mode
 
 ### Backend
 - **Framework**: Laravel 12
-- **Language**: PHP 8.2+
+- **Language**: PHP 8.4+
 - **Database**: PostgreSQL 14+
 - **Authentication**: Laravel Fortify
 - **Validation**: Form Request classes
@@ -129,7 +129,7 @@ C41.ch Backend is a production-ready content management system designed for mode
 - **Build Tool**: Vite 7
 
 ### Development Tools
-- **Testing**: PHPUnit 11
+- **Testing**: PHPUnit 13
 - **Code Quality**: ESLint, Prettier, Laravel Pint
 - **Package Manager**: Composer, NPM
 - **Process Manager**: Concurrently
