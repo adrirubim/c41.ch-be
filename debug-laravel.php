@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
 /**
  * Script para capturar el error exacto de Laravel
  *
@@ -115,7 +118,7 @@ try {
     // Intentar capturar una request
     echo "<div class='success'>🌐 Intentando procesar request...</div>";
     try {
-        $request = Illuminate\Http\Request::capture();
+        $request = Request::capture();
         echo "<div class='success'>✅ Request capturado</div>";
         echo '<pre>';
         echo 'Method: '.$request->method()."\n";
@@ -124,7 +127,7 @@ try {
 
         // Intentar manejar el request
         echo "<div class='success'>🔄 Intentando manejar request...</div>";
-        $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+        $kernel = $app->make(Kernel::class);
         $response = $kernel->handle($request);
         echo "<div class='success'>✅ Request manejado exitosamente</div>";
         echo '<pre>';

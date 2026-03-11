@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Contracts\Console\Kernel;
+
 /**
  * Script temporal para ejecutar migraciones desde el navegador
  *
@@ -47,7 +49,7 @@ try {
 
     // Ejecutar migraciones
     echo "🔄 Ejecutando migraciones...\n";
-    $exitCode = $app->make(Illuminate\Contracts\Console\Kernel::class)
+    $exitCode = $app->make(Kernel::class)
         ->call('migrate', ['--force' => true]);
 
     if ($exitCode === 0) {
@@ -59,7 +61,7 @@ try {
     // Ejecutar seeders
     echo "🌱 Ejecutando seeders...\n";
     try {
-        $seedExitCode = $app->make(Illuminate\Contracts\Console\Kernel::class)
+        $seedExitCode = $app->make(Kernel::class)
             ->call('db:seed', ['--force' => true]);
 
         if ($seedExitCode === 0) {
@@ -94,7 +96,7 @@ try {
     // Crear enlace de storage
     echo "🔗 Creando enlace de storage...\n";
     try {
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->call('storage:link');
+        $app->make(Kernel::class)->call('storage:link');
         echo "✅ Enlace de storage creado!\n\n";
     } catch (Exception $e) {
         echo '⚠️ No se pudo crear el enlace (puede que ya exista): '.$e->getMessage()."\n\n";
@@ -103,13 +105,13 @@ try {
     // Optimizar
     echo "⚡ Optimizando Laravel...\n";
     try {
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->call('config:cache');
+        $app->make(Kernel::class)->call('config:cache');
         echo "✅ Config cacheado\n";
 
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->call('route:cache');
+        $app->make(Kernel::class)->call('route:cache');
         echo "✅ Rutas cacheadas\n";
 
-        $app->make(Illuminate\Contracts\Console\Kernel::class)->call('view:cache');
+        $app->make(Kernel::class)->call('view:cache');
         echo "✅ Vistas cacheadas\n\n";
     } catch (Exception $e) {
         echo '⚠️ Error al optimizar: '.$e->getMessage()."\n\n";

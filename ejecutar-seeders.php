@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Contracts\Console\Kernel;
+
 /**
  * Script temporal para ejecutar seeders desde el navegador
  *
@@ -65,7 +67,7 @@ try {
 
     // Ejecutar seeders
     echo "🌱 Ejecutando seeders...\n";
-    $exitCode = $app->make(Illuminate\Contracts\Console\Kernel::class)
+    $exitCode = $app->make(Kernel::class)
         ->call('db:seed', ['--force' => true]);
 
     if ($exitCode === 0) {

@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Events\PostCreated;
+use App\Events\PostDeleted;
+use App\Events\PostUpdated;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -34,7 +37,7 @@ class PostService
         }
 
         // Trigger event
-        event(new \App\Events\PostCreated($post));
+        event(new PostCreated($post));
 
         // Clear cache
         $this->clearCache();
@@ -60,7 +63,7 @@ class PostService
 
         // Trigger event
         if ($updated) {
-            event(new \App\Events\PostUpdated($post->fresh()));
+            event(new PostUpdated($post->fresh()));
             $this->clearCache();
         }
 
@@ -76,7 +79,7 @@ class PostService
 
         // Trigger event
         if ($deleted) {
-            event(new \App\Events\PostDeleted($post));
+            event(new PostDeleted($post));
             $this->clearCache();
         }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Post;
 use App\Repositories\CategoryRepository;
 use App\Repositories\PostRepository;
 use Inertia\Inertia;
@@ -41,9 +43,9 @@ class HomeController extends Controller
 
         // Get statistics
         $stats = [
-            'totalPosts' => \App\Models\Post::where('published', true)->count(),
-            'totalCategories' => \App\Models\Category::count(),
-            'totalViews' => \App\Models\Post::where('published', true)->sum('views_count'),
+            'totalPosts' => Post::where('published', true)->count(),
+            'totalCategories' => Category::count(),
+            'totalViews' => Post::where('published', true)->sum('views_count'),
         ];
 
         return Inertia::render('public/home', [

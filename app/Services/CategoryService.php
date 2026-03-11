@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Events\CategoryCreated;
+use App\Events\CategoryDeleted;
+use App\Events\CategoryUpdated;
 use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -39,7 +42,7 @@ class CategoryService
         $category = $this->repository->create($data);
 
         // Trigger event
-        event(new \App\Events\CategoryCreated($category));
+        event(new CategoryCreated($category));
 
         // Clear cache
         $this->clearCache();
@@ -56,7 +59,7 @@ class CategoryService
 
         // Trigger event
         if ($updated) {
-            event(new \App\Events\CategoryUpdated($category->fresh()));
+            event(new CategoryUpdated($category->fresh()));
             $this->clearCache();
         }
 
@@ -72,7 +75,7 @@ class CategoryService
 
         // Trigger event
         if ($deleted) {
-            event(new \App\Events\CategoryDeleted($category));
+            event(new CategoryDeleted($category));
             $this->clearCache();
         }
 

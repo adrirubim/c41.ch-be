@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\User;
 use App\Services\CategoryService;
 use App\Services\PostService;
 use Illuminate\Http\RedirectResponse;
@@ -43,7 +44,7 @@ class PostController extends Controller
     public function create(Request $request): Response
     {
         $categories = $this->categoryService->getAll();
-        $users = \App\Models\User::select('id', 'name', 'email')->get();
+        $users = User::select('id', 'name', 'email')->get();
 
         return Inertia::render('posts/create', [
             'categories' => $categories,
@@ -97,7 +98,7 @@ class PostController extends Controller
 
         $post->load('categories');
         $categories = $this->categoryService->getAll();
-        $users = \App\Models\User::select('id', 'name', 'email')->get();
+        $users = User::select('id', 'name', 'email')->get();
 
         return Inertia::render('posts/edit', [
             'post' => $post,

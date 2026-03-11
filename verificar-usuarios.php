@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+
 /**
  * Script para verificar usuarios en la base de datos
  *
@@ -27,7 +29,7 @@ try {
     echo "<div class='success'>✅ Laravel cargado correctamente</div><br>";
 
     // Obtener todos los usuarios usando el modelo User
-    $users = \App\Models\User::select('id', 'name', 'email', 'is_admin', 'email_verified_at', 'created_at')
+    $users = User::select('id', 'name', 'email', 'is_admin', 'email_verified_at', 'created_at')
         ->get();
 
     if ($users->count() === 0) {

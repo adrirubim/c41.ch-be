@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Contracts\Console\Kernel;
+
 /**
  * Script temporal para limpiar caché de Laravel desde el navegador
  *
@@ -40,7 +42,7 @@ try {
     echo "<div class='success'>✅ Laravel cargado</div><br>";
 
     // Limpiar cachés
-    $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+    $kernel = $app->make(Kernel::class);
 
     echo '<div>🔄 Limpiando caché de configuración...</div>';
     $kernel->call('config:clear');
