@@ -1,4 +1,8 @@
-# C41.ch Backend
+<p align="center">
+  <img src="public/favicon.svg" alt="c41.ch-be logo" width="96" />
+</p>
+
+# C41.ch-be
 
 > A modern, enterprise-grade blog management system built with Laravel 12, React 19 (Inertia.js), and PostgreSQL. Featuring a professional UI/UX, comprehensive security, and optimized performance.
 
@@ -33,11 +37,11 @@
 
 ## 🎯 Overview
 
-C41.ch Backend is a production-ready content management system designed for modern blog management. It combines the power of Laravel's robust backend with React's reactive frontend, delivering a seamless, performant, and secure blogging experience.
+c41.ch-be is a production-ready content management system designed for modern blog management. It combines the power of Laravel's robust backend with React's reactive frontend, delivering a seamless, performant, and secure blogging experience.
 
 ### Key Highlights
 
-- **Modern Stack**: Laravel 12, React 19, TypeScript, TailwindCSS 4.0
+- **Modern Stack**: Laravel 12, React 19, TypeScript, TailwindCSS 4.2
 - **Professional UI/UX**: Enhanced with skeleton loaders, real-time previews, advanced filtering, and accessibility compliance
 - **Enterprise Security**: Authorization policies, rate limiting, HTML sanitization, and role-based access control
 - **Optimized Performance**: Database indexing, strategic caching, query optimization, and React memoization
