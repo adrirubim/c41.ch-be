@@ -6,7 +6,7 @@ Overview of test suites and what is covered in **c41.ch-be**.
 
 - **57 tests** across Unit and Feature suites
 - **241+ assertions**
-- PHPUnit 11; default DB: SQLite in-memory (CI uses PostgreSQL)
+- PHPUnit 13; default DB: SQLite in-memory (CI uses PostgreSQL)
 
 ## Test Suites
 

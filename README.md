@@ -5,9 +5,9 @@
 [![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.2-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Tests](https://img.shields.io/badge/Tests-57%20passing-brightgreen?style=flat)](./tests)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 
@@ -121,8 +121,8 @@ C41.ch Backend is a production-ready content management system designed for mode
 
 ### Frontend
 - **Framework**: React 19 with Inertia.js
-- **Language**: TypeScript 5.7
-- **Styling**: TailwindCSS 4.0
+- **Language**: TypeScript 5.9
+- **Styling**: TailwindCSS 4.2
 - **UI Components**: Radix UI primitives
 - **Editor**: Tiptap (WYSIWYG)
 - **Icons**: Lucide React

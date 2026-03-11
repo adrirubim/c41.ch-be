@@ -1,22 +1,27 @@
-# Scripts de utilidad
+# Utility Scripts
 
-Scripts y ayudas para despliegue y mantenimiento en entornos con acceso limitado (por ejemplo, hosting sin SSH).
+Helper scripts for deployment and maintenance in environments with limited access (for example, shared hosting without SSH).
 
-## Mantenimiento del repositorio
+## Repository maintenance
 
-- **update-license-year.sh** — Actualiza el año del copyright en `LICENSE` (mantiene el año inicial, pone el año actual al final del rango). Se ejecuta automáticamente al publicar un release (ver `.github/workflows/update-license-year.yml`) o manualmente: `./scripts/update-license-year.sh`.
+- **`update-license-year.sh`** — Updates the year range in `LICENSE` (keeps the initial year and sets the current year as the end of the range).  
+  It runs automatically when publishing a release (see `.github/workflows/update-license-year.yml`) or can be executed manually:
 
-## Uso local / desarrollo
+  ```bash
+  ./scripts/update-license-year.sh
+  ```
 
-En desarrollo se recomienda usar los comandos de Artisan estándar:
+## Local development usage
 
-- **Clave de aplicación:** `php artisan key:generate`
-- **Migraciones:** `php artisan migrate`
+For local development, prefer the standard Artisan commands:
+
+- **Application key:** `php artisan key:generate`
+- **Migrations:** `php artisan migrate`
 - **Seeders:** `php artisan db:seed`
-- **Caché:** `php artisan optimize:clear`
+- **Cache:** `php artisan optimize:clear`
 
-## Hosting compartido (sin SSH)
+## Shared hosting (no SSH)
 
-Si despliegas en un hosting donde no puedes ejecutar `php artisan`, puedes usar los scripts PHP de esta carpeta vía el intérprete PHP del servidor (por ejemplo, desde un panel que permita ejecutar PHP o subiendo los scripts y llamándolos por HTTP con las debidas protecciones).
+If you deploy to a hosting provider where you **cannot** run `php artisan`, you can use the PHP scripts in this folder via the server’s PHP interpreter (for example, from a control panel that allows running PHP, or by uploading the scripts and calling them over HTTP with proper protection).
 
-Consulta la documentación en `docs/DEPLOYMENT_CDMON.md` y `docs/TROUBLESHOOTING.md`.
+See `docs/DEPLOYMENT_CDMON.md` and `docs/TROUBLESHOOTING.md` for more details.

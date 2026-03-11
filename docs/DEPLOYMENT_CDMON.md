@@ -1,71 +1,77 @@
-# 🚀 Guía de Despliegue en CDMON - Subcarpeta /cp3/activitat_39/
+# 🚀 CDMON Deployment Guide – Subfolder `/cp3/activitat_39/`
 
-Esta guía está específicamente adaptada para desplegar Laravel en **CDMON** (hosting compartido) usando FileZilla.
+This guide is specifically tailored for deploying a Laravel application to **CDMON** (shared hosting) using FTP/FileZilla, targeting a subfolder like `/cp3/activitat_39/`.
 
-> **Nota**: Esta guía también es aplicable a otros servicios de hosting compartido similares a CDMON.
+> **Note**: Most of the steps also apply to other shared hosting providers with similar constraints.
 
-## 📋 Consideraciones Especiales para CDMON
+## 📋 CDMON Specific Considerations
 
-CDMON es un hosting compartido, por lo que:
+CDMON is a **shared hosting** environment:
 
-- ✅ **SÍ puedes subir archivos** vía FTP/FileZilla
-- ⚠️ **Puede que NO tengas acceso SSH** (depende del plan)
-- ⚠️ **Necesitas verificar** que CDMON soporte:
-  - PHP 8.2 o superior
-  - Extensiones PHP necesarias (pgsql, mbstring, xml, curl, zip, gd, fileinfo)
-  - PostgreSQL (o MySQL si prefieres cambiar)
-  - `mod_rewrite` habilitado (para `.htaccess`)
+- ✅ You **can upload files** via FTP/FileZilla.
+- ⚠️ You **may not have SSH access** (depends on your plan).
+- ⚠️ You must verify that CDMON supports:
+  - PHP 8.4 or higher
+  - Required PHP extensions (pgsql, mbstring, xml, curl, zip, gd, fileinfo)
+  - PostgreSQL (or MySQL if you adapt the project)
+  - `mod_rewrite` enabled (for `.htaccess` and pretty URLs)
 
-## 🔍 Verificación Previa
+## 🔍 Pre‑deployment Checklist in CDMON Panel
 
-Antes de empezar, verifica en el panel de control de CDMON:
+From the CDMON control panel:
 
-1. **Versión de PHP**: Debe ser 8.2 o superior
-2. **Extensiones PHP**: Verifica que estén habilitadas
-3. **Base de datos**: Crea una base de datos PostgreSQL (o MySQL)
-4. **Ruta del servidor**: Anota la ruta donde se alojan tus archivos (normalmente `/public_html/` o `/www/`)
+1. **PHP version** – Set PHP to **8.4** if available (or the highest supported version).
+2. **PHP extensions** – Ensure required extensions are enabled.
+3. **Database** – Create a PostgreSQL (or MySQL) database for the app.
+4. **Document root / path** – Note the folder where public files are served (usually `/public_html/` or `/www/`), and where your Laravel project will live (e.g. `/www/cp3/activitat_39/`).
 
 ---
 
-## 🔧 Preparación Local
+## 🔧 Local Preparation
 
-### 1. Compilar Assets
+All commands below are run **locally** in your development environment (WSL).
+
+### 1. Build frontend assets
 
 ```bash
 cd /var/www/c41.ch-be
 npm run build
 ```
 
-### 2. Instalar Dependencias PHP (Producción)
+This produces the optimized assets under `public/build/`.
+
+### 2. Install PHP dependencies for production
 
 ```bash
-# Si tienes problemas, simplemente sube el vendor actual
 composer install --optimize-autoloader --no-dev
 ```
 
-**Nota**: Si `composer install --no-dev` falla, puedes subir el `vendor/` actual y luego, si tienes acceso SSH en CDMON, ejecutar el comando allí.
+If `composer install --no-dev` fails on your local machine (or if you want to be extra safe), you can:
 
-### 3. Configurar `.env` para Producción
+- Run it locally and upload the resulting `vendor/` folder, **or**
+- Upload the existing `vendor/` directory and run `composer install --no-dev` directly on CDMON **if** you have SSH access.
 
-Crea/edita el archivo `.env` con estos valores:
+### 3. Configure `.env` for production
+
+Create or edit your `.env` file with production values such as:
 
 ```env
 APP_NAME="C41.ch Blog"
 APP_ENV=production
-APP_KEY=base64:... # Generar con: php artisan key:generate
+APP_KEY=base64:... # Generate locally with: php artisan key:generate
 APP_DEBUG=false
 APP_URL=https://adrirubim.es/cp3/activitat_39
 
 LOG_CHANNEL=stack
 LOG_LEVEL=error
 
-# Base de datos CDMON (PostgreSQL o MySQL)
+# CDMON database (PostgreSQL or MySQL)
 DB_CONNECTION=pgsql
-DB_HOST=localhost  # O la IP que te proporcione CDMON
+DB_HOST=localhost           # Or the host provided by CDMON
 DB_PORT=5432
-DB_DATABASE=nombre_base_datos_cdmon
-DB_USERNAME=usuario_db_cdmon
-DB_PASSWORD=contraseña_db_cdmon
+DB_DATABASE=your_cdmon_db_name
+DB_USERNAME=your_cdmon_db_user
+DB_PASSWORD=your_cdmon_db_password
 
 CACHE_DRIVER=file
 SESSION_DRIVER=file
@@ -74,9 +80,10 @@ QUEUE_CONNECTION=database
 FILESYSTEM_DISK=local
 ```
 
-**⚠️ IMPORTANTE**: 
-- `APP_URL` debe ser: `https://adrirubim.es/cp3/activitat_39`
-- Los datos de base de datos los obtienes del panel de control de CDMON
+**⚠️ IMPORTANT**
+
+- `APP_URL` must match the final URL of your subfolder, e.g. `https://adrirubim.es/cp3/activitat_39`.
+- Database credentials (`DB_*`) come from the CDMON control panel.
 
 ### 4. Optimizar la Aplicación
 

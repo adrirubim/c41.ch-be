@@ -21,7 +21,7 @@ Exact versions used in this project (reference for development and CI). Update w
 | Inertia React| ^2.3    | Client adapter      |
 | TypeScript  | ^5.9    |                     |
 | Vite        | ^7.3    | Build tool          |
-| Tailwind CSS| ^4.0    | Styling             |
+| Tailwind CSS| ^4.2    | Styling             |
 | Radix UI    | various | UI primitives       |
 | Tiptap      | ^3.15   | WYSIWYG editor      |
 
