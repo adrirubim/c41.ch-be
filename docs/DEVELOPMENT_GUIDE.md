@@ -272,9 +272,9 @@ php artisan make:migration add_field_to_table --table=table_name
 
 ```bash
 # Development
-composer run dev                    # Start all services
+composer run dev                    # Start Laravel app, TypeScript watcher, queue and logs
 php artisan serve                   # Laravel server only
-npm run dev                         # Vite only
+npm run dev:frontend                # Vite dev server only
 
 # Database
 php artisan migrate                 # Run migrations
@@ -282,6 +282,7 @@ php artisan migrate:fresh --seed    # Reset and seed
 php artisan tinker                  # Interactive console
 
 # Testing
+npm run build:frontend              # Build frontend for feature tests (Vite manifest)
 php artisan test                    # Run all tests
 php artisan test --filter=Post     # Filter tests
 

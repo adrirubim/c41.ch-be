@@ -138,7 +138,7 @@ C41.ch Backend is a production-ready content management system designed for mode
 
 - **PHP** >= 8.4
 - **PostgreSQL** >= 14
-- **Node.js** >= 20.19.0
+- **Node.js** >= 22.0.0
 - **Composer** >= 2.0
 - **NPM** >= 10.0
 
@@ -226,7 +226,7 @@ All repository documentation follows **current best practices**. Index:
 | [docs/README.md](docs/README.md) | Documentation index |
 | [README_TEST_DATABASE.md](README_TEST_DATABASE.md) | Test database (SQLite / PostgreSQL) |
 | [docs/TEST_COVERAGE.md](docs/TEST_COVERAGE.md) | Test suites and coverage |
-| [DEPLOYMENT](docs/DEPLOYMENT.md) | Server deployment with SSH |
+| [DEPLOYMENT](docs/deployment/README.md) | Server and shared hosting deployment |
 | [DEVELOPMENT_GUIDE](docs/DEVELOPMENT_GUIDE.md) | Architecture, conventions |
 | [ARCHITECTURE_GUIDELINES](docs/ARCHITECTURE_GUIDELINES.md#8-2026-enterprise-quality-checklist) | 2026 Enterprise Quality Checklist (mandatory) |
 | [API](docs/API.md) | Endpoints and authentication |
@@ -240,7 +240,7 @@ All repository documentation follows **current best practices**. Index:
 
 GitHub Actions runs **tests**, **lint**, **type-checking**, and **production builds** on every push and pull request to `main`:
 
-- **Tests** (`.github/workflows/tests.yml`): PHP 8.4, Node 22, `composer install`, `npm run build`, `php artisan test` against PostgreSQL `c41_test`
+- **Tests** (`.github/workflows/tests.yml`): PHP 8.4, Node 22, `composer install`, `npm run build:frontend`, `php artisan test` against PostgreSQL `c41_test`
 - **Enterprise Quality & CI 2026** (`.github/workflows/lint.yml`):
   - Laravel Pint (PHP)
   - Prettier (frontend)
@@ -255,7 +255,7 @@ GitHub Actions runs **tests**, **lint**, **type-checking**, and **production bui
 
 ```bash
 # Build frontend first (required for Inertia/Vite in Feature tests)
-npm run build
+npm run build:frontend
 
 # Run all tests
 php artisan test

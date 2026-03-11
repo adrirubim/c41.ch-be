@@ -12,6 +12,11 @@ Entry point for the project's technical documentation.
 ## Reference
 
 - **[VERSION_STACK.md](VERSION_STACK.md)** — Stack versions (PHP, Laravel, React, etc.)
+- **[ARCHITECTURE_GUIDELINES.md](ARCHITECTURE_GUIDELINES.md#8-2026-enterprise-quality-checklist)** — 2026 Enterprise Architecture Checklist
+
+## Deployment
+
+- **[deployment/README.md](deployment/README.md)** — Production deployment (SSH servers and shared hosting/CDMON)
 
 ## Support
 

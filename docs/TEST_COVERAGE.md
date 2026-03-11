@@ -41,7 +41,7 @@ Unit tests are kept minimal; most logic is covered by Feature tests with real HT
 
 ```bash
 # Build frontend first (required for Inertia/Vite in Feature tests)
-npm run build
+npm run build:frontend
 
 # Run all tests
 php artisan test

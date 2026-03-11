@@ -16,6 +16,7 @@ This guide covers deploying the C41.ch Backend application to production environ
 - [Queue Workers](#queue-workers)
 - [Monitoring & Maintenance](#monitoring--maintenance)
 - [Troubleshooting](#troubleshooting)
+- [Shared Hosting / CDMON (No SSH)](#shared-hosting--cdmon-no-ssh)
 
 ---
 
@@ -100,8 +101,8 @@ composer install --optimize-autoloader --no-dev
 # Install Node dependencies
 npm ci
 
-# Build frontend assets
-npm run build
+# Build frontend assets (Vite manifest for Laravel)
+npm run build:frontend
 ```
 
 ### 3. Environment Setup
@@ -365,8 +366,8 @@ composer dump-autoload --optimize --classmap-authoritative
 ### Frontend Optimization
 
 ```bash
-# Build production assets
-npm run build
+# Build production assets (Vite)
+npm run build:frontend
 ```
 
 ### Database Optimization
@@ -544,9 +545,120 @@ sudo chmod -R 775 storage bootstrap/cache
 
 #### Assets Not Loading
 
-1. Rebuild assets: `npm run build`
+1. Rebuild assets: `npm run build:frontend`
 2. Clear cache: `php artisan optimize:clear`
 3. Verify `storage:link` is created: `php artisan storage:link`
+
+---
+
+## Shared Hosting / CDMON (No SSH)
+
+This section explains how to deploy **c41.ch-be** on hosting providers such as **CDMON** where you may not have full SSH access or cannot run `php artisan` directly from a shell.
+
+> For standard VPS or servers with SSH access, use the steps described in [Deployment Steps](#deployment-steps) and below. This section focuses on constrained environments.
+
+### 1. Requirements and limitations
+
+- PHP 8.2+ with `pdo_pgsql` or `pgsql` available.
+- Access to a **PostgreSQL** database (you can also use MySQL if you adapt the `.env` and migrations accordingly).
+- Ability to upload files via FTP/SFTP or a web file manager.
+- Optional but recommended: ability to run **scheduled tasks** (cron).
+
+Because SSH access is limited or unavailable:
+
+- You cannot rely on running `php artisan` in the server shell.
+- You should **build assets locally** with `npm run build:frontend` before uploading.
+- You may need to use small helper scripts (see `scripts/README.md`) for tasks such as migrations or cache clearing.
+
+### 2. Local build and preparation
+
+On your development machine:
+
+```bash
+cd /var/www/c41.ch-be
+
+# Install dependencies
+composer install --optimize-autoloader --no-dev
+npm ci
+
+# Build frontend assets (Vite manifest)
+npm run build:frontend
+```
+
+This generates the production build under `public/build` (including `manifest.json`), which is required by Laravel’s Vite integration.
+
+### 3. Files to upload
+
+Upload the **entire project** to your hosting account, except for development-only directories:
+
+- Include:
+  - `app/`, `bootstrap/`, `config/`, `database/`, `public/`, `resources/`, `routes/`, `storage/`, `vendor/`
+  - `.env` (configure directly on the server or via hosting UI — **never commit real secrets to Git**)
+- Exclude:
+  - `node_modules/`
+  - `tests/`
+  - `.git/`, `.github/`
+
+> Some providers allow you to configure the **document root** to point to `public/`. If not, use their **“public_html”** (or similar) directory and upload the contents of `public/` there, adjusting paths accordingly.
+
+### 4. Environment configuration (`.env`)
+
+Create or edit `.env` on the server with production values:
+
+```env
+APP_NAME="C41.ch Backend"
+APP_ENV=production
+APP_KEY=base64:...       # Generate locally with php artisan key:generate
+APP_DEBUG=false
+APP_URL=https://your-domain.com
+
+DB_CONNECTION=pgsql
+DB_HOST=your-db-host
+DB_PORT=5432
+DB_DATABASE=c41_production
+DB_USERNAME=your_db_user
+DB_PASSWORD=your_db_password
+```
+
+Generate `APP_KEY` **locally** using `php artisan key:generate` and copy the value into the server `.env`.
+
+### 5. Running migrations without SSH
+
+If you cannot run `php artisan migrate` directly:
+
+- Use a **temporary PHP script** that includes `artisan` and calls `migrate --force`.
+- Or use the helper scripts described in `scripts/README.md` (for example, a script that bootstraps Laravel and runs the migration command once).
+
+After migrations succeed, delete or protect any script that can execute artisan commands to avoid misuse.
+
+### 6. Caching and optimization
+
+On shared hosting, optimizations like `php artisan config:cache` and `php artisan route:cache` are still useful but must be triggered via helper scripts (similar to migrations) if SSH is not available.
+
+At minimum, ensure:
+
+- `storage/` and `bootstrap/cache/` are writable by the web server user.
+- `public/storage` is a valid symlink or a correctly configured directory for uploaded files.
+
+### 7. Vite assets and common issues
+
+Typical problems on CDMON / shared hosting relate to frontend assets:
+
+- **Blank pages or 500 errors** in production often mean the Vite **manifest is missing**.
+  - Make sure you ran `npm run build:frontend` locally **before** uploading.
+  - Confirm that `public/build/manifest.json` is present on the server.
+- If styles or JavaScript do not load:
+  - Clear Laravel caches (via helper script): `php artisan optimize:clear`.
+  - Verify that the document root points to `public/` (or that your paths match your hosting’s structure).
+
+For additional troubleshooting, see `docs/TROUBLESHOOTING.md`.
+
+### 8. Cron and queues (optional)
+
+If your hosting provider supports cron:
+
+- Configure a job to call `php artisan schedule:run` every minute.
+- If you use queues and the provider allows long-running processes, configure a queue worker; otherwise consider using `sync` queue driver in `.env` for simplicity.
 
 ---
 
@@ -567,7 +679,7 @@ git pull origin main
 # Install dependencies
 composer install --optimize-autoloader --no-dev
 npm ci
-npm run build
+npm run build:frontend
 
 # Run migrations
 php artisan migrate --force

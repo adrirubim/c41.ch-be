@@ -92,7 +92,7 @@ npm cache clean --force
 # Use npm ci instead of npm install
 npm ci
 
-# Check Node.js version (should be 18+)
+# Check Node.js version (should be 22+)
 node --version
 ```
 
@@ -325,7 +325,7 @@ php artisan optimize:clear
 
 1. **Rebuild assets**:
    ```bash
-   npm run build
+   npm run build:frontend
    ```
 
 2. **Clear view cache**:
@@ -336,10 +336,10 @@ php artisan optimize:clear
 3. **Check Vite configuration**:
    ```bash
    # Development
-   npm run dev
+   npm run dev:frontend
 
    # Production
-   npm run build
+   npm run build:frontend
    ```
 
 ### Vite Dev Server Not Starting

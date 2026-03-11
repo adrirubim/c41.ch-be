@@ -24,4 +24,4 @@ For local development, prefer the standard Artisan commands:
 
 If you deploy to a hosting provider where you **cannot** run `php artisan`, you can use the PHP scripts in this folder via the server’s PHP interpreter (for example, from a control panel that allows running PHP, or by uploading the scripts and calling them over HTTP with proper protection).
 
-See `docs/DEPLOYMENT_CDMON.md` and `docs/TROUBLESHOOTING.md` for more details.
+See `docs/DEPLOYMENT.md#shared-hosting--cdmon-no-ssh` and `docs/TROUBLESHOOTING.md` for more details.
