@@ -25,7 +25,7 @@
         "test": "php artisan test"
     },
     "devDependencies": {
-        "@eslint/js": "^9.39.4",
+        "@eslint/js": "^10.0.1",
         "@laravel/vite-plugin-wayfinder": "^0.1.7",
         "@types/node": "^25.4.0",
         "babel-plugin-react-compiler": "^1.0.0",
