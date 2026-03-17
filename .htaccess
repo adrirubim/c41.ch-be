@@ -5,8 +5,9 @@
 
     RewriteEngine On
 
-    # Set the base path for the application subdirectory
-    RewriteBase /cp3/activitat_39/
+    # Base path for the application.
+    # If you deploy under a subdirectory, set this to that path (e.g. /cp3/activitat_39/).
+    RewriteBase /
 
     # Serve Vite build assets correctly.
     # Vite generates routes like /cp3/activitat_39/assets/... but the physical
@@ -30,7 +31,7 @@
     # Serve static files from public/ directory
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} ^/cp3/activitat_39/(build|favicon|storage|.*\.(ico|png|jpg|jpeg|gif|svg|css|js|woff|woff2|ttf|eot)) [NC]
+    RewriteCond %{REQUEST_URI} ^/(build|favicon|storage|.*\.(ico|png|jpg|jpeg|gif|svg|css|js|woff|woff2|ttf|eot)) [NC]
     RewriteRule ^(.*)$ public/$1 [L]
 
     # Redirect Trailing Slashes If Not A Folder...

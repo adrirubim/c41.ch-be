@@ -33,11 +33,11 @@
 
         <title inertia>C41.ch Blog - {{ config('app.name', 'C41.ch Blog') }}</title>
 
-        {{-- Favicons and web app manifest: absolute paths from the public/ directory --}}
-        <link rel="icon" href="/cp3/activitat_39/favicon.ico" sizes="any">
-        <link rel="icon" href="/cp3/activitat_39/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/cp3/activitat_39/apple-touch-icon.png">
-        <link rel="manifest" href="/cp3/activitat_39/site.webmanifest">
+        {{-- Favicons and web app manifest (portable across subdirectories) --}}
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

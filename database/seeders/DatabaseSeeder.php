@@ -15,21 +15,26 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create administrator user (development only; set SEEDER_ADMIN_PASSWORD in .env or change after first login)
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make(env('SEEDER_ADMIN_PASSWORD', 'password')),
-            'email_verified_at' => now(),
-            'is_admin' => true,
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make(env('SEEDER_ADMIN_PASSWORD', 'password')),
+                'email_verified_at' => now(),
+                'is_admin' => true,
+            ]
+        );
 
         // Create test user
-        User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make(env('SEEDER_TEST_PASSWORD', 'password')),
-            'email_verified_at' => now(),
-        ]);
+        User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => Hash::make(env('SEEDER_TEST_PASSWORD', 'password')),
+                'email_verified_at' => now(),
+                'is_admin' => false,
+            ]
+        );
 
         // Ejecutar seeders en orden
         $this->call([

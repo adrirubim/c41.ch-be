@@ -5,8 +5,9 @@
 
     RewriteEngine On
 
-    # Set the base path for the subdirectory
-    RewriteBase /cp3/activitat_39/
+    # Base path for the application.
+    # If you deploy under a subdirectory, set this to that path (e.g. /cp3/activitat_39/).
+    RewriteBase /
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

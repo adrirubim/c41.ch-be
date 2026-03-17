@@ -8,7 +8,24 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicPostController;
 use App\Http\Controllers\SitemapController;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+
+// Local dev helper: when serving via `php artisan serve`, Apache/Nginx rewrite rules
+// are not applied. Vite's modulepreload can request `/assets/*`, which are actually
+// located under `public/build/assets/*` in this project. In production, the web server
+// should handle this mapping; locally we serve them through Laravel.
+if (app()->environment('local')) {
+    Route::get('/assets/{path}', function (string $path) {
+        $fullPath = public_path("build/assets/{$path}");
+
+        if (! File::exists($fullPath)) {
+            abort(404);
+        }
+
+        return response()->file($fullPath);
+    })->where('path', '.*');
+}
 
 // Public routes (no authentication required)
 Route::get('/', [HomeController::class, 'index'])->name('home');
