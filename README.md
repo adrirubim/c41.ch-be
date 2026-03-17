@@ -4,10 +4,10 @@
 
 # C41.ch-be
 
-> A modern, enterprise-grade blog management system built with Laravel 12, React 19 (Inertia.js), and PostgreSQL. Featuring a professional UI/UX, comprehensive security, and optimized performance.
+> A modern, enterprise-grade blog management system built with Laravel 13, React 19 (Inertia.js), and PostgreSQL. Featuring a professional UI/UX, comprehensive security, and optimized performance.
 
 [![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
-[![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
+[![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
@@ -54,7 +54,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 
 ### Key Highlights
 
-- **Modern Stack**: Laravel 12, React 19, TypeScript, TailwindCSS 4.2
+- **Modern Stack**: Laravel 13, React 19, TypeScript, TailwindCSS 4.2
 - **Professional UI/UX**: Enhanced with skeleton loaders, real-time previews, advanced filtering, and accessibility compliance
 - **Enterprise Security**: Authorization policies, rate limiting, HTML sanitization, and role-based access control
 - **Optimized Performance**: Database indexing, strategic caching, query optimization, and React memoization
@@ -129,7 +129,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 ## 🛠 Tech Stack
 
 ### Backend
-- **Framework**: Laravel 12
+- **Framework**: Laravel 13
 - **Language**: PHP 8.4+
 - **Database**: PostgreSQL 14+
 - **Authentication**: Laravel Fortify
@@ -147,7 +147,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 
 ### Development Tools
 - **Testing**: PHPUnit 13
-- **Code Quality**: ESLint 9, Prettier, Laravel Pint
+- **Code Quality**: ESLint 10, Prettier, Laravel Pint
 - **Package Manager**: Composer, NPM
 - **Process Manager**: Concurrently
 
@@ -241,7 +241,7 @@ All documentation lives under `docs/`. The main index is [docs/README.md](docs/R
 | Doc | Description |
 |-----|-------------|
 | [docs/README.md](docs/README.md) | Documentation index |
-| [README_TEST_DATABASE.md](README_TEST_DATABASE.md) | Test database (SQLite / PostgreSQL) |
+| [docs/testing/TEST_DATABASE.md](docs/testing/TEST_DATABASE.md) | Test database (SQLite / PostgreSQL) |
 | [docs/TEST_COVERAGE.md](docs/TEST_COVERAGE.md) | Test suites and coverage |
 | [DEPLOYMENT](docs/deployment/README.md) | Server and shared hosting deployment |
 | [DEVELOPMENT_GUIDE](docs/DEVELOPMENT_GUIDE.md) | Architecture, conventions |
@@ -266,7 +266,7 @@ GitHub Actions runs **tests**, **lint**, **type-checking**, and **production bui
   - ESLint (React 19 + TS)
   - TypeScript `tsc --noEmit`
   - `npm run build:frontend` (Vite)
-  - Auto-commit of style fixes with `stefanzweifel/git-auto-commit-action@v5`
+  - CI is read-only (no auto-commits / no pushing changes from workflows)
 
 ## 🧪 Testing
 
@@ -297,8 +297,8 @@ php artisan test --coverage
 
 ### Test Database
 
-- Configured in `phpunit.xml` (PostgreSQL, database `c41_test`)
-- CI uses password `postgres`; adjust `phpunit.xml` locally if your test DB uses different credentials
+- Default is configured in `phpunit.xml` as **SQLite in-memory** (`:memory:`), so you can run tests locally without PostgreSQL (requires PDO SQLite).
+- CI runs the same suite against **PostgreSQL** (`c41_test`, user/password `postgres`) in `.github/workflows/tests.yml`.
 - Automatically refreshed with `RefreshDatabase` trait
 - Isolated test environment
 
@@ -415,10 +415,10 @@ composer run dev
 php artisan serve
 
 # Start Vite dev server only
-npm run dev
+npm run dev:frontend
 
 # Build for production
-npm run build
+npm run build:frontend
 
 # Build with SSR
 npm run build:ssr
@@ -507,21 +507,35 @@ Ensure dependencies are installed (`composer install` and `npm install`). Then r
 
 ```bash
 composer install
-npm install
-./vendor/bin/pint && npm run format && npm run lint && npm run types && npm run test
-npm run build
+npm ci
+./vendor/bin/pint
+npm run format:check
+npm run lint
+npm run types
+npm run build:frontend
+php artisan test
 ```
 
 - If `./vendor/bin/pint` is missing, run `composer install` first.
-- **Tests** (`npm run test` = `php artisan test`) use **SQLite in-memory** by default, so they run locally without PostgreSQL. CI runs the same suite against PostgreSQL.
+- **Tests** (`npm run test` = `php artisan test`) use **SQLite in-memory** by default (requires PDO SQLite), so they can run locally without PostgreSQL. CI runs the same suite against PostgreSQL.
 
 ### Test database (optional)
 
-By default tests use SQLite (`:memory:`). To run them against PostgreSQL instead (e.g. to match CI), set env vars: `DB_CONNECTION=pgsql DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test`. Ensure the database exists (e.g. `sudo -u postgres psql -c "CREATE DATABASE c41_test OWNER postgres;"`).
+By default tests use SQLite (`:memory:`). If you don't have PDO SQLite installed (common on minimal PHP builds), install your distro package (e.g. `php8.4-sqlite3`) or run tests against PostgreSQL instead (to match CI). For example, using an ephemeral Docker container on port `5433`:
+
+```bash
+docker rm -f c41_test_pg >/dev/null 2>&1 || true
+docker run -d --name c41_test_pg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=c41_test -p 5433:5432 postgres:16
+for i in {1..30}; do docker exec c41_test_pg pg_isready -U postgres >/dev/null 2>&1 && break; sleep 1; done
+DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5433 DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test
+docker rm -f c41_test_pg
+```
 
 ## 🤝 Contributing
 
 This is an open-source project (MIT). For contributions or inquiries, please contact the author. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for code standards and workflow.
+
+Please note that participation in this project is governed by our **[Code of Conduct](CODE_OF_CONDUCT.md)**.
 
 ### Code Standards
 
@@ -553,4 +567,4 @@ MIT. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Last Updated:** February 2026 · **Version:** 3.0.0 · **Status:** Production Ready ✅ · **Stack:** [docs/VERSION_STACK.md](docs/VERSION_STACK.md)
+**Last Updated:** March 2026 · **Version:** 3.0.0 · **Status:** Production Ready ✅ · **Stack:** [docs/VERSION_STACK.md](docs/VERSION_STACK.md)

@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "c41-ch/backend",
     "type": "project",
-    "description": "C41.ch – Blog CMS with Laravel 12, React 19 (Inertia.js), TypeScript and PostgreSQL.",
+    "description": "C41.ch – Blog CMS with Laravel 13, React 19 (Inertia.js), TypeScript and PostgreSQL.",
     "keywords": [
         "laravel",
         "react",
@@ -21,8 +21,8 @@
         "ezyang/htmlpurifier": "^4.19",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.30",
-        "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1",
+        "laravel/framework": "^13.0",
+        "laravel/tinker": "3.x-dev",
         "laravel/wayfinder": "^0.1.9"
     },
     "require-dev": {
@@ -53,7 +53,7 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
-            "npm run build"
+            "npm run build:frontend"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",

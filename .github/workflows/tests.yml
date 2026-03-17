@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -40,9 +40,10 @@ jobs:
           php-version: '8.4'
           tools: composer:v2
           coverage: xdebug
+          extensions: mbstring, xml, curl, zip, gd, intl, bcmath, pdo_sqlite, sqlite3, pdo_pgsql, pgsql
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'

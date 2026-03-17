@@ -30,7 +30,7 @@ Run these checks locally before opening a pull request:
    - `php artisan test`
 2. **Lint and type checks**
    - `vendor/bin/pint`
-   - `npm run format`
+   - `npm run format:check`
    - `npm run lint`
    - `npm run types`
 

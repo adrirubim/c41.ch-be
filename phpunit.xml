@@ -26,7 +26,7 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <!-- SQLite by default so tests run locally without PostgreSQL. CI overrides to pgsql. -->
+        <!-- SQLite by default so tests run locally without PostgreSQL (requires PDO SQLite). CI overrides to pgsql. -->
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="MAIL_MAILER" value="array"/>

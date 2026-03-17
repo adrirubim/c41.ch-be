@@ -54,4 +54,4 @@ php artisan test --testsuite=Feature
 php artisan test --filter=PostControllerTest
 ```
 
-See [README_TEST_DATABASE.md](../README_TEST_DATABASE.md) for test database setup (SQLite vs PostgreSQL).
+See [docs/testing/TEST_DATABASE.md](testing/TEST_DATABASE.md) for test database setup (SQLite vs PostgreSQL).

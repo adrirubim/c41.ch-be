@@ -107,11 +107,14 @@ node --version
 php -m
 
 # Install missing extensions (Ubuntu/Debian)
-sudo apt-get install php8.2-pgsql php8.2-mbstring php8.2-xml php8.2-curl php8.2-zip php8.2-gd
+sudo apt-get install php8.4-pgsql php8.4-sqlite3 php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-gd
 
 # Restart PHP-FPM
-sudo systemctl restart php8.2-fpm
+sudo systemctl restart php8.4-fpm
 ```
+
+> Note: PHPUnit defaults to SQLite in-memory (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`) via `phpunit.xml`.  
+> If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`php8.4-sqlite3` on Ubuntu/Debian).
 
 ---
 
@@ -349,7 +352,7 @@ php artisan optimize:clear
 **Solutions**:
 
 ```bash
-# Check Node.js version (18+)
+# Check Node.js version (22+ recommended; see .nvmrc)
 node --version
 
 # Clear node_modules and reinstall

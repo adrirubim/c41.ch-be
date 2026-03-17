@@ -1,6 +1,6 @@
 {
   "reject": [
-    "eslint",
-    "@eslint/js"
+    "vite",
+    "@vitejs/plugin-react"
   ]
 }

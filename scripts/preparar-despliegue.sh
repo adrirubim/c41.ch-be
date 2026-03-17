@@ -27,13 +27,8 @@ cp "$SOURCE_DIR/composer.json" "$DEPLOY_DIR/"
 cp "$SOURCE_DIR/composer.lock" "$DEPLOY_DIR/"
 cp "$SOURCE_DIR/vite.config.ts" "$DEPLOY_DIR/"
 
-# Copy .env from ENV_PRODUCCION_ACTUALIZADO.txt if available
-if [ -f "$SOURCE_DIR/ENV_PRODUCCION_ACTUALIZADO.txt" ]; then
-    cp "$SOURCE_DIR/ENV_PRODUCCION_ACTUALIZADO.txt" "$DEPLOY_DIR/.env"
-    echo "✅ .env copied from ENV_PRODUCCION_ACTUALIZADO.txt"
-else
-    echo "⚠️  ENV_PRODUCCION_ACTUALIZADO.txt not found. You must create .env manually."
-fi
+echo "🔐 Note: .env is not copied automatically (avoid handling secrets in-repo)."
+echo "   Create $DEPLOY_DIR/.env manually from .env.example (or your secret manager)."
 
 # Copy full directories
 echo "📁 Copying directories..."
@@ -60,11 +55,12 @@ echo "✅ Deployment folder created at: $DEPLOY_DIR"
 echo ""
 echo "📋 Summary:"
 echo "   - Location: $DEPLOY_DIR"
-echo "   - Ready to upload to: /public_html/cp3/activitat_39/"
+echo "   - Ready to upload to your hosting web root (or subdirectory)"
 echo ""
 echo "📤 Next steps:"
-echo "   1. Verify that .env is correct at $DEPLOY_DIR/.env"
+echo "   1. Create and verify .env at $DEPLOY_DIR/.env"
 echo "   2. Connect FileZilla to CDMON"
-echo "   3. Upload ALL content from $DEPLOY_DIR to /public_html/cp3/activitat_39/"
+echo "   3. Upload ALL content from $DEPLOY_DIR to your hosting target directory"
+echo "      - If deploying under a subdirectory, set VITE_BASE accordingly (e.g. /cp3/activitat_39/) and build assets in that environment"
 echo "   4. Set permissions: storage/ and bootstrap/cache/ → 775"
 echo ""

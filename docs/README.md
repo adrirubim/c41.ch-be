@@ -13,6 +13,7 @@ Entry point for the project's technical documentation.
 
 - **[VERSION_STACK.md](VERSION_STACK.md)** — Stack versions (PHP, Laravel, React, etc.)
 - **[ARCHITECTURE_GUIDELINES.md](ARCHITECTURE_GUIDELINES.md#8-2026-enterprise-quality-checklist)** — 2026 Enterprise Architecture Checklist
+- **[testing/TEST_DATABASE.md](testing/TEST_DATABASE.md)** — Test database setup (SQLite vs PostgreSQL)
 
 ## Deployment
 

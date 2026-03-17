@@ -9,16 +9,16 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
@@ -27,6 +27,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          extensions: mbstring, xml, curl, zip, gd, intl, bcmath, pdo_sqlite, sqlite3, pdo_pgsql, pgsql
 
       - name: Install Composer Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -37,8 +38,8 @@ jobs:
       - name: Run Pint
         run: vendor/bin/pint
 
-      - name: Format Frontend
-        run: npm run format
+      - name: Check Frontend Format
+        run: npm run format:check
 
       - name: Lint Frontend
         run: npm run lint
@@ -48,9 +49,3 @@ jobs:
 
       - name: Verify Production Frontend Build
         run: npm run build:frontend
-
-      - name: "🚀 Commit & Push Auto-fixes"
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: auto-format style [skip ci]"
-          branch: ${{ github.head_ref || github.ref_name }}

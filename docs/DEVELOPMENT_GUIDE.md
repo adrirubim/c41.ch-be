@@ -112,9 +112,9 @@ php artisan make:test PostControllerTest
 
 ### Test Database
 
-- Database: `c41_test`
-- Automatically cleaned with `RefreshDatabase`
-- Configured in `phpunit.xml`
+- Default: SQLite in-memory (`:memory:`), configured in `phpunit.xml`
+- Automatically cleaned with `RefreshDatabase` (Feature tests)
+- Optional: PostgreSQL to match CI (see `docs/testing/TEST_DATABASE.md`)
 
 ### Test Example
 

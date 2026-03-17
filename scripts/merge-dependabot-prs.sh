@@ -65,7 +65,7 @@ npm ci
 
 echo ""
 echo "==> Building assets..."
-npm run build
+npm run build:frontend
 
 echo ""
 echo "==> Running tests..."
