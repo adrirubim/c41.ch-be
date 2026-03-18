@@ -8,7 +8,7 @@
 
 [![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.2-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
@@ -17,25 +17,28 @@
 
 ## 📋 Table of Contents
 
-- [Operational Quickstart](#-operational-quickstart)
-- [Overview](#-overview)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Requirements](#-requirements)
-- [Installation](#-installation)
-- [Security](#-security)
-- [Documentation](#-documentation)
-- [CI/CD](#-cicd)
-- [Testing](#-testing)
-- [Architecture](#-architecture)
-- [Project Status](#-project-status)
-- [Default Users](#-default-users-development)
-- [Useful Commands](#️-useful-commands)
-- [Before Pushing to GitHub](#-before-pushing-to-github)
-- [Contributing](#-contributing)
-- [Author](#-author)
-- [License](#-license)
+- [Operational Quickstart](#operational-quickstart)
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Security](#security)
+- [Documentation](#documentation)
+- [CI/CD](#cicd)
+- [Testing](#testing)
+- [Architecture](#architecture)
+- [Project Status](#project-status)
+- [Default Users](#default-users-development)
+- [Useful Commands](#useful-commands)
+- [Before Pushing to GitHub](#before-pushing-to-github)
+- [Contributing](#contributing)
+- [Author](#author)
+- [License](#license)
 
+---
+
+<a id="operational-quickstart"></a>
 ## ⚙️ Operational Quickstart
 
 Use these commands from the **repository root** as your main entrypoints:
@@ -45,9 +48,19 @@ Use these commands from the **repository root** as your main entrypoints:
 | `composer run dev` | Start Laravel server, Vite dev server, queue worker and logs for local development. |
 | `npm run build:frontend && php artisan test` | Build frontend assets (Vite manifest) and run the full PHPUnit test suite (Feature + Unit). |
 | `npm run lint && npm run types` | Run ESLint (strict rules) and TypeScript type checking (`tsc --noEmit`). |
+| `composer audit && npm audit` | Check dependency vulnerabilities (Composer + npm). |
+| `composer run setup` | First-time setup: installs deps, copies `.env`, generates key, migrates, installs JS deps, builds assets. |
 
-For a full local quality gate before pushing, see [Before Pushing to GitHub](#-before-pushing-to-github).
+**Default dev URL:** `http://127.0.0.1:8000` (Laravel).
 
+For Vite HMR, the dev server runs on its default port (see terminal output).  
+Default Vite dev URL: `http://localhost:5173`.
+
+For detailed docs: start from [docs/README.md](docs/README.md).
+
+For a full local quality gate before pushing, see [Before Pushing to GitHub](#before-pushing-to-github).
+
+<a id="overview"></a>
 ## 🎯 Overview
 
 c41.ch-be is a production-ready content management system designed for modern blog management. It combines the power of Laravel's robust backend with React's reactive frontend, delivering a seamless, performant, and secure blogging experience.
@@ -61,6 +74,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **Comprehensive Testing**: 57 tests with 241 assertions covering all critical paths
 - **Full Documentation**: API docs, development guide, roadmap, and English code comments throughout
 
+<a id="features"></a>
 ## ✨ Features
 
 ### 🔐 Security & Stability
@@ -126,6 +140,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **Product & growth teams**: teams that experiment frequently with blog content and landing pages and need real-time preview, command palette, advanced filters and analytics-ready data.
 - **Engineering teams (Laravel + SPA)**: teams looking for a reference implementation of layered architecture (Controller → Service → Repository → Model) with strong testing and CI/CD practices.
 
+<a id="tech-stack"></a>
 ## 🛠 Tech Stack
 
 ### Backend
@@ -151,6 +166,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **Package Manager**: Composer, NPM
 - **Process Manager**: Concurrently
 
+<a id="requirements"></a>
 ## 📦 Requirements
 
 - **PHP** >= 8.4
@@ -159,6 +175,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **Composer** >= 2.0
 - **NPM** >= 10.0
 
+<a id="installation"></a>
 ## 🚀 Installation
 
 ### 1. Clone the Repository
@@ -175,7 +192,7 @@ cd c41.ch-be
 composer install
 
 # Install Node dependencies
-npm install
+npm ci
 ```
 
 ### 3. Environment Configuration
@@ -228,12 +245,14 @@ This command starts:
 - **Queue Worker** for background jobs
 - **Log Tailer** for real-time logs
 
+<a id="security"></a>
 ## 🔒 Security
 
 - **Never commit `.env`** — It is in `.gitignore`; use `.env.example` as a template and set your own `APP_KEY`, `DB_*`, and other secrets locally or via your deployment environment.
 - **Default users** — Created by `DatabaseSeeder` for development only. Use `SEEDER_ADMIN_PASSWORD` / `SEEDER_TEST_PASSWORD` in `.env` if needed, and change or remove these users before production.
 - **Production** — Set `APP_DEBUG=false`, use strong `APP_KEY`, restrict `APP_URL`, and configure proper DB and mail credentials outside the repository.
 
+<a id="documentation"></a>
 ## 📚 Documentation
 
 All documentation lives under `docs/`. The main index is [docs/README.md](docs/README.md). This table lists the most important topics:
@@ -245,7 +264,7 @@ All documentation lives under `docs/`. The main index is [docs/README.md](docs/R
 | [docs/TEST_COVERAGE.md](docs/TEST_COVERAGE.md) | Test suites and coverage |
 | [DEPLOYMENT](docs/deployment/README.md) | Server and shared hosting deployment |
 | [DEVELOPMENT_GUIDE](docs/DEVELOPMENT_GUIDE.md) | Architecture, conventions |
-| [ARCHITECTURE_GUIDELINES](docs/ARCHITECTURE_GUIDELINES.md#8-2026-enterprise-quality-checklist) | 2026 Enterprise Quality Checklist (mandatory) |
+| [ARCHITECTURE_GUIDELINES](docs/ARCHITECTURE_GUIDELINES.md#15-2026-enterprise-quality-checklist) | 2026 Enterprise Quality Checklist (mandatory) |
 | [API](docs/API.md) | Endpoints and authentication |
 | [FRONTEND_COMPONENTS](docs/FRONTEND_COMPONENTS.md) | React components |
 | [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Custom hooks |
@@ -255,6 +274,7 @@ For a navigable, high-level overview, you can also use the [GitHub Wiki](https:/
 
 [SECURITY](SECURITY.md) · [LICENSE](LICENSE) · [VERSION_STACK](docs/VERSION_STACK.md)
 
+<a id="cicd"></a>
 ## 🔄 CI/CD
 
 GitHub Actions runs **tests**, **lint**, **type-checking**, and **production builds** on every push and pull request to `main`:
@@ -266,8 +286,11 @@ GitHub Actions runs **tests**, **lint**, **type-checking**, and **production bui
   - ESLint (React 19 + TS)
   - TypeScript `tsc --noEmit`
   - `npm run build:frontend` (Vite)
-  - CI is read-only (no auto-commits / no pushing changes from workflows)
+  - CI is read-only (no auto-commits / no pushing changes from quality/test workflows)
 
+Note: there is a separate release automation workflow (`.github/workflows/update-license-year.yml`) that may commit a `LICENSE` year update when a GitHub Release is published.
+
+<a id="testing"></a>
 ## 🧪 Testing
 
 ### Run Tests
@@ -302,6 +325,7 @@ php artisan test --coverage
 - Automatically refreshed with `RefreshDatabase` trait
 - Isolated test environment
 
+<a id="architecture"></a>
 ## 🏗 Architecture
 
 The project follows a **layered architecture** with clear separation of concerns:
@@ -353,6 +377,7 @@ Request → Controller → Service → Repository → Model
 - **Hooks** (`resources/js/hooks/`) - Custom React hooks
 - **Types** (`resources/js/types/`) - TypeScript type definitions
 
+<a id="project-status"></a>
 ## 📊 Project status
 
 **Overall Score: 10/10** - Production-ready, optimized, well-structured, fully tested, and professionally documented
@@ -394,6 +419,7 @@ Request → Controller → Service → Repository → Model
 - All TypeScript/React comments translated to English
 - Consistent professional documentation
 
+<a id="default-users-development"></a>
 ## ⚠️ Default users (development)
 
 After `php artisan migrate:fresh --seed`, the application creates demo users for local development. Credentials are defined in `database/seeders/DatabaseSeeder.php`.
@@ -401,8 +427,9 @@ After `php artisan migrate:fresh --seed`, the application creates demo users for
 - **Administrator** — `admin@example.com` · Role: Admin (full access)
 - **Standard user** — `test@example.com` · Role: User (own posts only)
 
-**Security:** Change or remove these users before deploying to production. Optional: set `SEEDER_ADMIN_PASSWORD` and `SEEDER_TEST_PASSWORD` in `.env` to override defaults (see [Security](#-security)).
+**Security:** Change or remove these users before deploying to production. Optional: set `SEEDER_ADMIN_PASSWORD` and `SEEDER_TEST_PASSWORD` in `.env` to override defaults (see [Security](#security)).
 
+<a id="useful-commands"></a>
 ## 🛠 Useful Commands
 
 ### Development
@@ -501,27 +528,54 @@ php artisan storage:link
 php artisan storage:clear
 ```
 
+<a id="before-pushing-to-github"></a>
 ## 📤 Before Pushing to GitHub
 
-Ensure dependencies are installed (`composer install` and `npm install`). Then run locally to avoid CI failures:
+This project enforces CI checks via GitHub Actions. To avoid surprises, run the **same commands CI runs** locally.
+
+Prerequisites:
+
+- Install dependencies: `composer install` and `npm ci`
+- CI runs tests against PostgreSQL 16 (database `c41_test`). Locally, tests default to **SQLite in-memory** via `phpunit.xml` (requires PDO SQLite).
+  - Note: the repository uses `legacy-peer-deps=true` (see `.npmrc`) to keep installs reproducible with the current Vite/Tailwind plugin peer constraints.
+
+### Lint pipeline (matches `.github/workflows/lint.yml`)
 
 ```bash
-composer install
+composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 npm ci
-./vendor/bin/pint
+vendor/bin/pint
 npm run format:check
 npm run lint
 npm run types
 npm run build:frontend
-php artisan test
 ```
 
-- If `./vendor/bin/pint` is missing, run `composer install` first.
-- **Tests** (`npm run test` = `php artisan test`) use **SQLite in-memory** by default (requires PDO SQLite), so they can run locally without PostgreSQL. CI runs the same suite against PostgreSQL.
+### Tests pipeline (matches `.github/workflows/tests.yml`)
+
+```bash
+npm ci
+composer install --no-interaction --prefer-dist --optimize-autoloader
+npm run build:frontend
+cp .env.example .env
+php artisan key:generate
+echo "DB_CONNECTION=pgsql" >> .env
+echo "DB_HOST=127.0.0.1" >> .env
+echo "DB_PORT=5432" >> .env
+echo "DB_DATABASE=c41_test" >> .env
+echo "DB_USERNAME=postgres" >> .env
+echo "DB_PASSWORD=postgres" >> .env
+DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5432 DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test
+```
+
+Notes:
+
+- `npm run format` is intentionally **not** part of CI; CI enforces formatting via `npm run format:check`.
+- If you want auto-formatting locally, run `npm run format` before `npm run format:check`.
 
 ### Test database (optional)
 
-By default tests use SQLite (`:memory:`). If you don't have PDO SQLite installed (common on minimal PHP builds), install your distro package (e.g. `php8.4-sqlite3`) or run tests against PostgreSQL instead (to match CI). For example, using an ephemeral Docker container on port `5433`:
+By default tests use SQLite (`:memory:`). If you want to run the same PostgreSQL setup as CI (database `c41_test`, user/password `postgres`/`postgres`) without relying on your local PostgreSQL configuration, you can use an ephemeral Docker container (port `5433`).
 
 ```bash
 docker rm -f c41_test_pg >/dev/null 2>&1 || true
@@ -531,6 +585,7 @@ DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5433 DB_DATABASE=c41_test DB_USERN
 docker rm -f c41_test_pg
 ```
 
+<a id="contributing"></a>
 ## 🤝 Contributing
 
 This is an open-source project (MIT). For contributions or inquiries, please contact the author. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for code standards and workflow.
@@ -546,6 +601,7 @@ Please note that participation in this project is governed by our **[Code of Con
 - Keep code comments in English
 - Follow SOLID principles
 
+<a id="author"></a>
 ## 👨‍💻 Author
 
 **Developed by:** [Adrián Morillas Pérez](https://linktr.ee/adrianmorillasperez)
@@ -561,10 +617,11 @@ Please note that participation in this project is governed by our **[Code of Con
 
 ---
 
+<a id="license"></a>
 ## 📄 License
 
 MIT. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Last Updated:** March 2026 · **Version:** 3.0.0 · **Status:** Production Ready ✅ · **Stack:** [docs/VERSION_STACK.md](docs/VERSION_STACK.md)
+**Last Updated:** March 2026 · **Status:** Production Ready ✅ · **Version:** v3.0.0 · **Stack:** [docs/VERSION_STACK.md](docs/VERSION_STACK.md)

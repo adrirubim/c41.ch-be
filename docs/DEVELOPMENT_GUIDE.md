@@ -114,7 +114,7 @@ php artisan make:test PostControllerTest
 
 - Default: SQLite in-memory (`:memory:`), configured in `phpunit.xml`
 - Automatically cleaned with `RefreshDatabase` (Feature tests)
-- Optional: PostgreSQL to match CI (see `docs/testing/TEST_DATABASE.md`)
+- Optional: PostgreSQL to match CI (see `testing/TEST_DATABASE.md`)
 
 ### Test Example
 
@@ -284,7 +284,7 @@ php artisan tinker                  # Interactive console
 # Testing
 npm run build:frontend              # Build frontend for feature tests (Vite manifest)
 php artisan test                    # Run all tests
-php artisan test --filter=Post     # Filter tests
+php artisan test --filter=PostControllerTest  # Filter tests
 
 # Cache
 php artisan cache:clear             # Clear cache

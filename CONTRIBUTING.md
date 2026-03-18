@@ -8,7 +8,7 @@ Please read this guide and the main `README` before opening pull requests.
 ## Branching and Workflow
 
 - Clone the repo and follow the installation section in the `README`.
-- Create a branch from `main` or `develop`.
+- Create a branch from `main`.
 - Use clear branch names: `feat/...`, `fix/...`, `chore/...`.
 
 ---
@@ -40,7 +40,7 @@ CI will run tests and lint automatically on your pull request; local runs should
 
 ## Pull Requests
 
-- Open a PR against the appropriate base branch (`main` or `develop`).
+- Open a PR against `main`.
 - Clearly describe the scope of the change and areas of the codebase touched.
 - Ensure all tests and linters pass; CI must be green before merge.
 - Link related issues when applicable (for example, `Fixes #123`).

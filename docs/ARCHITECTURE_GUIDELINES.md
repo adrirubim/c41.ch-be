@@ -1,6 +1,6 @@
 # Architecture Guidelines
 
-This document defines the architectural standards and guardrails for the C41.ch Backend project. It is the primary reference for senior engineers and architects when making structural or cross-cutting decisions.
+This document defines the architectural standards and guardrails for **c41.ch-be** (Laravel + Inertia + React). It is the primary reference for senior engineers when making structural or cross-cutting decisions.
 
 ---
 
@@ -52,22 +52,23 @@ This document defines the architectural standards and guardrails for the C41.ch 
 - One Inertia page component per route-level screen.
 - Compose layout, fetch data via props, and wire user interactions to HTTP actions.
 
-**Components (`resources/js/components/`)**
-- Reusable, presentation-focused components.
-- React components use `PascalCase.tsx` naming.
-- Do not contain routing or data-fetch responsibilities.
+**Components**
+- **Wrappers** live in `resources/js/components/` (stable `@/components/*` imports).
+- **Implementations** live in `src/shared` and `src/modules` (source of truth).
+- Wrappers may forward Laravel/Inertia-specific concerns (for example, upload URLs), but must remain thin.
 
 **Layouts (`resources/js/layouts/`)**
 - Define shared page structure (navigation, shell, theming).
 - Wrap pages to provide consistent UX and state containers.
 
-**Hooks (`resources/js/hooks/`)**
-- Encapsulate reusable stateful logic (e.g. filters, command palette, wayfinder).
-- Are pure TypeScript/React logic with strong typing, no `any`.
+**Hooks**
+- **Wrappers** live in `resources/js/hooks/` (stable `@/hooks/*` imports).
+- **Implementations** live in `src/shared` and `src/modules`.
 
-**Types (`resources/js/types/`)**
-- Central location for shared TypeScript interfaces and type aliases.
-- All API contracts used in the frontend must be represented here.
+**Types**
+- Domain types live with the domain (for example `src/modules/*/types`).
+- Shared types live under `src/shared`.
+- `resources/js/types/` is reserved for Laravel/Vite/Inertia entrypoint typing needs and thin re-exports.
 
 ---
 
@@ -89,7 +90,8 @@ This document defines the architectural standards and guardrails for the C41.ch 
 
 ## 5. Naming and Structure
 
-- **Directories and non-React files**: `kebab-case` naming (e.g. `post-repository.php`, `html-purifier-service.php`) except where Laravel conventions require `StudlyCase` class names.
+- **TypeScript files and directories**: use `kebab-case` for non-component files and folders (see the frontend conventions below).
+- **PHP (PSR-4) files**: follow Laravel/PSR-4 conventions — file names match the `StudlyCase` class name (for example `PostRepository.php`, `HtmlPurifierService.php`). Do not use `kebab-case` for PHP class files.
 - **React components**: `PascalCase.tsx` (e.g. `PostEditor.tsx`).
 - **Scripts**: All utility or maintenance scripts live under `scripts/` with `kebab-case` filenames.
 - **Configuration**: Keep framework configuration in `config/` and frontend configuration in the root (e.g. `vite.config.ts`, `eslint.config.js`).
@@ -109,16 +111,27 @@ This document defines the architectural standards and guardrails for the C41.ch 
 - This file, `README.md`, and `docs/DEVELOPMENT_GUIDE.md` together define the **authoritative architecture contract**.
 - Any deviation from these guidelines must be documented with rationale and, where possible, refactored back towards the standard.
 
-## C41.ch Backend – Architecture Guidelines (2026)
+---
 
-This document defines the frontend architecture rules for `c41.ch-be`.  
-All new code **must** follow these guidelines. The CI "Quality Gate" enforces them via `npm run lint` and `npm run types`.
+## 8. Frontend Architecture (2026)
+
+This section defines the **frontend architecture rules** for `c41.ch-be`.
+
+### 8.1 Source of truth: `src/*`, composition: `resources/js/*`
+
+- **`src/*` is the implementation source of truth** for domain logic, shared UI primitives, hooks, and infrastructure.
+- **`resources/js/*` is the Laravel/Inertia view layer**:
+  - Inertia pages and Laravel-wired layouts live here.
+  - Wrappers and re-exports are allowed here to keep Laravel entrypoints stable.
+  - Heavy logic must not live here; it must be implemented in `src/*` and consumed via aliases.
+
+CI enforces key rules via `npm run lint` and `npm run types`.
 
 ---
 
-## 1. Directory Layout & Responsibilities
+## 9. Directory Layout & Responsibilities
 
-### 1.1 `src/modules/*` – Domain Modules
+### 9.1 `src/modules/*` – Domain Modules
 
 - **Purpose**: Own **feature/domain-specific** logic and components.
 - Each top-level folder under `src/modules` represents a **business domain** (e.g. `auth`, `dashboard`, `posts`, `settings`).
@@ -131,7 +144,7 @@ All new code **must** follow these guidelines. The CI "Quality Gate" enforces th
   - Cross-cutting utilities used by many domains → `src/shared`
   - Global app shell, layouts, or composition → `src/core`
 
-### 1.2 `src/shared/*` – Cross-cutting Concerns
+### 9.2 `src/shared/*` – Cross-cutting Concerns
 
 - **Purpose**: Reusable, app-wide primitives:
   - Shared React components (forms, editors, UI primitives, etc.)
@@ -142,7 +155,7 @@ All new code **must** follow these guidelines. The CI "Quality Gate" enforces th
   - Code here must be **domain-agnostic**. If it requires knowledge of a specific domain, move it to `src/modules/<domain>`.
   - Keep APIs stable and well typed; `resources/js` should consume these via aliases, never via deep relative imports.
 
-### 1.3 `src/core/*` – Application Core
+### 9.3 `src/core/*` – Application Core
 
 - **Purpose**: Global, app-level infrastructure for the frontend:
   - Root server/bootstrap logic (e.g. Node server, SSR bridge)
@@ -151,30 +164,30 @@ All new code **must** follow these guidelines. The CI "Quality Gate" enforces th
   - Global types that truly apply to the entire app
 - `src/core` should **not** contain domain logic or domain-specific UI.
 
-### 1.4 `resources/js/*` – View Layer Only
+### 9.4 `resources/js/*` – View Layer Only
 
 - **Purpose**: **View composition** for the Laravel/Inertia entrypoints.
 - Contains:
   - Page components (Inertia pages)
   - Layouts wired to Laravel routes
-  - Thin wrappers that re-export hooks/utils/components from `src/modules` and `src/shared`
+  - Thin wrappers that re-export hooks/utils/components from `src/modules`, `src/shared`, and `src/core`
 - Rules:
   - **No heavy business logic** lives in `resources/js`. Logic must live in `src/modules` or `src/shared` and be imported via aliases.
   - `resources/js/hooks/*` and `resources/js/lib/*` must remain **thin re-export wrappers** only.
 
 ---
 
-## 2. Naming Conventions
+## 10. Naming Conventions
 
-### 2.1 React Components – `PascalCase.tsx`
+### 10.1 React Components – `PascalCase.tsx` (implementation)
 
-- Files that **export React components** must be named in **PascalCase** with `.tsx`:
+- In `src/*`, files that **implement React components** must be named in **PascalCase** with `.tsx`:
   - ✅ `DashboardStatsGrid.tsx`
   - ✅ `PostsShowLayout.tsx`
   - ✅ `RichTextEditor.tsx`
 - Inside a file, the **default/exported component name** must match the file name.
 
-### 2.2 Logic, Hooks, Utilities – `kebab-case.ts` / `kebab-case.tsx`
+### 10.2 Logic, Hooks, Utilities – `kebab-case.ts` / `kebab-case.tsx`
 
 - Non-component files (logic, hooks, services, utils, types) must use **kebab-case**:
   - Hooks: `use-posts-index-page.ts`, `use-filter-presets.ts`, `use-autosave.ts`
@@ -183,15 +196,22 @@ All new code **must** follow these guidelines. The CI "Quality Gate" enforces th
 - When a hook returns JSX/components and must be `.tsx`, it **still uses kebab-case** in the filename:
   - ✅ `use-keyboard-shortcuts.tsx`
 
-### 2.3 Directories – `kebab-case`
+### 10.3 Directories – `kebab-case`
 
 - All directories must use **kebab-case**:
   - ✅ `rich-text-editor/`, `two-factor/`, `post-integration/`
   - ❌ `RichTextEditor/`, ❌ `TwoFactor/`
 
+### 10.4 Wrappers in `resources/js/*`
+
+- In `resources/js/*`, wrappers and re-exports may use legacy naming (including `kebab-case`) as long as:
+  - They stay **thin** (no business logic).
+  - They forward to `src/*` implementations via aliases (`@shared`, `@modules`, `@core`, `@infra`).
+  - New substantial implementations are added to `src/*`, not `resources/js/*`.
+
 ---
 
-## 3. Typing Policy – Zero `any`
+## 11. Typing Policy – Zero `any`
 
 - **Global policy**: **`any` is not allowed**.
   - The ESLint rule `@typescript-eslint/no-explicit-any` is enabled and enforced in CI.
@@ -203,7 +223,7 @@ All new code **must** follow these guidelines. The CI "Quality Gate" enforces th
 
 ---
 
-## 4. Boolean Expressions – Be Explicit
+## 12. Boolean Expressions – Be Explicit
 
 The project enforces `@typescript-eslint/strict-boolean-expressions`.  
 This means **every conditional must be explicit** about what is being checked.
@@ -222,7 +242,7 @@ Any new code that violates these rules will fail ESLint and be rejected by CI.
 
 ---
 
-## 5. Import Aliases – No Deep Relative Paths
+## 13. Import Aliases – No Deep Relative Paths
 
 Always use the configured **path aliases** instead of long relative imports.
 
@@ -249,7 +269,7 @@ If you catch yourself counting `../`, you are probably breaking this rule. Reach
 
 ---
 
-## 6. CI/CD Quality Gate
+## 14. CI/CD Quality Gate
 
 All contributions must pass the **Quality Gate** before they can be merged.
 
@@ -265,7 +285,7 @@ The CI pipeline is configured to enforce these guidelines so that the `c41.ch-be
 
 ---
 
-## 8. 2026 Enterprise Quality Checklist
+## 15. 2026 Enterprise Quality Checklist
 
 This checklist is **mandatory** for all future commits and pull requests. Any violation is considered a **blocking issue**.
 

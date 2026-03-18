@@ -71,7 +71,8 @@ Before deploying, ensure you have:
 
 ## Pre-Deployment Checklist
 
-- [ ] Code is tested and all tests pass (`php artisan test`)
+- [ ] Code is tested and all tests pass (`php artisan test`) (default: SQLite in-memory; PostgreSQL/CI via `docs/testing/TEST_DATABASE.md`)
+- [ ] Frontend assets are built (`npm run build:frontend`)
 - [ ] Environment variables are configured
 - [ ] Database migrations are ready
 - [ ] Storage directory is writable
@@ -378,7 +379,7 @@ npm run build:frontend
 
 ### PHP-FPM Optimization
 
-Edit `/etc/php/8.2/fpm/pool.d/www.conf`:
+Edit the PHP-FPM pool config (example for PHP 8.4 on Ubuntu/Debian): `/etc/php/8.4/fpm/pool.d/www.conf`.
 
 ```ini
 pm = dynamic

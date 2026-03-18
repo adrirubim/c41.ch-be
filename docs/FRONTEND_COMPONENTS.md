@@ -2,6 +2,15 @@
 
 This document provides comprehensive documentation for all custom React components in the C41.ch Backend application.
 
+## Source of truth (important)
+
+This project uses a split frontend architecture:
+
+- **Implementation** lives in `src/*` (`src/shared`, `src/modules`, `src/core`).
+- `resources/js/*` provides the Laravel/Inertia **view layer** and thin wrappers for stable `@/*` import paths.
+
+When a component is implemented in `src/*`, you may also find a thin wrapper under `resources/js/components/*` that forwards props or wires Laravel-specific concerns (for example, upload URLs).
+
 ## 📋 Table of Contents
 
 - [Business Components](#business-components)
@@ -19,7 +28,9 @@ This document provides comprehensive documentation for all custom React componen
 
 A full-featured WYSIWYG editor built with Tiptap.
 
-**Location**: `resources/js/components/rich-text-editor.tsx`
+**Public import**: `@/components/rich-text-editor`  
+**Wrapper**: `resources/js/components/rich-text-editor.tsx`  
+**Implementation**: `src/shared/components/rich-text-editor/RichTextEditor.tsx`
 
 **Props**:
 ```typescript
@@ -319,22 +330,8 @@ The application uses shadcn/ui components located in `resources/js/components/ui
 
 ### Available UI Components
 
-- **Alert** (`alert.tsx`) - Alert messages
-- **AlertDialog** (`alert-dialog.tsx`) - Modal dialogs
-- **Avatar** (`avatar.tsx`) - User avatars
-- **Badge** (`badge.tsx`) - Status badges
-- **Button** (`button.tsx`) - Buttons with variants
-- **Card** (`card.tsx`) - Card containers
-- **Checkbox** (`checkbox.tsx`) - Checkboxes
-- **Dialog** (`dialog.tsx`) - Modal dialogs
-- **DropdownMenu** (`dropdown-menu.tsx`) - Dropdown menus
-- **Input** (`input.tsx`) - Text inputs
-- **Label** (`label.tsx`) - Form labels
-- **Select** (`select.tsx`) - Select dropdowns
-- **Skeleton** (`skeleton.tsx`) - Loading skeletons
-- **Textarea** (`textarea.tsx`) - Text areas
-- **Toast** (`toast.tsx`) - Toast notifications
-- **Tooltip** (`tooltip.tsx`) - Tooltips
+- This list is intentionally **non-exhaustive**. The source of truth is the folder `resources/js/components/ui/`.
+- Common components include: `alert.tsx`, `alert-dialog.tsx`, `avatar.tsx`, `badge.tsx`, `breadcrumb.tsx`, `button.tsx`, `card.tsx`, `checkbox.tsx`, `collapsible.tsx`, `command.tsx`, `dialog.tsx`, `dropdown-menu.tsx`, `input.tsx`, `input-otp.tsx`, `label.tsx`, `navigation-menu.tsx`, `select.tsx`, `separator.tsx`, `sheet.tsx`, `sidebar.tsx`, `skeleton.tsx`, `spinner.tsx`, `textarea.tsx`, `toast.tsx`, `toggle.tsx`, `toggle-group.tsx`, `tooltip.tsx`.
 
 **Usage Example**:
 ```tsx
