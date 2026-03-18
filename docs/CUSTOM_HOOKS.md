@@ -2,6 +2,15 @@
 
 This document provides comprehensive documentation for all custom React hooks in the C41.ch Backend application.
 
+## Source of truth (important)
+
+This project uses a split frontend architecture:
+
+- **Implementation** lives in `src/*` (`src/shared`, `src/modules`, `src/core`).
+- `resources/js/*` provides the Laravel/Inertia **view layer** and thin **re-export wrappers** (stable import paths under `@/hooks/*`).
+
+Unless stated otherwise, the paths under `resources/js/hooks/*` are **wrappers** that re-export the real implementation from `src/*`.
+
 ## 📋 Table of Contents
 
 - [useToast](#usetoast)
@@ -24,7 +33,9 @@ This document provides comprehensive documentation for all custom React hooks in
 
 Toast notification hook for displaying temporary messages.
 
-**Location**: `resources/js/hooks/use-toast.tsx`
+**Public import**: `@/hooks/use-toast`  
+**Wrapper**: `resources/js/hooks/use-toast.tsx`  
+**Implementation**: `src/shared/hooks/use-toast.tsx`
 
 **Returns**:
 ```typescript
@@ -89,12 +100,14 @@ function MyComponent() {
 
 Automatic draft saving hook with localStorage persistence.
 
-**Location**: `resources/js/hooks/use-autosave.tsx`
+**Public import**: `@/hooks/use-autosave`  
+**Wrapper**: `resources/js/hooks/use-autosave.tsx`  
+**Implementation**: `src/shared/hooks/use-autosave.ts`
 
 **Parameters**:
 ```typescript
 interface UseAutosaveOptions {
-    data: Record<string, any>;  // Data to save
+    data: Record<string, unknown>;  // Data to save
     storageKey: string;          // localStorage key
     interval?: number;            // Save interval in ms (default: 30000)
     enabled?: boolean;            // Enable/disable autosave (default: true)
@@ -159,15 +172,17 @@ function PostEditor() {
 
 Hook for managing filter presets with localStorage persistence.
 
-**Location**: `resources/js/hooks/use-filter-presets.tsx`
+**Public import**: `@/hooks/use-filter-presets`  
+**Wrapper**: `resources/js/hooks/use-filter-presets.tsx`  
+**Implementation**: `src/modules/posts/hooks/use-filter-presets.ts`
 
 **Returns**:
 ```typescript
 {
     presets: FilterPreset[];
-    savePreset: (name: string, filters: Record<string, any>) => FilterPreset;
+    savePreset: (name: string, filters: Record<string, unknown>) => FilterPreset;
     deletePreset: (id: string) => void;
-    applyPreset: (id: string) => Record<string, any> | null;
+    applyPreset: (id: string) => Record<string, unknown> | null;
 }
 ```
 
@@ -176,7 +191,7 @@ Hook for managing filter presets with localStorage persistence.
 interface FilterPreset {
     id: string;
     name: string;
-    filters: Record<string, any>;
+    filters: Record<string, unknown>;
     createdAt: Date;
 }
 ```
@@ -230,7 +245,9 @@ function PostFilters() {
 
 Hook for managing keyboard shortcuts.
 
-**Location**: `resources/js/hooks/use-keyboard-shortcuts.tsx`
+**Public import**: `@/hooks/use-keyboard-shortcuts`  
+**Wrapper**: `resources/js/hooks/use-keyboard-shortcuts.tsx`  
+**Implementation**: `src/shared/hooks/use-keyboard-shortcuts.tsx`
 
 **Parameters**:
 ```typescript
@@ -281,7 +298,9 @@ function MyComponent() {
 
 Hook for managing loading states.
 
-**Location**: `resources/js/hooks/use-loading-state.tsx`
+**Public import**: `@/hooks/use-loading-state`  
+**Wrapper**: `resources/js/hooks/use-loading-state.tsx`  
+**Implementation**: `src/shared/hooks/use-loading-state.tsx`
 
 **Returns**:
 ```typescript
@@ -327,7 +346,9 @@ function MyComponent() {
 
 Hook for managing theme/appearance (light/dark mode).
 
-**Location**: `resources/js/hooks/use-appearance.tsx`
+**Public import**: `@/hooks/use-appearance`  
+**Wrapper**: `resources/js/hooks/use-appearance.tsx`  
+**Implementation**: `src/shared/hooks/use-appearance.tsx`
 
 **Returns**:
 ```typescript
@@ -352,7 +373,10 @@ function ThemeToggle() {
     const { appearance, resolvedAppearance, updateAppearance } = useAppearance();
 
     return (
-        <select value={appearance} onChange={(e) => updateAppearance(e.target.value as any)}>
+        <select
+            value={appearance}
+            onChange={(e) => updateAppearance(e.target.value as 'light' | 'dark' | 'system')}
+        >
             <option value="light">Light</option>
             <option value="dark">Dark</option>
             <option value="system">System</option>
@@ -367,7 +391,9 @@ function ThemeToggle() {
 
 Hook for detecting mobile devices.
 
-**Location**: `resources/js/hooks/use-mobile.tsx`
+**Public import**: `@/hooks/use-mobile`  
+**Wrapper**: `resources/js/hooks/use-mobile.tsx`  
+**Implementation**: `src/shared/hooks/use-mobile.tsx`
 
 **Returns**:
 ```typescript
@@ -401,7 +427,9 @@ function ResponsiveComponent() {
 
 Hook for clipboard operations.
 
-**Location**: `resources/js/hooks/use-clipboard.ts`
+**Public import**: `@/hooks/use-clipboard`  
+**Wrapper**: `resources/js/hooks/use-clipboard.ts`  
+**Implementation**: `src/shared/hooks/use-clipboard.ts`
 
 **Returns**:
 ```typescript
@@ -432,7 +460,9 @@ function CopyButton({ text }: { text: string }) {
 
 Hook for generating user initials from full name.
 
-**Location**: `resources/js/hooks/use-initials.tsx`
+**Public import**: `@/hooks/use-initials`  
+**Wrapper**: `resources/js/hooks/use-initials.tsx`  
+**Implementation**: `src/shared/hooks/use-initials.tsx`
 
 **Returns**:
 ```typescript
@@ -460,7 +490,9 @@ function UserAvatar({ name }: { name: string }) {
 
 Hook for checking if a URL is active.
 
-**Location**: `resources/js/hooks/use-active-url.ts`
+**Public import**: `@/hooks/use-active-url`  
+**Wrapper**: `resources/js/hooks/use-active-url.ts`  
+**Implementation**: `src/shared/hooks/use-active-url.ts`
 
 **Returns**:
 ```typescript
@@ -491,7 +523,9 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 
 Hook for managing mobile navigation state.
 
-**Location**: `resources/js/hooks/use-mobile-navigation.ts`
+**Public import**: `@/hooks/use-mobile-navigation`  
+**Wrapper**: `resources/js/hooks/use-mobile-navigation.ts`  
+**Implementation**: `src/shared/hooks/use-mobile-navigation.ts`
 
 **Returns**:
 ```typescript
@@ -530,7 +564,9 @@ function MobileNav() {
 
 Hook for managing two-factor authentication.
 
-**Location**: `resources/js/hooks/use-two-factor-auth.ts`
+**Public import**: `@/hooks/use-two-factor-auth`  
+**Wrapper**: `resources/js/hooks/use-two-factor-auth.ts`  
+**Implementation**: `src/modules/auth/services/use-two-factor-auth.ts`
 
 **Returns**:
 ```typescript

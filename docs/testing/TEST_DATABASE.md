@@ -2,6 +2,14 @@
 
 How to run tests and configure the test database for **c41.ch-be**.
 
+## Build frontend assets (Vite manifest)
+
+Feature tests depend on the Vite/Inertia manifest. CI generates this automatically, but locally make sure to build the assets before running the test suite:
+
+```bash
+npm run build:frontend
+```
+
 ## Default: SQLite in-memory
 
 By default, tests use **SQLite** with an in-memory database (`:memory:`). No setup is required:
@@ -32,6 +40,20 @@ CI (GitHub Actions) runs tests against **PostgreSQL** with database `c41_test`. 
 
 3. **Optional:** override in `phpunit.xml` or a local `.env.testing` if you always want to use PostgreSQL for tests.
 
+## Optional: PostgreSQL via Docker (ephemeral, like CI)
+
+If you don't have PostgreSQL local configured (or the `postgres` user/password differs), you can run the same database as CI with an ephemeral Docker container.
+
+```bash
+docker rm -f c41_test_pg >/dev/null 2>&1 || true
+docker run -d --name c41_test_pg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=c41_test -p 5433:5432 postgres:16
+for i in {1..30}; do docker exec c41_test_pg pg_isready -U postgres >/dev/null 2>&1 && break; sleep 1; done
+
+DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5433 DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test
+
+docker rm -f c41_test_pg >/dev/null 2>&1 || true
+```
+
 ## CI configuration
 
 In `.github/workflows/tests.yml`, the test database is configured as follows:
@@ -45,9 +67,10 @@ Migrations are applied automatically via Laravel's `RefreshDatabase` trait in te
 
 ## Summary
 
-| Environment | DB          | Config / command |
-|-------------|-------------|------------------|
+| Environment | DB | Config / command |
+|-------------|----|------------------|
 | Local (default) | SQLite `:memory:` | `php artisan test` |
 | Local (PostgreSQL) | `c41_test` | `DB_CONNECTION=pgsql DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test` |
+| Local (PostgreSQL via Docker) | `c41_test` | `DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5433 DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test` |
 | CI (GitHub Actions) | PostgreSQL `c41_test` | Set in workflow; no extra step |
 

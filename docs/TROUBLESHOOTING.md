@@ -139,13 +139,17 @@ sudo systemctl restart php8.4-fpm
    DB_PORT=5432
    DB_DATABASE=c41
    DB_USERNAME=postgres
-   DB_PASSWORD=your_password
+   DB_PASSWORD=postgres
    ```
+
+   If you're running tests against PostgreSQL, set `DB_DATABASE=c41_test` (CI default user/password is still `postgres` / `postgres`).
 
 3. **Test connection**:
    ```bash
    psql -U postgres -d c41 -h 127.0.0.1
    ```
+
+   For tests, use `c41_test` instead of `c41`.
 
 ### Migration Errors
 
@@ -357,7 +361,7 @@ node --version
 
 # Clear node_modules and reinstall
 rm -rf node_modules package-lock.json
-npm install
+npm ci
 
 # Check port 5173 is available
 lsof -i :5173
@@ -586,8 +590,8 @@ php artisan view:clear
 **Solutions**:
 
 ```bash
-# Install concurrently globally
-npm install -g concurrently
+# Ensure Node dependencies are installed (concurrently is a project dependency)
+npm ci
 
 # Or run services separately
 php artisan serve &

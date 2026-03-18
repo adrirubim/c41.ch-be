@@ -1,4 +1,8 @@
-# API Documentation
+# Routes / HTTP Documentation
+
+This project is a **Laravel + Inertia** application. Most endpoints below return **Inertia/HTML responses** (pages) and perform **redirects** on successful mutations, not JSON REST responses.
+
+Use this document as a **route reference** (paths, auth requirements, rate limits). For the authoritative list, run `php artisan route:list`.
 
 ## Authentication
 
@@ -13,7 +17,7 @@ Most API routes require authentication via Laravel Fortify. Public routes (homep
 GET /
 ```
 
-**Response:**
+**Response (Inertia page props, example shape):**
 ```json
 {
   "featuredPosts": [
@@ -74,7 +78,7 @@ GET /blog
 
 **Note:** Only published posts are returned.
 
-**Response:** Same format as authenticated `/posts` endpoint, but only includes published posts.
+**Response:** Inertia page (published posts only).
 
 #### Get Published Post by Slug
 ```
@@ -113,7 +117,7 @@ GET /blog/{slug}
 GET /categories
 ```
 
-**Response:**
+**Response:** Inertia page (public categories index).
 ```json
 {
   "categories": [
@@ -189,7 +193,7 @@ GET /posts
 - `sort_order` (string, optional): Sort order (`asc` or `desc`, default: `desc`)
 - `per_page` (integer, optional): Items per page (15, 25, 50, 100, default: 15)
 
-**Response:**
+**Response:** Inertia page (posts index).
 ```json
 {
   "data": [
@@ -326,12 +330,14 @@ DELETE /posts/{post}
 
 ### Categories
 
+> Note: authenticated category management lives under the `dashboard` prefix to avoid clashing with public `/categories/{slug}` routes.
+
 #### List Categories
 ```
-GET /categories
+GET /dashboard/categories
 ```
 
-**Response:**
+**Response:** Inertia page (dashboard categories index).
 ```json
 {
   "categories": [
@@ -350,7 +356,7 @@ GET /categories
 
 #### Create Category
 ```
-POST /categories
+POST /dashboard/categories
 ```
 
 **Request Body:**
@@ -369,24 +375,24 @@ POST /categories
 - `description`: nullable, string
 - `color`: nullable, string, regex:/^#[0-9A-Fa-f]{6}$/
 
-**Response:** `302 Redirect` to `/categories` with success message
+**Response:** `302 Redirect` to `/dashboard/categories` with success message
 
 #### Update Category
 ```
-PUT /categories/{category}
-PATCH /categories/{category}
+PUT /dashboard/categories/{category}
+PATCH /dashboard/categories/{category}
 ```
 
 **Request Body:** Same as Create Category
 
-**Response:** `302 Redirect` to `/categories` with success message
+**Response:** `302 Redirect` to `/dashboard/categories` with success message
 
 #### Delete Category
 ```
-DELETE /categories/{category}
+DELETE /dashboard/categories/{category}
 ```
 
-**Response:** `302 Redirect` to `/categories` with success message
+**Response:** `302 Redirect` to `/dashboard/categories` with success message
 
 **Note:** Soft delete. If category has associated posts, only admins can delete.
 
@@ -397,7 +403,7 @@ DELETE /categories/{category}
 GET /dashboard
 ```
 
-**Response:**
+**Response:** Inertia page (dashboard) with cached stats (5 minutes).
 ```json
 {
   "stats": {
@@ -443,7 +449,7 @@ GET /dashboard
 }
 ```
 
-**Cache:** Results are cached for 5 minutes
+**Cache:** Results are cached for 5 minutes.
 
 ### Images
 
@@ -456,14 +462,16 @@ POST /upload-image
 - `image` (file, required): Image file (max 5MB)
   - Allowed types: `jpeg`, `png`, `jpg`, `gif`, `webp`
 
-**Response:**
+**Response (JSON):**
 ```json
 {
   "imageUrl": "/storage/posts/images/2026/01/09/image-name.jpg"
 }
 ```
 
-**Rate Limit:** 5 requests per minute
+**Auth:** Requires `auth` + `verified` middleware.
+
+**Rate Limit:** 5 requests per minute.
 
 **Storage:** Images are stored in `storage/app/public/posts/images/`
 
@@ -489,8 +497,8 @@ Rate limits are applied to prevent abuse:
 |----------|-------|--------|
 | POST /posts | 10 requests | 1 minute |
 | PUT /posts/{post} | 10 requests | 1 minute |
-| POST /categories | 10 requests | 1 minute |
-| PUT /categories/{category} | 10 requests | 1 minute |
+| POST /dashboard/categories | 10 requests | 1 minute |
+| PUT /dashboard/categories/{category} | 10 requests | 1 minute |
 | GET /posts (search) | 30 requests | 1 minute |
 | POST /upload-image | 5 requests | 1 minute |
 
@@ -550,30 +558,39 @@ Rate limits are applied to prevent abuse:
 
 ## Examples
 
-### Create Post with Categories
-```javascript
-const response = await fetch('/posts', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-CSRF-TOKEN': csrfToken
-  },
-  body: JSON.stringify({
-    title: 'My New Post',
-    slug: 'my-new-post',
-    content: '<p>Post content</p>',
-    excerpt: 'Post excerpt',
-    published: true,
-    tags: ['laravel', 'php'],
-    categories: [1, 2]
-  })
+### Create Post (Inertia)
+
+Most mutations in this app return a **302 redirect** with flash messages (not JSON). Use Inertia's router:
+
+```tsx
+import { router } from '@inertiajs/react';
+
+router.post('/posts', {
+  title: 'My New Post',
+  slug: 'my-new-post',
+  content: '<p>Post content</p>',
+  excerpt: 'Post excerpt',
+  published: true,
+  tags: ['laravel', 'php'],
+  categories: [1, 2],
 });
 ```
 
-### Search Posts
-```javascript
-const response = await fetch('/posts?search=laravel&published=true&per_page=25');
-const data = await response.json();
+### Search / filter posts (Inertia)
+
+Filtering is typically done via **Inertia GET navigation** (server returns a page with updated props):
+
+```tsx
+import { router } from '@inertiajs/react';
+
+router.get('/posts', {
+  search: 'laravel',
+  published: true,
+  per_page: 25,
+}, {
+  preserveState: true,
+  replace: true,
+});
 ```
 
 ### Upload Image
