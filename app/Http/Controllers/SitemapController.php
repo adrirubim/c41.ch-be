@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
@@ -40,7 +42,8 @@ class SitemapController extends Controller
         foreach ($posts as $post) {
             $xml .= '  <url>'."\n";
             $xml .= '    <loc>'.htmlspecialchars($baseUrl.'/posts/'.$post->slug).'</loc>'."\n";
-            $xml .= '    <lastmod>'.$post->updated_at->toAtomString().'</lastmod>'."\n";
+            $lastMod = $post->updated_at?->toAtomString() ?? now()->toAtomString();
+            $xml .= '    <lastmod>'.$lastMod.'</lastmod>'."\n";
             $xml .= '    <changefreq>weekly</changefreq>'."\n";
             $xml .= '    <priority>0.8</priority>'."\n";
             $xml .= '  </url>'."\n";
@@ -50,7 +53,8 @@ class SitemapController extends Controller
         foreach ($categories as $category) {
             $xml .= '  <url>'."\n";
             $xml .= '    <loc>'.htmlspecialchars($baseUrl.'/categories/'.$category->slug).'</loc>'."\n";
-            $xml .= '    <lastmod>'.$category->updated_at->toAtomString().'</lastmod>'."\n";
+            $lastMod = $category->updated_at?->toAtomString() ?? now()->toAtomString();
+            $xml .= '    <lastmod>'.$lastMod.'</lastmod>'."\n";
             $xml .= '    <changefreq>weekly</changefreq>'."\n";
             $xml .= '    <priority>0.6</priority>'."\n";
             $xml .= '  </url>'."\n";

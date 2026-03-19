@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
@@ -46,15 +48,17 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $messageText = trim((string) $message);
+        $authorText = trim((string) $author);
 
-        // Obtener la URL base del subdirectorio
+        // Resolve the base URL path for subdirectory deployments.
         $appUrl = config('app.url');
         $basePath = parse_url($appUrl, PHP_URL_PATH) ?: '';
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'quote' => ['message' => $messageText, 'author' => $authorText],
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -64,7 +68,8 @@ class HandleInertiaRequests extends Middleware
                 'error' => $request->session()->get('error'),
                 'message' => $request->session()->get('message'),
             ],
-            'basePath' => $basePath, // Compartir el path base con el frontend
+            // Share base path with frontend route helpers.
+            'basePath' => $basePath,
         ];
     }
 }

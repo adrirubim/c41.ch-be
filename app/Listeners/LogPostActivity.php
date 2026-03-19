@@ -14,12 +14,13 @@ class LogPostActivity
      */
     public function handle(PostCreated|PostUpdated|PostDeleted $event): void
     {
-        $action = match (true) {
-            $event instanceof PostCreated => 'created',
-            $event instanceof PostUpdated => 'updated',
-            $event instanceof PostDeleted => 'deleted',
-            default => 'unknown',
-        };
+        if ($event instanceof PostCreated) {
+            $action = 'created';
+        } elseif ($event instanceof PostUpdated) {
+            $action = 'updated';
+        } else {
+            $action = 'deleted';
+        }
 
         Log::info("Post {$action}", [
             'post_id' => $event->post->id,

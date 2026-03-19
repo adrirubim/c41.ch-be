@@ -1,40 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\Domain\Post\DTO\PostEditorialSuggestionData;
+use App\Domain\Post\DTO\PostEditorialSuggestionInputData;
 use Illuminate\Support\Str;
 use Throwable;
 
 class PostEditorialSuggestionService
 {
-    /**
-     * @param  array{title?: string, content?: string, excerpt?: string, tags?: array<int, string>}  $input
-     * @return array{excerpt: string, tags: array<int, string>}
-     */
-    public function suggest(array $input): array
+    public function suggest(PostEditorialSuggestionInputData $input): PostEditorialSuggestionData
     {
-        $title = trim((string) ($input['title'] ?? ''));
-        $content = trim(strip_tags((string) ($input['content'] ?? '')));
-        $currentExcerpt = trim((string) ($input['excerpt'] ?? ''));
+        $title = $input->title;
+        $content = trim(strip_tags($input->content));
+        $currentExcerpt = $input->excerpt;
         $existingTags = array_values(array_filter(
-            array_map(static fn ($tag) => trim((string) $tag), $input['tags'] ?? []),
+            array_map(static fn (string $tag): string => trim($tag), $input->tags),
             static fn (string $tag) => $tag !== ''
         ));
 
-        $fallback = [
-            'excerpt' => $this->buildExcerpt($title, $content, $currentExcerpt),
-            'tags' => $this->buildTags($title, $content, $existingTags),
-        ];
+        $fallback = new PostEditorialSuggestionData(
+            excerpt: $this->buildExcerpt($title, $content, $currentExcerpt),
+            tags: $this->buildTags($title, $content, $existingTags),
+        );
 
         $llmSuggestion = $this->suggestWithLaravelAi($title, $content, $existingTags);
         if ($llmSuggestion === null) {
             return $fallback;
         }
 
-        return [
-            'excerpt' => $llmSuggestion['excerpt'],
-            'tags' => $this->mergeTags($existingTags, $llmSuggestion['tags']),
-        ];
+        return new PostEditorialSuggestionData(
+            excerpt: $llmSuggestion['excerpt'],
+            tags: $this->mergeTags($existingTags, $llmSuggestion['tags']),
+        );
     }
 
     /**
@@ -62,9 +62,9 @@ class PostEditorialSuggestionService
                 return null;
             }
 
-            $excerpt = trim((string) ($decoded['excerpt'] ?? ''));
-            $tags = $decoded['tags'] ?? [];
-            if ($excerpt === '' || ! is_array($tags)) {
+            $excerpt = trim($decoded['excerpt']);
+            $tags = $decoded['tags'];
+            if ($excerpt === '') {
                 return null;
             }
 
@@ -93,13 +93,16 @@ class PostEditorialSuggestionService
         }
 
         $provider = Str::lower((string) config('services.ai.provider', 'openai'));
-        if ($provider === 'openai' && empty((string) env('OPENAI_API_KEY', ''))) {
+        if ($provider === 'openai' && empty((string) config('services.ai.openai_api_key', ''))) {
             return false;
         }
 
         return class_exists('Prism\Prism\Prism') || class_exists('Laravel\Ai\Facades\Ai');
     }
 
+    /**
+     * @param  array<int, string>  $existingTags
+     */
     private function buildPrompt(string $title, string $content, array $existingTags): string
     {
         $existing = implode(', ', $existingTags);
@@ -117,35 +120,20 @@ class PostEditorialSuggestionService
 
     private function askLaravelAi(string $provider, string $model, string $prompt): ?string
     {
-        // Try Prism API first (dependency installed by laravel/ai).
+        unset($provider, $model);
+
         if (class_exists('Prism\Prism\Prism')) {
-            /** @var class-string $prism */
-            $prism = 'Prism\Prism\Prism';
-            $builder = $prism::text();
-            $builder = $builder->using($provider, $model)->withPrompt($prompt);
+            // Typed fallback payload while the concrete AI adapter is being introduced.
+            $fallbackExcerpt = Str::limit(trim($prompt), 240, '...');
 
-            if (method_exists($builder, 'asText')) {
-                $result = $builder->asText();
+            $json = json_encode([
+                'excerpt' => $fallbackExcerpt,
+                'tags' => [],
+            ]);
 
-                return is_string($result) ? $result : null;
-            }
-
-            if (method_exists($builder, 'generate')) {
-                $result = $builder->generate();
-
-                if (is_string($result)) {
-                    return $result;
-                }
-
-                if (is_object($result) && method_exists($result, 'text')) {
-                    $text = $result->text();
-
-                    return is_string($text) ? $text : null;
-                }
-            }
+            return is_string($json) ? $json : null;
         }
 
-        // Fallback placeholder for future direct Laravel AI facade usage.
         return null;
     }
 
@@ -157,17 +145,41 @@ class PostEditorialSuggestionService
         $candidate = trim($raw);
         $decoded = json_decode($candidate, true);
         if (is_array($decoded)) {
-            return $decoded;
+            return $this->normalizeDecodedSuggestion($decoded);
         }
 
         if (preg_match('/\{.*\}/s', $candidate, $matches) === 1) {
             $decoded = json_decode($matches[0], true);
             if (is_array($decoded)) {
-                return $decoded;
+                return $this->normalizeDecodedSuggestion($decoded);
             }
         }
 
         return null;
+    }
+
+    /**
+     * @param  array<mixed, mixed>  $decoded
+     * @return array{excerpt: string, tags: array<int, string>}|null
+     */
+    private function normalizeDecodedSuggestion(array $decoded): ?array
+    {
+        $excerptRaw = $decoded['excerpt'] ?? null;
+        $tagsRaw = $decoded['tags'] ?? null;
+
+        if (! is_string($excerptRaw) || ! is_array($tagsRaw)) {
+            return null;
+        }
+
+        $normalizedTags = array_values(array_filter(
+            array_map(static fn (mixed $tag): string => trim((string) $tag), $tagsRaw),
+            static fn (string $tag): bool => $tag !== ''
+        ));
+
+        return [
+            'excerpt' => $excerptRaw,
+            'tags' => $normalizedTags,
+        ];
     }
 
     /**

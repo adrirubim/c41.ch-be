@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Domain\Post\DTO\PostFiltersData;
 use App\Models\Category;
 use App\Models\Post;
 use App\Repositories\CategoryRepository;
@@ -22,16 +25,24 @@ class HomeController extends Controller
     public function index(): Response
     {
         // Get featured posts
-        $featuredPostsPaginator = $this->postRepository->getFiltered([
-            'published' => true,
-            'featured' => true,
-        ], 6);
+        $featuredFilters = PostFiltersData::fromRequestData(
+            filters: [
+                'published' => true,
+                'featured' => true,
+            ],
+            perPage: 6,
+        );
+        $featuredPostsPaginator = $this->postRepository->getFiltered($featuredFilters);
         $featuredPosts = $featuredPostsPaginator->items();
 
         // Get recent posts
-        $recentPostsPaginator = $this->postRepository->getFiltered([
-            'published' => true,
-        ], 6);
+        $recentFilters = PostFiltersData::fromRequestData(
+            filters: [
+                'published' => true,
+            ],
+            perPage: 6,
+        );
+        $recentPostsPaginator = $this->postRepository->getFiltered($recentFilters);
         $recentPosts = $recentPostsPaginator->items();
 
         // Get all categories with post counts (only published posts)

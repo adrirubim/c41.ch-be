@@ -338,3 +338,69 @@ This checklist is **mandatory** for all future commits and pull requests. Any vi
   - No manual overrides or "force merges" are allowed for lint or type-check failures.
   - Engineers are responsible for running these commands locally before opening or updating a PR.
 
+---
+
+## 16. Data Contracts & Immutability
+
+Data exchange between architectural layers must be explicit, immutable, and intention-revealing.
+
+- **No untyped array handoff for business workflows**:
+  - Controllers, Services, and Repositories must not pass ad-hoc associative arrays for core domain operations.
+  - Use dedicated DTOs per use case (for example filter DTOs, upsert DTOs, and command-style input DTOs).
+- **Immutable DTO standard**:
+  - DTOs in backend domain/application boundaries must be implemented as `readonly` value objects whenever applicable.
+  - DTO constructors and named factories must normalize and validate shape assumptions early (for example booleans, IDs, sort options, and nullable dates).
+- **Contract ownership**:
+  - Each DTO must expose explicit conversion methods (for example persistence mapping or view payload mapping) instead of leaking internal shape assumptions to callers.
+  - Cross-layer contracts must be stable and versioned through code review; breaking changes require coordinated updates across all consuming layers.
+
+This rule ensures predictable refactoring, minimizes hidden coupling, and improves static-analysis quality at PHPStan Level 8+.
+
+---
+
+## 17. Strict Typing Standards
+
+The backend codebase follows a strict typing baseline aligned with enterprise static analysis.
+
+- **`declare(strict_types=1)` is mandatory** in new and refactored PHP classes (Controllers, Services, Repositories, DTOs, domain utilities).
+- **Typed APIs by default**:
+  - Public methods must define precise parameter and return types.
+  - Iterable parameters and return values must declare value types via PHPDoc generics where native PHP typing is insufficient.
+- **Collection and paginator generics are required**:
+  - Use explicit PHPDoc templates for Eloquent collections and paginators (for example `Collection<int, Category>` and `LengthAwarePaginator<int, Post>`).
+- **Eloquent interoperability for static analysis**:
+  - Models must expose analyzer-friendly metadata (`@mixin` and typed relationships) so static tools can safely resolve query methods and static model factories.
+- **Nullability is explicit**:
+  - Methods returning framework values that may be nullable (for example model refresh operations) must normalize before downstream usage.
+  - Event dispatch payloads must never rely on nullable model states.
+
+Strict typing is a non-negotiable quality gate and must be preserved in every incremental refactor.
+
+---
+
+## 18. Modern Stack (Laravel 13 & AI)
+
+The project must use native Laravel 13 capabilities before introducing custom alternatives.
+
+- **Caching strategy**:
+  - Prefer Laravel-native stale-while-revalidate semantics through `Cache::flexible(...)` for read-heavy datasets where eventual freshness is acceptable.
+  - Reserve manual cache orchestration patterns for exceptional cases that cannot be expressed by framework primitives.
+- **Framework-first approach**:
+  - Prefer native Eloquent, validation, policy, queue, event, and caching features over hand-rolled implementations.
+  - Any custom implementation that replaces an available Laravel 13 primitive requires documented architectural rationale.
+- **AI integration guardrails**:
+  - AI-assisted workflows must remain behind explicit service boundaries with typed input/output contracts.
+  - Fallback behavior must be deterministic and safe when providers are unavailable.
+  - Configuration values must come from `config(...)` accessors (never direct `env(...)` calls in services).
+- **Operational reliability**:
+  - New AI and cache paths must be observable, testable, and safe under static analysis constraints.
+  - Refactors that introduce modern stack features must preserve compatibility with CI checks and quality gates.
+- **Model attribute metadata (Laravel 13 analyzer support)**:
+  - Avoid legacy `protected $fillable` / `protected $casts` in `app/Models`.
+  - Prefer the attribute-based configuration via:
+    - `#[Fillable([...])]` and `#[Cast([...])]` (implemented in `app/Infrastructure/Eloquent/Attributes/*`)
+    - `HasModelAttributes` trait (implemented in `app/Infrastructure/Eloquent/Concerns/HasModelAttributes.php`) to apply those attributes to Eloquent mass-assignment and casting metadata.
+  - This keeps model intent explicit and aligned with PHPStan Level 8 static-analysis expectations.
+
+These rules ensure that c41.ch-be maximizes Laravel 13 and AI capabilities without sacrificing maintainability, type safety, or production reliability.
+

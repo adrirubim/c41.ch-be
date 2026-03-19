@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\Domain\Category\DTO\CategoryUpsertData;
 use App\Events\CategoryCreated;
 use App\Events\CategoryDeleted;
 use App\Events\CategoryUpdated;
@@ -18,26 +21,35 @@ class CategoryService
 
     /**
      * Get all categories
+     *
+     * @return Collection<int, Category>
      */
     public function getAll(): Collection
     {
-        return Cache::remember('categories.list', 600, function () {
+        return Cache::flexible('categories.list', [300, 600], function () {
             return $this->repository->getAll();
         });
     }
 
     /**
      * Get categories with post count
+     *
+     * @return Collection<int, Category>
      */
     public function getAllWithPostCount(): Collection
     {
-        return $this->repository->getAllWithPostCount();
+        /** @var Collection<int, Category> $categories */
+        $categories = Cache::flexible('categories.with_post_count', [300, 600], function (): Collection {
+            return $this->repository->getAllWithPostCount();
+        });
+
+        return $categories;
     }
 
     /**
      * Create a new category
      */
-    public function create(array $data): Category
+    public function create(CategoryUpsertData $data): Category
     {
         $category = $this->repository->create($data);
 
@@ -53,13 +65,14 @@ class CategoryService
     /**
      * Update a category
      */
-    public function update(Category $category, array $data): bool
+    public function update(Category $category, CategoryUpsertData $data): bool
     {
         $updated = $this->repository->update($category, $data);
 
         // Trigger event
         if ($updated) {
-            event(new CategoryUpdated($category->fresh()));
+            $category->refresh();
+            event(new CategoryUpdated($category));
             $this->clearCache();
         }
 

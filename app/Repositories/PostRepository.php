@@ -1,63 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
+use App\Domain\Post\DTO\PostFiltersData;
+use App\Domain\Post\DTO\PostUpsertData;
 use App\Models\Post;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostRepository
 {
     /**
      * Retrieve posts applying filters and pagination.
+     *
+     * @return LengthAwarePaginator<int, Post>
      */
-    public function getFiltered(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    public function getFiltered(PostFiltersData $filters): LengthAwarePaginator
     {
+        /** @var Builder<Post> $query */
         $query = Post::with(['user', 'categories'])->withoutTrashed();
 
         // Search
-        if (! empty($filters['search'])) {
-            $this->applyHybridSearch($query, (string) $filters['search'], $filters);
+        if ($filters->search !== null) {
+            $this->applyHybridSearch($query, $filters->search, $filters);
         }
 
         // Filter by category
-        if (! empty($filters['category'])) {
-            $query->whereHas('categories', function ($q) use ($filters) {
-                $q->where('categories.id', $filters['category']);
+        if ($filters->categoryId !== null) {
+            $query->whereHas('categories', function (Builder $q) use ($filters): void {
+                $q->where('categories.id', $filters->categoryId);
             });
         }
 
-        // Filtro por estado publicado
-        if (isset($filters['published']) && $filters['published'] !== null) {
-            $published = $filters['published'];
-            if (is_string($published)) {
-                $published = $published === 'true' || $published === '1';
-            }
-            $query->where('published', (bool) $published);
+        if ($filters->published !== null) {
+            $query->where('published', $filters->published);
         }
 
-        // Filtro por destacado
-        if (isset($filters['featured']) && $filters['featured'] !== null && $filters['featured'] !== '') {
-            $featured = $filters['featured'];
-            if (is_string($featured)) {
-                $featured = $featured === 'true' || $featured === '1';
-            }
-            $query->where('featured', (bool) $featured);
+        if ($filters->featured !== null) {
+            $query->where('featured', $filters->featured);
         }
 
-        // Ordenamiento
-        $sortBy = $filters['sort_by'] ?? 'created_at';
-        $sortOrder = $filters['sort_order'] ?? 'desc';
-        $query->orderBy($sortBy, $sortOrder);
+        $query->orderBy($filters->sortBy, $filters->sortOrder);
 
-        // Validar per_page
-        $perPage = in_array($perPage, [15, 25, 50, 100]) ? $perPage : 15;
-
-        return $query->paginate($perPage)->withQueryString();
+        return $query->paginate($filters->perPage)->withQueryString();
     }
 
-    private function applyHybridSearch(Builder $query, string $searchTerm, array $filters): void
+    /**
+     * @param  Builder<Post>  $query
+     */
+    private function applyHybridSearch(Builder $query, string $searchTerm, PostFiltersData $filters): void
     {
         $normalizedTerm = trim($searchTerm);
         if ($normalizedTerm === '') {
@@ -70,7 +64,7 @@ class PostRepository
             // Hybrid strategy: semantic first; if no candidates, fallback to LIKE.
             if ($semanticIds !== []) {
                 $query->whereIn('posts.id', $semanticIds);
-                $query->orderByRaw($this->buildIdPriorityOrderSql($semanticIds));
+                $query->orderByDesc('published_at')->orderByDesc('created_at');
 
                 return;
             }
@@ -79,27 +73,33 @@ class PostRepository
         $this->applyLikeSearch($query, $normalizedTerm);
     }
 
+    /**
+     * @param  Builder<Post>  $query
+     */
     private function canUseSemanticSearch(Builder $query): bool
     {
         $isHybridEnabled = (bool) config('services.search.hybrid_enabled', false);
         $isSemanticEnabled = (bool) config('services.search.semantic_enabled', false);
-        $driverName = $query->getConnection()->getDriverName();
+        $driverName = $query->getModel()->getConnection()->getDriverName();
 
         return $isHybridEnabled && $isSemanticEnabled && $driverName === 'pgsql';
     }
 
+    /**
+     * @param  Builder<Post>  $query
+     */
     private function applyLikeSearch(Builder $query, string $searchTerm): void
     {
-        $query->where(function ($q) use ($searchTerm) {
+        $query->where(function (Builder $q) use ($searchTerm): void {
             $q->where('title', 'like', '%'.$searchTerm.'%')
                 ->orWhere('content', 'like', '%'.$searchTerm.'%')
                 ->orWhere('excerpt', 'like', '%'.$searchTerm.'%')
                 ->orWhere('slug', 'like', '%'.$searchTerm.'%')
                 ->orWhereJsonContains('tags', $searchTerm)
-                ->orWhereHas('categories', function ($catQuery) use ($searchTerm) {
+                ->orWhereHas('categories', function (Builder $catQuery) use ($searchTerm): void {
                     $catQuery->where('name', 'like', '%'.$searchTerm.'%');
                 })
-                ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                ->orWhereHas('user', function (Builder $userQuery) use ($searchTerm): void {
                     $userQuery->where('name', 'like', '%'.$searchTerm.'%')
                         ->orWhere('email', 'like', '%'.$searchTerm.'%');
                 });
@@ -109,40 +109,36 @@ class PostRepository
     /**
      * @return array<int, int>
      */
-    private function getSemanticCandidateIds(string $searchTerm, array $filters): array
+    private function getSemanticCandidateIds(string $searchTerm, PostFiltersData $filters): array
     {
-        $ftsVector = "to_tsvector('simple', coalesce(posts.title,'') || ' ' || coalesce(posts.excerpt,'') || ' ' || coalesce(posts.content,''))";
-        $ftsQuery = "plainto_tsquery('simple', ?)";
-
+        /** @var Builder<Post> $semanticQuery */
         $semanticQuery = Post::query()
             ->select('posts.id')
             ->withoutTrashed()
-            ->whereRaw("{$ftsVector} @@ {$ftsQuery}", [$searchTerm]);
+            ->whereRaw(
+                "to_tsvector('simple', coalesce(posts.title,'') || ' ' || coalesce(posts.excerpt,'') || ' ' || coalesce(posts.content,'')) @@ plainto_tsquery('simple', ?)",
+                [$searchTerm]
+            );
 
-        if (isset($filters['published']) && $filters['published'] !== null) {
-            $published = $filters['published'];
-            if (is_string($published)) {
-                $published = $published === 'true' || $published === '1';
-            }
-            $semanticQuery->where('posts.published', (bool) $published);
+        if ($filters->published !== null) {
+            $semanticQuery->where('posts.published', $filters->published);
         }
 
-        if (! empty($filters['category'])) {
-            $semanticQuery->whereHas('categories', function ($q) use ($filters) {
-                $q->where('categories.id', $filters['category']);
+        if ($filters->categoryId !== null) {
+            $semanticQuery->whereHas('categories', function (Builder $q) use ($filters): void {
+                $q->where('categories.id', $filters->categoryId);
             });
         }
 
-        if (isset($filters['featured']) && $filters['featured'] !== null && $filters['featured'] !== '') {
-            $featured = $filters['featured'];
-            if (is_string($featured)) {
-                $featured = $featured === 'true' || $featured === '1';
-            }
-            $semanticQuery->where('posts.featured', (bool) $featured);
+        if ($filters->featured !== null) {
+            $semanticQuery->where('posts.featured', $filters->featured);
         }
 
         return $semanticQuery
-            ->orderByRaw("ts_rank({$ftsVector}, {$ftsQuery}) desc", [$searchTerm])
+            ->orderByRaw(
+                "ts_rank(to_tsvector('simple', coalesce(posts.title,'') || ' ' || coalesce(posts.excerpt,'') || ' ' || coalesce(posts.content,'')), plainto_tsquery('simple', ?)) desc",
+                [$searchTerm]
+            )
             ->limit(150)
             ->pluck('posts.id')
             ->map(static fn ($id) => (int) $id)
@@ -150,25 +146,7 @@ class PostRepository
     }
 
     /**
-     * Build deterministic ranking order from semantic candidate IDs.
-     *
-     * @param  array<int, int>  $ids
-     */
-    private function buildIdPriorityOrderSql(array $ids): string
-    {
-        $cases = [];
-        foreach ($ids as $position => $id) {
-            $rank = $position + 1;
-            $cases[] = "when {$id} then {$rank}";
-        }
-
-        $fallbackRank = count($ids) + 1;
-
-        return 'case posts.id '.implode(' ', $cases)." else {$fallbackRank} end";
-    }
-
-    /**
-     * Obtener un post por ID con relaciones
+     * Retrieve a post by ID with related user and categories.
      */
     public function findById(int $id): ?Post
     {
@@ -176,7 +154,7 @@ class PostRepository
     }
 
     /**
-     * Obtener un post por slug con relaciones
+     * Retrieve a post by slug with related user and categories.
      */
     public function findBySlug(string $slug): ?Post
     {
@@ -184,31 +162,33 @@ class PostRepository
     }
 
     /**
-     * Crear un nuevo post
+     * Create a new post.
      */
-    public function create(array $data): Post
+    public function create(PostUpsertData $data): Post
     {
-        return Post::create($data);
+        return Post::create($data->toPersistenceArray());
     }
 
     /**
-     * Actualizar un post
+     * Update a post.
      */
-    public function update(Post $post, array $data): bool
+    public function update(Post $post, PostUpsertData $data): bool
     {
-        return $post->update($data);
+        return $post->update($data->toPersistenceArray());
     }
 
     /**
-     * Eliminar un post (soft delete)
+     * Soft delete a post.
      */
     public function delete(Post $post): bool
     {
-        return $post->delete();
+        return (bool) $post->delete();
     }
 
     /**
-     * Obtener posts recientes
+     * Get recent posts.
+     *
+     * @return Collection<int, Post>
      */
     public function getRecent(int $limit = 5): Collection
     {
@@ -225,6 +205,8 @@ class PostRepository
 
     /**
      * Get popular posts
+     *
+     * @return Collection<int, Post>
      */
     public function getPopular(int $limit = 5): Collection
     {

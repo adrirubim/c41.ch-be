@@ -14,12 +14,13 @@ class LogCategoryActivity
      */
     public function handle(CategoryCreated|CategoryUpdated|CategoryDeleted $event): void
     {
-        $action = match (true) {
-            $event instanceof CategoryCreated => 'created',
-            $event instanceof CategoryUpdated => 'updated',
-            $event instanceof CategoryDeleted => 'deleted',
-            default => 'unknown',
-        };
+        if ($event instanceof CategoryCreated) {
+            $action = 'created';
+        } elseif ($event instanceof CategoryUpdated) {
+            $action = 'updated';
+        } else {
+            $action = 'deleted';
+        }
 
         Log::info("Category {$action}", [
             'category_id' => $event->category->id,

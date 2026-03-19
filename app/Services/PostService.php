@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
+use App\Domain\Post\DTO\PostFiltersData;
+use App\Domain\Post\DTO\PostUpsertData;
 use App\Events\PostCreated;
 use App\Events\PostDeleted;
 use App\Events\PostUpdated;
 use App\Models\Post;
 use App\Repositories\PostRepository;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 
 class PostService
@@ -18,16 +23,20 @@ class PostService
 
     /**
      * Get posts with filters
+     *
+     * @return LengthAwarePaginator<int, Post>
      */
-    public function getFiltered(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    public function getFiltered(PostFiltersData $filters): LengthAwarePaginator
     {
-        return $this->repository->getFiltered($filters, $perPage);
+        return $this->repository->getFiltered($filters);
     }
 
     /**
      * Create a new post
+     *
+     * @param  array<int, int>|null  $categoryIds
      */
-    public function create(array $data, ?array $categoryIds = null): Post
+    public function create(PostUpsertData $data, ?array $categoryIds = null): Post
     {
         $post = $this->repository->create($data);
 
@@ -47,8 +56,10 @@ class PostService
 
     /**
      * Update a post
+     *
+     * @param  array<int, int>|null  $categoryIds
      */
-    public function update(Post $post, array $data, ?array $categoryIds = null): bool
+    public function update(Post $post, PostUpsertData $data, ?array $categoryIds = null): bool
     {
         $updated = $this->repository->update($post, $data);
 
@@ -63,7 +74,8 @@ class PostService
 
         // Trigger event
         if ($updated) {
-            event(new PostUpdated($post->fresh()));
+            $post->refresh();
+            event(new PostUpdated($post));
             $this->clearCache();
         }
 
@@ -104,18 +116,32 @@ class PostService
 
     /**
      * Get recent posts
+     *
+     * @return Collection<int, Post>
      */
-    public function getRecent(int $limit = 5)
+    public function getRecent(int $limit = 5): Collection
     {
-        return $this->repository->getRecent($limit);
+        /** @var Collection<int, Post> $posts */
+        $posts = Cache::flexible('dashboard.recent_posts', [300, 600], function () use ($limit): Collection {
+            return $this->repository->getRecent($limit);
+        });
+
+        return $posts;
     }
 
     /**
      * Get popular posts
+     *
+     * @return Collection<int, Post>
      */
-    public function getPopular(int $limit = 5)
+    public function getPopular(int $limit = 5): Collection
     {
-        return $this->repository->getPopular($limit);
+        /** @var Collection<int, Post> $posts */
+        $posts = Cache::flexible('dashboard.popular_posts', [300, 600], function () use ($limit): Collection {
+            return $this->repository->getPopular($limit);
+        });
+
+        return $posts;
     }
 
     /**

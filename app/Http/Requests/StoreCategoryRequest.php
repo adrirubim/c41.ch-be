@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -14,7 +15,12 @@ class StoreCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Category::class);
+        $user = $this->user();
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        return $user->can('create', Category::class);
     }
 
     /**

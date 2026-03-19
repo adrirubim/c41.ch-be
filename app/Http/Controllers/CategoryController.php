@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Domain\Category\DTO\CategoryUpsertData;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
@@ -45,8 +48,8 @@ class CategoryController extends Controller
     {
         $this->authorize('create', Category::class);
 
-        $validated = $request->validated();
-        $this->categoryService->create($validated);
+        $categoryData = CategoryUpsertData::fromValidated($request->validated());
+        $this->categoryService->create($categoryData);
 
         return redirect()->route('categories.index')
             ->with('success', 'Category created successfully.');
@@ -80,8 +83,8 @@ class CategoryController extends Controller
     {
         $this->authorize('update', $category);
 
-        $validated = $request->validated();
-        $this->categoryService->update($category, $validated);
+        $categoryData = CategoryUpsertData::fromValidated($request->validated());
+        $this->categoryService->update($category, $categoryData);
 
         return redirect()->route('categories.index')
             ->with('success', 'Category updated successfully.');

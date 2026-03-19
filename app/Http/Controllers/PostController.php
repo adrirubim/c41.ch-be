@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Domain\Post\DTO\PostFiltersData;
+use App\Domain\Post\DTO\PostEditorialSuggestionInputData;
+use App\Domain\Post\DTO\PostUpsertData;
+use App\Http\Requests\PostEditorialSuggestionRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Http\Requests\PostEditorialSuggestionRequest;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\CategoryService;
@@ -31,16 +36,18 @@ class PostController extends Controller
      */
     public function index(Request $request): Response
     {
-        $filters = $request->only(['search', 'category', 'published', 'featured', 'sort_by', 'sort_order']);
-        $perPage = $request->get('per_page', 15);
+        $postFilters = PostFiltersData::fromRequestData(
+            $request->only(['search', 'category', 'published', 'featured', 'sort_by', 'sort_order']),
+            $request->input('per_page', 15)
+        );
 
-        $posts = $this->postService->getFiltered($filters, $perPage);
+        $posts = $this->postService->getFiltered($postFilters);
         $categories = $this->categoryService->getAll();
 
         return Inertia::render('posts/index', [
             'posts' => $posts,
             'categories' => $categories,
-            'filters' => array_merge($filters, ['per_page' => $perPage]),
+            'filters' => $postFilters->toViewArray(),
         ]);
     }
 
@@ -49,13 +56,18 @@ class PostController extends Controller
      */
     public function create(Request $request): Response
     {
+        $user = $request->user();
+        if ($user === null) {
+            abort(401);
+        }
+
         $categories = $this->categoryService->getAll();
         $users = User::select('id', 'name', 'email')->get();
 
         return Inertia::render('posts/create', [
             'categories' => $categories,
             'users' => $users,
-            'defaultUserId' => $request->user()->id,
+            'defaultUserId' => $user->id,
         ]);
     }
 
@@ -64,23 +76,24 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request): RedirectResponse
     {
+        $user = $request->user();
+        if ($user === null) {
+            abort(401);
+        }
+
         $validated = $request->validated();
+        $postData = PostUpsertData::fromValidated(
+            validated: $validated,
+            defaultUserId: $user->id,
+            clearPublishedAtWhenUnpublished: false,
+        );
 
-        // If user_id is not specified, use the authenticated user
-        if (empty($validated['user_id'] ?? null)) {
-            $validated['user_id'] = $request->user()->id;
-        }
-
-        // If published but no date, use now
-        if (($validated['published'] ?? false) && empty($validated['published_at'] ?? null)) {
-            $validated['published_at'] = now();
-        }
-
-        $categoryIds = $request->has('categories') ? $request->categories : null;
-        $this->postService->create($validated, $categoryIds);
+        /** @var array<int, int>|null $categoryIds */
+        $categoryIds = $request->has('categories') ? $request->input('categories') : null;
+        $this->postService->create($postData, $categoryIds);
 
         return redirect()->route('posts.index')
-            ->with('success', 'Post creado exitosamente.');
+            ->with('success', 'Post created successfully.');
     }
 
     /**
@@ -102,6 +115,11 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
+        $user = $request->user();
+        if ($user === null) {
+            abort(401);
+        }
+
         $post->load('categories');
         $categories = $this->categoryService->getAll();
         $users = User::select('id', 'name', 'email')->get();
@@ -110,7 +128,7 @@ class PostController extends Controller
             'post' => $post,
             'categories' => $categories,
             'users' => $users,
-            'defaultUserId' => $request->user()->id,
+            'defaultUserId' => $user->id,
         ]);
     }
 
@@ -121,28 +139,24 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
+        $user = $request->user();
+        if ($user === null) {
+            abort(401);
+        }
+
         $validated = $request->validated();
+        $postData = PostUpsertData::fromValidated(
+            validated: $validated,
+            defaultUserId: $user->id,
+            clearPublishedAtWhenUnpublished: true,
+        );
 
-        // If user_id is not specified, use the authenticated user
-        if (empty($validated['user_id'] ?? null)) {
-            $validated['user_id'] = $request->user()->id;
-        }
-
-        // If published but no date, use now
-        if (($validated['published'] ?? false) && empty($validated['published_at'] ?? null)) {
-            $validated['published_at'] = now();
-        }
-
-        // If unpublished, clear date
-        if (! ($validated['published'] ?? false)) {
-            $validated['published_at'] = null;
-        }
-
-        $categoryIds = $request->has('categories') ? $request->categories : [];
-        $this->postService->update($post, $validated, $categoryIds);
+        /** @var array<int, int> $categoryIds */
+        $categoryIds = $request->has('categories') ? $request->input('categories', []) : [];
+        $this->postService->update($post, $postData, $categoryIds);
 
         return redirect()->route('posts.index')
-            ->with('success', 'Post actualizado exitosamente.');
+            ->with('success', 'Post updated successfully.');
     }
 
     /**
@@ -155,7 +169,7 @@ class PostController extends Controller
         $this->postService->delete($post);
 
         return redirect()->route('posts.index')
-            ->with('success', 'Post eliminado exitosamente.');
+            ->with('success', 'Post deleted successfully.');
     }
 
     public function editorialSuggestions(
@@ -176,7 +190,8 @@ class PostController extends Controller
             ], 503);
         }
 
-        if ($isAdminOnly && ! (bool) ($user?->is_admin ?? false)) {
+        $isAdmin = $user !== null && $user->is_admin === true;
+        if ($isAdminOnly && ! $isAdmin) {
             Log::warning('ai_editorial_suggestions_forbidden', [
                 'user_id' => $user?->id,
                 'request_id' => app()->bound('request_id') ? app('request_id') : null,
@@ -187,11 +202,11 @@ class PostController extends Controller
             ], 403);
         }
 
-        $payload = $request->validated();
-        $promptChars = strlen((string) ($payload['title'] ?? '')).'|'.strlen((string) ($payload['content'] ?? ''));
+        $input = PostEditorialSuggestionInputData::fromValidated($request->validated());
+        $promptChars = strlen($input->title).'|'.strlen($input->content);
 
         try {
-            $suggestions = $this->editorialSuggestionService->suggest($payload);
+            $suggestions = $this->editorialSuggestionService->suggest($input);
         } catch (Throwable $exception) {
             Log::error('ai_editorial_suggestions_failed', [
                 'user_id' => $user?->id,
@@ -205,8 +220,8 @@ class PostController extends Controller
             return response()->json([
                 'message' => 'AI assistant is temporarily unavailable. Continue in manual mode.',
                 'data' => [
-                    'excerpt' => (string) ($payload['excerpt'] ?? ''),
-                    'tags' => $payload['tags'] ?? [],
+                    'excerpt' => $input->excerpt,
+                    'tags' => $input->tags,
                 ],
             ]);
         }
@@ -216,14 +231,14 @@ class PostController extends Controller
             'request_id' => app()->bound('request_id') ? app('request_id') : null,
             'latency_ms' => (int) round((microtime(true) - $startedAt) * 1000),
             'prompt_sizes' => $promptChars,
-            'suggested_tags_count' => count($suggestions['tags'] ?? []),
+            'suggested_tags_count' => count($suggestions->tags),
             // Rough estimator only; avoid persisting prompt content.
-            'estimated_tokens' => (int) ceil((strlen((string) ($payload['title'] ?? '')).strlen((string) ($payload['content'] ?? ''))) / 4),
+            'estimated_tokens' => (int) ceil((strlen($input->title).strlen($input->content)) / 4),
         ]);
 
         return response()->json([
             'message' => 'Suggestions generated successfully.',
-            'data' => $suggestions,
+            'data' => $suggestions->toArray(),
         ]);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -14,7 +16,17 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('post'));
+        $user = $this->user();
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        $post = $this->route('post');
+        if (! $post instanceof Post) {
+            return false;
+        }
+
+        return $user->can('update', $post);
     }
 
     /**

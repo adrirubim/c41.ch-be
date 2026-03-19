@@ -6,6 +6,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Models\User;
+use App\Models\Category;
 
 class UpdateCategoryRequest extends FormRequest
 {
@@ -14,7 +16,19 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('category'));
+        $user = $this->user();
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        /** @var Category|null $category */
+        $category = $this->route('category');
+
+        if ($category === null) {
+            return false;
+        }
+
+        return $user->can('update', $category);
     }
 
     /**

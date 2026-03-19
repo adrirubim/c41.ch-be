@@ -58,7 +58,7 @@ export function useToast() {
     }, []);
 
     useEffect(() => {
-        // Check if there are any flash messages
+        // Check if there are flash messages
         const success = typeof flash?.success === 'string' ? flash.success : undefined;
         const error = typeof flash?.error === 'string' ? flash.error : undefined;
         const message =

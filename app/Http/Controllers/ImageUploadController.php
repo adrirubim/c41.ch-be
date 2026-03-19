@@ -22,6 +22,13 @@ class ImageUploadController extends Controller
         $filename = Str::uuid().'.'.$file->getClientOriginalExtension();
         $path = $file->storeAs('posts/images', $filename, 'public');
 
+        if ($path === false) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Image upload failed.',
+            ], 500);
+        }
+
         $url = Storage::disk('public')->url($path);
 
         return response()->json([

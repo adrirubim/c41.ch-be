@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
+use App\Models\User;
 use App\Models\Post;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -13,7 +16,12 @@ class PostEditorialSuggestionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Post::class);
+        $user = $this->user();
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        return $user->can('create', Post::class);
     }
 
     /**

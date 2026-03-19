@@ -50,7 +50,8 @@ class CategoryPolicy
     {
         // Check if category has associated posts
         // If it has posts, only administrators can delete it
-        $hasPosts = $category->posts()->withoutTrashed()->exists();
+        // phpstan cannot infer `withoutTrashed()` availability on BelongsToMany here.
+        $hasPosts = $category->posts()->whereNull('posts.deleted_at')->exists();
 
         if ($hasPosts) {
             return $this->isAdmin($user);

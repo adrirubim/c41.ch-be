@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Domain\Post\DTO\PostFiltersData;
 use App\Models\Post;
 use App\Repositories\CategoryRepository;
 use App\Repositories\PostRepository;
@@ -21,23 +24,25 @@ class PublicPostController extends Controller
      */
     public function index(Request $request): Response
     {
-        $filters = [
-            'published' => true, // Only published posts
-            'search' => $request->get('search'),
-            'category' => $request->get('category'),
-            'featured' => $request->get('featured'),
-            'sort_by' => $request->get('sort_by', 'published_at'),
-            'sort_order' => $request->get('sort_order', 'desc'),
-        ];
-
         $perPage = $request->get('per_page', 12);
-        $posts = $this->postRepository->getFiltered($filters, $perPage);
+        $postFilters = PostFiltersData::fromRequestData(
+            filters: [
+                'published' => true,
+                'search' => $request->get('search'),
+                'category' => $request->get('category'),
+                'featured' => $request->get('featured'),
+                'sort_by' => $request->get('sort_by', 'published_at'),
+                'sort_order' => $request->get('sort_order', 'desc'),
+            ],
+            perPage: $perPage,
+        );
+        $posts = $this->postRepository->getFiltered($postFilters);
         $categories = $this->categoryRepository->getAll();
 
         return Inertia::render('public/blog', [
             'posts' => $posts,
             'categories' => $categories,
-            'filters' => array_merge($filters, ['per_page' => $perPage]),
+            'filters' => $postFilters->toViewArray(),
         ]);
     }
 

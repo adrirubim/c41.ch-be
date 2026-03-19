@@ -1,30 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Infrastructure\Eloquent\Attributes\Cast;
+use App\Infrastructure\Eloquent\Attributes\Fillable;
+use App\Infrastructure\Eloquent\Concerns\HasModelAttributes;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'is_admin',
+])]
+#[Cast([
+    'email_verified_at' => 'datetime',
+    'password' => 'hashed',
+    'two_factor_confirmed_at' => 'datetime',
+    'is_admin' => 'boolean',
+])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'is_admin',
-    ];
+    use HasFactory, HasModelAttributes, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -39,24 +45,12 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * HasMany relationship with posts.
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'two_factor_confirmed_at' => 'datetime',
-            'is_admin' => 'boolean',
-        ];
-    }
-
     /**
-     * hasMany relationship with posts.
+     * @return HasMany<Post, $this>
      */
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }

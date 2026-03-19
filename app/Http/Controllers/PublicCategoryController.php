@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Domain\Post\DTO\PostFiltersData;
 use App\Repositories\CategoryRepository;
 use App\Repositories\PostRepository;
 use Illuminate\Http\Request;
@@ -41,23 +44,25 @@ class PublicCategoryController extends Controller
             abort(404);
         }
 
-        $filters = [
-            'published' => true,
-            'category' => $category->id,
-            'search' => $request->get('search'),
-            'sort_by' => $request->get('sort_by', 'published_at'),
-            'sort_order' => $request->get('sort_order', 'desc'),
-        ];
-
         $perPage = $request->get('per_page', 12);
-        $posts = $this->postRepository->getFiltered($filters, $perPage);
+        $postFilters = PostFiltersData::fromRequestData(
+            filters: [
+                'published' => true,
+                'category' => $category->id,
+                'search' => $request->get('search'),
+                'sort_by' => $request->get('sort_by', 'published_at'),
+                'sort_order' => $request->get('sort_order', 'desc'),
+            ],
+            perPage: $perPage,
+        );
+        $posts = $this->postRepository->getFiltered($postFilters);
         $categories = $this->categoryRepository->getAll();
 
         return Inertia::render('public/category', [
             'category' => $category,
             'posts' => $posts,
             'categories' => $categories,
-            'filters' => array_merge($filters, ['per_page' => $perPage]),
+            'filters' => $postFilters->toViewArray(),
         ]);
     }
 }
