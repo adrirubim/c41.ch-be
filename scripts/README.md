@@ -11,6 +11,18 @@ Helper scripts for deployment and maintenance in environments with limited acces
   ./scripts/update-license-year.sh
   ```
 
+## Local quality gate
+
+- **`dev-verify.sh`** — Runs the local quality gate for `c41.ch-be`:
+
+  ```bash
+  # SQLite (default phpunit.xml)
+  ./scripts/dev-verify.sh
+
+  # SQLite + PostgreSQL (ephemeral Docker, like CI)
+  USE_PG_FOR_TESTS=1 ./scripts/dev-verify.sh
+  ```
+
 ## Local development usage
 
 For local development, prefer the standard Artisan commands:
