@@ -328,6 +328,39 @@ DELETE /posts/{post}
 
 **Note:** Soft delete. Only post owner or admin can delete.
 
+#### Get Editorial Suggestions (AI-assisted)
+```
+POST /posts/editorial-suggestions
+```
+
+**Auth:** Requires `auth` + `verified`.
+
+**Request Body:**
+```json
+{
+  "title": "Post title",
+  "content": "<p>Post body</p>",
+  "excerpt": "Optional existing excerpt",
+  "tags": ["optional", "existing", "tags"]
+}
+```
+
+**Response (200):**
+```json
+{
+  "message": "Suggestions generated successfully.",
+  "data": {
+    "excerpt": "Generated concise excerpt...",
+    "tags": ["Laravel", "CMS", "Editorial"]
+  }
+}
+```
+
+**Guardrails:**
+- `AI_ENABLED=false` → `503` (safe fallback message)
+- `AI_EDITORIAL_ADMIN_ONLY=true` + non-admin user → `403`
+- Dedicated limiter `ai-editorial` can return `429`
+
 ### Categories
 
 > Note: authenticated category management lives under the `dashboard` prefix to avoid clashing with public `/categories/{slug}` routes.
@@ -471,7 +504,7 @@ POST /upload-image
 
 **Auth:** Requires `auth` + `verified` middleware.
 
-**Rate Limit:** 5 requests per minute.
+**Rate Limit:** 10 requests per minute.
 
 **Storage:** Images are stored in `storage/app/public/posts/images/`
 
@@ -497,10 +530,11 @@ Rate limits are applied to prevent abuse:
 |----------|-------|--------|
 | POST /posts | 10 requests | 1 minute |
 | PUT /posts/{post} | 10 requests | 1 minute |
-| POST /dashboard/categories | 10 requests | 1 minute |
-| PUT /dashboard/categories/{category} | 10 requests | 1 minute |
+| POST /posts/editorial-suggestions | Configurable (`AI_EDITORIAL_RATE_LIMIT_ATTEMPTS`, default 6) | 1 minute |
+| POST /dashboard/categories | 5 requests | 1 minute |
+| PUT /dashboard/categories/{category} | 5 requests | 1 minute |
 | GET /posts (search) | 30 requests | 1 minute |
-| POST /upload-image | 5 requests | 1 minute |
+| POST /upload-image | 10 requests | 1 minute |
 
 **Response when rate limited:**
 - Status Code: `429 Too Many Requests`

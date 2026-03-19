@@ -18,7 +18,7 @@ Please read this guide and the main `README` before opening pull requests.
 - **Backend (PHP):** PSR-12, Laravel conventions, Laravel Pint.
 - **Frontend:** TypeScript, ESLint, Prettier.
 - **Tests:** Write or update tests for new features and bug fixes.
-- **Docs:** Keep code comments and docblocks in English.
+- **Docs:** All repository documentation, code comments, and docblocks must be written in professional English.
 
 ---
 

@@ -79,13 +79,16 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureRateLimiting(): void
     {
         RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+            $twoFactorAttempts = (int) config('fortify.two_factor_rate_limit_attempts', 5);
+
+            return Limit::perMinute($twoFactorAttempts)->by($request->session()->get('login.id'));
         });
 
         RateLimiter::for('login', function (Request $request) {
+            $loginAttempts = (int) config('fortify.login_rate_limit_attempts', 5);
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinute($loginAttempts)->by($throttleKey);
         });
 
         // Rate limiting for post creation
@@ -101,6 +104,13 @@ class FortifyServiceProvider extends ServiceProvider
         // Rate limiting for searches
         RateLimiter::for('search', function (Request $request) {
             return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Dedicated rate limiting for editorial AI endpoint
+        RateLimiter::for('ai-editorial', function (Request $request) {
+            $attempts = (int) config('services.ai.editorial_rate_limit_attempts', 6);
+
+            return Limit::perMinute($attempts)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

@@ -1,6 +1,6 @@
 # Frontend Components Documentation
 
-This document provides comprehensive documentation for all custom React components in the C41.ch Backend application.
+This document provides comprehensive documentation for all custom React components in the `c41.ch-be` application.
 
 ## Source of truth (important)
 

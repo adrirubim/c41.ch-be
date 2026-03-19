@@ -121,7 +121,14 @@ function TwoFactorSetupStep({
                         </div>
                     ) : (
                         <>
+                            <label
+                                htmlFor="manual-setup-key"
+                                className="sr-only"
+                            >
+                                Manual setup key
+                            </label>
                             <input
+                                id="manual-setup-key"
                                 type="text"
                                 readOnly
                                 value={manualSetupKey}
@@ -131,6 +138,7 @@ function TwoFactorSetupStep({
                                 type="button"
                                 onClick={() => copy(manualSetupKey)}
                                 className="border-l border-border px-3 hover:bg-muted"
+                                aria-label="Copy manual setup key"
                             >
                                 <IconComponent className="w-4" />
                             </button>
@@ -194,6 +202,12 @@ function TwoFactorVerificationStep({
                     className="relative w-full space-y-3"
                 >
                     <div className="flex w-full flex-col items-center space-y-3 py-2">
+                        <label htmlFor="otp" className="sr-only">
+                            Authentication code
+                        </label>
+                        <p id="otp-help" className="sr-only">
+                            Enter the {OTP_MAX_LENGTH}-digit code from your authenticator app.
+                        </p>
                         <InputOTP
                             id="otp"
                             name="code"
@@ -201,6 +215,7 @@ function TwoFactorVerificationStep({
                             onChange={setCode}
                             disabled={processing}
                             pattern={REGEXP_ONLY_DIGITS}
+                            aria-describedby="otp-help"
                         >
                             <InputOTPGroup>
                                 {Array.from(
@@ -296,11 +311,17 @@ export default function TwoFactorSetupModal({
                 }
             }}
         >
-            <DialogContent className="sm:max-w-md">
+            <DialogContent
+                className="sm:max-w-md"
+                aria-describedby="two-factor-setup-description"
+            >
                 <DialogHeader className="flex items-center justify-center">
                     <GridScanIcon />
                     <DialogTitle>{modalConfig.title}</DialogTitle>
-                    <DialogDescription className="text-center">
+                    <DialogDescription
+                        id="two-factor-setup-description"
+                        className="text-center"
+                    >
                         {modalConfig.description}
                     </DialogDescription>
                 </DialogHeader>

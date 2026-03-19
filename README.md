@@ -71,7 +71,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **Professional UI/UX**: Enhanced with skeleton loaders, real-time previews, advanced filtering, and accessibility compliance
 - **Enterprise Security**: Authorization policies, rate limiting, HTML sanitization, and role-based access control
 - **Optimized Performance**: Database indexing, strategic caching, query optimization, and React memoization
-- **Comprehensive Testing**: 57 tests with 241 assertions covering all critical paths
+- **Comprehensive Testing**: Feature and Unit test suites covering all critical paths
 - **Full Documentation**: API docs, development guide, roadmap, and English code comments throughout
 
 <a id="features"></a>
@@ -131,7 +131,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - ✅ **SOLID Principles** - Clean, maintainable, and extensible code
 - ✅ **TypeScript** - Full type safety across frontend
 - ✅ **English Documentation** - Code comments and docblocks in English
-- ✅ **Comprehensive Testing** - 57 tests, 241 assertions
+- ✅ **Comprehensive Testing** - Feature and Unit suites with broad critical-path coverage
 
 ### 👥 Target users & use cases
 
@@ -158,7 +158,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **UI Components**: Radix UI primitives
 - **Editor**: Tiptap (WYSIWYG)
 - **Icons**: Lucide React
-- **Build Tool**: Vite 7
+- **Build Tool**: Vite 8
 
 ### Development Tools
 - **Testing**: PHPUnit 13
@@ -311,8 +311,8 @@ php artisan test --coverage
 
 ### Test Coverage
 
-- ✅ **57 tests** passing
-- ✅ **241 assertions** across all test suites
+- ✅ **Automated test suites** passing in local and CI workflows
+- ✅ **Feature + Unit coverage** across critical paths
 - ✅ **Feature tests** for all controllers
 - ✅ **Integration tests** for complex workflows
 - ✅ **Authorization tests** for policies
@@ -389,7 +389,7 @@ Request → Controller → Service → Repository → Model
 | Code Quality | ✅ Excellent | 10/10 | Clean architecture, SOLID principles, English documentation |
 | UX/UI | ✅ Excellent | 10/10 | Enhanced with Phase 1 + Phase 2 + Phase 3 + Public pages with animated background |
 | Functionality | ✅ Excellent | 10/10 | All core features + public website implemented and tested |
-| Testing | ✅ Excellent | 10/10 | 57 tests, 241 assertions, comprehensive coverage |
+| Testing | ✅ Excellent | 10/10 | Feature + Unit suites with comprehensive critical-path coverage |
 | Documentation | ✅ Excellent | 10/10 | API docs, development guide, deployment guide, troubleshooting, frontend components, custom hooks, changelog, English code comments |
 
 ### Recent Improvements
@@ -524,8 +524,8 @@ php artisan view:cache
 # Create symbolic link
 php artisan storage:link
 
-# Clear storage
-php artisan storage:clear
+# Remove public storage symlink (if needed)
+rm public/storage
 ```
 
 <a id="before-pushing-to-github"></a>

@@ -121,6 +121,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Auth Flow Rate Limits
+    |--------------------------------------------------------------------------
+    |
+    | These values control how many attempts are allowed for the most sensitive
+    | authentication flows. They are environment-driven so you can keep
+    | development generous while production stays strict and safe.
+    |
+    */
+
+    'login_rate_limit_attempts' => env('FORTIFY_LOGIN_RATE_LIMIT_ATTEMPTS', 5),
+
+    'two_factor_rate_limit_attempts' => env('FORTIFY_TWO_FACTOR_RATE_LIMIT_ATTEMPTS', 5),
+
+    /*
+    |--------------------------------------------------------------------------
     | Register View Routes
     |--------------------------------------------------------------------------
     |

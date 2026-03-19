@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying the C41.ch Backend application to production environments.
+This guide covers deploying the `c41.ch-be` application to production environments.
 
 ## 📋 Table of Contents
 

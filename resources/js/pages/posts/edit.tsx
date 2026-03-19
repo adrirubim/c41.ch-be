@@ -1,7 +1,6 @@
 import { EditorPreview } from '@/components/editor-preview';
 import InputError from '@/components/input-error';
 import { Link } from '@/components/link';
-import { RichTextEditor } from '@/components/rich-text-editor';
 import { TagsInput } from '@/components/tags-input';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,8 +23,15 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import { EditorialSuggestionsPanel } from '@modules/posts/components/EditorialSuggestionsPanel';
 import { Head, useForm } from '@inertiajs/react';
 import { ArrowLeft, Save } from 'lucide-react';
+import { lazy, Suspense } from 'react';
+
+const LazyRichTextEditor = lazy(async () => {
+    const mod = await import('@/components/rich-text-editor');
+    return { default: mod.RichTextEditor };
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -222,13 +228,21 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                                 excerpt={data.excerpt}
                                             />
                                         </div>
-                                        <RichTextEditor
-                                            content={data.content}
-                                            onChange={(content) =>
-                                                setData('content', content)
+                                        <Suspense
+                                            fallback={
+                                                <div className="rounded-lg border p-4 text-sm text-muted-foreground">
+                                                    Loading editor…
+                                                </div>
                                             }
-                                            placeholder="Write your post content here..."
-                                        />
+                                        >
+                                            <LazyRichTextEditor
+                                                content={data.content}
+                                                onChange={(content) =>
+                                                    setData('content', content)
+                                                }
+                                                placeholder="Write your post content here..."
+                                            />
+                                        </Suspense>
                                         <InputError message={errors.content} />
                                     </div>
                                 </CardContent>
@@ -432,6 +446,18 @@ export default function PostsEdit({ post, categories, users }: PostsEditProps) {
                                     </div>
                                 </CardContent>
                             </Card>
+
+                            <EditorialSuggestionsPanel
+                                title={data.title}
+                                content={data.content}
+                                excerpt={data.excerpt}
+                                tags={data.tags}
+                                disabled={processing}
+                                onApply={(suggestions) => {
+                                    setData('excerpt', suggestions.excerpt);
+                                    setData('tags', suggestions.tags);
+                                }}
+                            />
 
                             <div className="flex gap-2">
                                 <Button

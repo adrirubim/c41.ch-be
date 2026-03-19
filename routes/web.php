@@ -51,6 +51,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('posts', [PostController::class, 'store'])
         ->middleware('throttle:posts')
         ->name('posts.store');
+    Route::post('posts/editorial-suggestions', [PostController::class, 'editorialSuggestions'])
+        ->middleware('throttle:ai-editorial')
+        ->name('posts.editorial-suggestions');
     Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
     Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('posts/{post}', [PostController::class, 'update'])

@@ -8,6 +8,7 @@ import {
     PostsListSection,
 } from '@modules/posts/components/PostsIndex/PostsFilters';
 import { usePostsIndexPage } from '@modules/posts/hooks/use-posts-index-page';
+import type { PostsIndexProps } from '@modules/posts/types/posts-index-props';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,8 +20,6 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/posts',
     },
 ];
-
-import type { PostsIndexProps } from '@modules/posts/hooks/use-posts-index-page';
 
 export default function PostsIndex({
     posts,
@@ -52,6 +51,7 @@ export default function PostsIndex({
                     setPresetName={viewModel.setPresetName}
                     presets={viewModel.presets}
                     handleFilter={viewModel.handleFilter}
+                    handleSavePreset={viewModel.handleSavePreset}
                     handleApplyPreset={viewModel.handleApplyPreset}
                     deletePreset={() => {}}
                 />

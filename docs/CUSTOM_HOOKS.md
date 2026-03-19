@@ -1,6 +1,6 @@
 # Custom Hooks Documentation
 
-This document provides comprehensive documentation for all custom React hooks in the C41.ch Backend application.
+This document provides comprehensive documentation for all custom React hooks in the `c41.ch-be` application.
 
 ## Source of truth (important)
 

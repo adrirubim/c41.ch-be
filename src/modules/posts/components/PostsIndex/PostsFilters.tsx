@@ -38,7 +38,7 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Bookmark, BookmarkCheck, ChevronDown, ChevronUp, FileText, HelpCircle, Search, X } from 'lucide-react';
-import type { PostsIndexCategory, PostsIndexPost } from '@modules/posts/hooks/use-posts-index-page';
+import type { PostsIndexCategory, PostsIndexPost } from '@modules/posts/types/posts-index-props';
 
 interface SetDataFn<TData> {
     (key: keyof TData, value: TData[keyof TData]): void;
@@ -65,6 +65,7 @@ interface PostsFiltersProps {
     setPresetName: (value: string) => void;
     presets: Array<{ id: string; name: string }>;
     handleFilter: () => void;
+    handleSavePreset: () => void;
     handleApplyPreset: (presetId: string) => void;
     deletePreset: (id: string) => void;
 }
@@ -101,6 +102,7 @@ export function PostsFilters({
     setPresetName,
     presets,
     handleFilter,
+    handleSavePreset,
     handleApplyPreset,
     deletePreset,
 }: PostsFiltersProps) {
@@ -153,7 +155,7 @@ export function PostsFilters({
                                 aria-label="Search filters"
                             >
                                 <div className="space-y-2">
-                                    <Label htmlFor="search">Buscar</Label>
+                                    <Label htmlFor="search">Search</Label>
                                     <div className="relative">
                                         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                         <Input
@@ -173,7 +175,13 @@ export function PostsFilters({
                                         <Label htmlFor="category">Category</Label>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <HelpCircle className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex h-5 w-5 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                    aria-label="Help: category filter"
+                                                >
+                                                    <HelpCircle className="h-3.5 w-3.5" />
+                                                </button>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <p className="max-w-xs">
@@ -213,7 +221,13 @@ export function PostsFilters({
                                         <Label htmlFor="published">Status</Label>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <HelpCircle className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex h-5 w-5 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                    aria-label="Help: publication status filter"
+                                                >
+                                                    <HelpCircle className="h-3.5 w-3.5" />
+                                                </button>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <p className="max-w-xs">
@@ -247,7 +261,13 @@ export function PostsFilters({
                                         <Label htmlFor="sort_by">Sort by</Label>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <HelpCircle className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex h-5 w-5 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                    aria-label="Help: sorting options"
+                                                >
+                                                    <HelpCircle className="h-3.5 w-3.5" />
+                                                </button>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <p className="max-w-xs">
@@ -286,7 +306,13 @@ export function PostsFilters({
                                         <Label htmlFor="per_page">Per page</Label>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
-                                                <HelpCircle className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex h-5 w-5 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                                    aria-label="Help: results per page"
+                                                >
+                                                    <HelpCircle className="h-3.5 w-3.5" />
+                                                </button>
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 <p className="max-w-xs">
@@ -367,12 +393,14 @@ export function PostsFilters({
                                             </TooltipContent>
                                         </Tooltip>
                                     </DialogTrigger>
-                                    <DialogContent>
+                                    <DialogContent
+                                        aria-describedby="save-preset-description"
+                                    >
                                         <DialogHeader>
                                             <DialogTitle>
                                                 Save Filter Preset
                                             </DialogTitle>
-                                            <DialogDescription>
+                                            <DialogDescription id="save-preset-description">
                                                 Save the current filter
                                                 configuration for quick access
                                                 later.
@@ -391,7 +419,7 @@ export function PostsFilters({
                                                 placeholder="e.g., Featured posts this month"
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') {
-                                                        handleFilter();
+                                                        handleSavePreset();
                                                     }
                                                 }}
                                             />
@@ -407,7 +435,7 @@ export function PostsFilters({
                                                 Cancel
                                             </Button>
                                             <Button
-                                                onClick={handleFilter}
+                                                onClick={handleSavePreset}
                                                 disabled={!presetName.trim()}
                                             >
                                                 Save

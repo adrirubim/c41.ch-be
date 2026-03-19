@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-This guide helps you diagnose and resolve common issues with the C41.ch Backend application.
+This guide helps you diagnose and resolve common issues with the `c41.ch-be` application.
 
 ## 📋 Table of Contents
 
@@ -289,9 +289,9 @@ php artisan route:cache
 
 **Solutions**:
 
-1. **Clear session cache**:
+1. **Clear application caches and refresh session state**:
    ```bash
-   php artisan session:clear
+   php artisan optimize:clear
    ```
 
 2. **Check session configuration in `.env`**:

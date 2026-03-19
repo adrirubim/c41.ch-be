@@ -37,6 +37,36 @@ class PostControllerTest extends TestCase
         $response->assertInertia(fn ($page) => $page->component('posts/index'));
     }
 
+    public function test_posts_index_search_works_with_like_fallback(): void
+    {
+        config([
+            'services.search.hybrid_enabled' => true,
+            'services.search.semantic_enabled' => true,
+        ]);
+
+        $this->actingAs($this->user);
+
+        Post::factory()->create([
+            'user_id' => $this->user->id,
+            'title' => 'Laravel Search Baseline',
+            'slug' => 'laravel-search-baseline',
+            'content' => 'Testing fallback search behavior.',
+        ]);
+
+        Post::factory()->create([
+            'user_id' => $this->user->id,
+            'title' => 'Another Post',
+            'slug' => 'another-post',
+            'content' => 'Unrelated content',
+        ]);
+
+        $response = $this->get(route('posts.index', ['search' => 'Baseline']));
+
+        $response->assertOk();
+        $response->assertSee('Laravel Search Baseline');
+        $response->assertDontSee('Another Post');
+    }
+
     public function test_authenticated_users_can_create_post(): void
     {
         $this->actingAs($this->user);
@@ -92,5 +122,98 @@ class PostControllerTest extends TestCase
         $response = $this->get(route('posts.edit', $post));
 
         $response->assertForbidden();
+    }
+
+    public function test_guests_cannot_request_editorial_suggestions(): void
+    {
+        $response = $this->postJson(route('posts.editorial-suggestions'), [
+            'title' => 'A sample title',
+            'content' => 'A sample content body',
+        ]);
+
+        $response->assertUnauthorized();
+    }
+
+    public function test_editorial_suggestions_return_service_unavailable_when_ai_is_disabled(): void
+    {
+        config(['services.ai.enabled' => false]);
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $this->actingAs($adminUser);
+
+        $response = $this->postJson(route('posts.editorial-suggestions'), [
+            'title' => 'Laravel AI editorial helper',
+            'content' => 'Generate concise summary and useful tags for this article.',
+        ]);
+
+        $response->assertStatus(503);
+        $response->assertJsonPath('message', 'AI assistant is currently disabled.');
+    }
+
+    public function test_editorial_suggestions_return_excerpt_and_tags_when_ai_is_enabled(): void
+    {
+        config([
+            'services.ai.enabled' => true,
+            'services.ai.editorial_admin_only' => true,
+        ]);
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $this->actingAs($adminUser);
+
+        $response = $this->postJson(route('posts.editorial-suggestions'), [
+            'title' => 'Laravel AI editorial helper',
+            'content' => 'This post explains editorial workflows for tag suggestions and excerpt generation in a CMS.',
+            'tags' => ['CMS'],
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure([
+            'message',
+            'data' => [
+                'excerpt',
+                'tags',
+            ],
+        ]);
+    }
+
+    public function test_non_admin_users_cannot_request_editorial_suggestions_when_admin_only_is_enabled(): void
+    {
+        config([
+            'services.ai.enabled' => true,
+            'services.ai.editorial_admin_only' => true,
+        ]);
+
+        $this->actingAs($this->user);
+
+        $response = $this->postJson(route('posts.editorial-suggestions'), [
+            'title' => 'Restricted editorial request',
+            'content' => 'Only admin should be able to use this feature.',
+        ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_editorial_suggestions_are_rate_limited_with_dedicated_limiter(): void
+    {
+        config([
+            'services.ai.enabled' => true,
+            'services.ai.editorial_admin_only' => true,
+            'services.ai.editorial_rate_limit_attempts' => 1,
+        ]);
+
+        $adminUser = User::factory()->create(['is_admin' => true]);
+        $this->actingAs($adminUser);
+
+        $first = $this->postJson(route('posts.editorial-suggestions'), [
+            'title' => 'First request',
+            'content' => 'This should pass.',
+        ]);
+        $first->assertOk();
+
+        $second = $this->postJson(route('posts.editorial-suggestions'), [
+            'title' => 'Second request',
+            'content' => 'This should be throttled.',
+        ]);
+        $second->assertTooManyRequests();
     }
 }

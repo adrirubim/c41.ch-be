@@ -4,8 +4,8 @@ Overview of test suites and what is covered in **c41.ch-be**.
 
 ## Summary
 
-- **57 tests** across Unit and Feature suites
-- **241+ assertions**
+- Automated tests across Unit and Feature suites
+- Assertions vary as suites evolve; see latest CI runs for exact counts
 - PHPUnit 13; default DB: SQLite in-memory (CI uses PostgreSQL)
 
 ## Test Suites

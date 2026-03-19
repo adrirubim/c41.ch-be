@@ -1,11 +1,12 @@
 # Documentation Index
 
-Entry point for the project's technical documentation.
+Public entry point for the project's technical documentation.
 
 ## Development & Reference
 
 - **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)** — Architecture, conventions, best practices
 - **[API.md](API.md)** — Endpoints, parameters, authentication
+- **[AI_RUNTIME_SETUP.md](AI_RUNTIME_SETUP.md)** — AI runtime configuration, rollout, and guardrails
 - **[FRONTEND_COMPONENTS.md](FRONTEND_COMPONENTS.md)** — React components
 - **[CUSTOM_HOOKS.md](CUSTOM_HOOKS.md)** — Custom hooks
 
@@ -22,3 +23,8 @@ Entry point for the project's technical documentation.
 ## Support
 
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** — Common errors and troubleshooting
+
+## Governance
+
+- **[../CONTRIBUTING.md](../CONTRIBUTING.md)** — Contribution workflow and standards
+- **[../SECURITY.md](../SECURITY.md)** — Security policy and vulnerability reporting

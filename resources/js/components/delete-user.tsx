@@ -12,8 +12,8 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import { useRef } from 'react';
 
 export default function DeleteUser() {
@@ -42,11 +42,11 @@ export default function DeleteUser() {
                             Delete account
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent aria-describedby="delete-account-description">
                         <DialogTitle>
                             Are you sure you want to delete your account?
                         </DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription id="delete-account-description">
                             Once your account is deleted, all of its resources
                             and data will also be permanently deleted. Please
                             enter your password to confirm you would like to
@@ -72,9 +72,8 @@ export default function DeleteUser() {
                                             Password
                                         </Label>
 
-                                        <Input
+                                        <PasswordInput
                                             id="password"
-                                            type="password"
                                             name="password"
                                             ref={passwordInput}
                                             placeholder="Password"

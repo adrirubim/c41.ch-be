@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Requests\PostEditorialSuggestionRequest;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\CategoryService;
+use App\Services\PostEditorialSuggestionService;
 use App\Services\PostService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,7 +22,8 @@ class PostController extends Controller
 {
     public function __construct(
         private PostService $postService,
-        private CategoryService $categoryService
+        private CategoryService $categoryService,
+        private PostEditorialSuggestionService $editorialSuggestionService
     ) {}
 
     /**
@@ -150,5 +156,74 @@ class PostController extends Controller
 
         return redirect()->route('posts.index')
             ->with('success', 'Post eliminado exitosamente.');
+    }
+
+    public function editorialSuggestions(
+        PostEditorialSuggestionRequest $request
+    ): JsonResponse {
+        $startedAt = microtime(true);
+        $user = $request->user();
+        $isAdminOnly = (bool) config('services.ai.editorial_admin_only', true);
+
+        if (! config('services.ai.enabled', false)) {
+            Log::info('ai_editorial_suggestions_disabled', [
+                'user_id' => $user?->id,
+                'request_id' => app()->bound('request_id') ? app('request_id') : null,
+            ]);
+
+            return response()->json([
+                'message' => 'AI assistant is currently disabled.',
+            ], 503);
+        }
+
+        if ($isAdminOnly && ! (bool) ($user?->is_admin ?? false)) {
+            Log::warning('ai_editorial_suggestions_forbidden', [
+                'user_id' => $user?->id,
+                'request_id' => app()->bound('request_id') ? app('request_id') : null,
+            ]);
+
+            return response()->json([
+                'message' => 'You are not allowed to use editorial AI suggestions.',
+            ], 403);
+        }
+
+        $payload = $request->validated();
+        $promptChars = strlen((string) ($payload['title'] ?? '')).'|'.strlen((string) ($payload['content'] ?? ''));
+
+        try {
+            $suggestions = $this->editorialSuggestionService->suggest($payload);
+        } catch (Throwable $exception) {
+            Log::error('ai_editorial_suggestions_failed', [
+                'user_id' => $user?->id,
+                'request_id' => app()->bound('request_id') ? app('request_id') : null,
+                'latency_ms' => (int) round((microtime(true) - $startedAt) * 1000),
+                'prompt_sizes' => $promptChars,
+                'error_class' => $exception::class,
+                'error_message' => $exception->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'AI assistant is temporarily unavailable. Continue in manual mode.',
+                'data' => [
+                    'excerpt' => (string) ($payload['excerpt'] ?? ''),
+                    'tags' => $payload['tags'] ?? [],
+                ],
+            ]);
+        }
+
+        Log::info('ai_editorial_suggestions_success', [
+            'user_id' => $user?->id,
+            'request_id' => app()->bound('request_id') ? app('request_id') : null,
+            'latency_ms' => (int) round((microtime(true) - $startedAt) * 1000),
+            'prompt_sizes' => $promptChars,
+            'suggested_tags_count' => count($suggestions['tags'] ?? []),
+            // Rough estimator only; avoid persisting prompt content.
+            'estimated_tokens' => (int) ceil((strlen((string) ($payload['title'] ?? '')).strlen((string) ($payload['content'] ?? ''))) / 4),
+        ]);
+
+        return response()->json([
+            'message' => 'Suggestions generated successfully.',
+            'data' => $suggestions,
+        ]);
     }
 }

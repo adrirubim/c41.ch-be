@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'ai' => [
+        'enabled' => env('AI_ENABLED', false),
+        'editorial_admin_only' => env('AI_EDITORIAL_ADMIN_ONLY', true),
+        'editorial_rate_limit_attempts' => env('AI_EDITORIAL_RATE_LIMIT_ATTEMPTS', 6),
+        'provider' => env('AI_PROVIDER', 'openai'),
+        'model' => env('AI_MODEL', 'gpt-4o-mini'),
+    ],
+
+    'search' => [
+        'hybrid_enabled' => env('SEARCH_HYBRID_ENABLED', false),
+        'semantic_enabled' => env('SEARCH_SEMANTIC_ENABLED', false),
+    ],
+
 ];
