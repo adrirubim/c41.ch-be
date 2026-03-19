@@ -68,6 +68,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 ### Key Highlights
 
 - **Modern Stack**: Laravel 13, React 19, TypeScript, TailwindCSS 4.2
+- **AI-Assisted Editorial Flow**: Optional excerpt/tag suggestions with feature flags, role guardrails, and dedicated throttling
 - **Professional UI/UX**: Enhanced with skeleton loaders, real-time previews, advanced filtering, and accessibility compliance
 - **Enterprise Security**: Authorization policies, rate limiting, HTML sanitization, and role-based access control
 - **Optimized Performance**: Database indexing, strategic caching, query optimization, and React memoization
@@ -532,6 +533,15 @@ rm public/storage
 ## 📤 Before Pushing to GitHub
 
 This project enforces CI checks via GitHub Actions. To avoid surprises, run the **same commands CI runs** locally.
+
+Fast path (recommended):
+
+```bash
+./scripts/dev-verify.sh
+USE_PG_FOR_TESTS=1 ./scripts/dev-verify.sh
+```
+
+The script is documented in `scripts/README.md` and wraps dependency install, frontend build, SQLite tests, and optional PostgreSQL tests via ephemeral Docker.
 
 Prerequisites:
 
