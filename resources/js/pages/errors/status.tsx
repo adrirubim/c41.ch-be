@@ -2,11 +2,11 @@ import { Link } from '@/components/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
+import { Head } from '@inertiajs/react';
 import {
     getErrorStatusCta,
     type ErrorStatusCode,
 } from '@modules/errors/utils/get-error-status-cta';
-import { Head } from '@inertiajs/react';
 
 interface ErrorStatusProps {
     status: ErrorStatusCode;

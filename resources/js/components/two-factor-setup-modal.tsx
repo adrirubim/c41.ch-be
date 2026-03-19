@@ -206,7 +206,8 @@ function TwoFactorVerificationStep({
                             Authentication code
                         </label>
                         <p id="otp-help" className="sr-only">
-                            Enter the {OTP_MAX_LENGTH}-digit code from your authenticator app.
+                            Enter the {OTP_MAX_LENGTH}-digit code from your
+                            authenticator app.
                         </p>
                         <InputOTP
                             id="otp"

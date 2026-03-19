@@ -23,8 +23,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { EditorialSuggestionsPanel } from '@modules/posts/components/EditorialSuggestionsPanel';
 import { Head, useForm } from '@inertiajs/react';
+import { EditorialSuggestionsPanel } from '@modules/posts/components/EditorialSuggestionsPanel';
 import { ArrowLeft, Save } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 
