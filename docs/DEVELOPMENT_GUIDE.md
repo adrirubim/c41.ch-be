@@ -62,18 +62,20 @@ public function create(array $data, ?array $categoryIds = null): Post
 
 **Example:**
 ```php
-public function getFiltered(array $filters = [], int $perPage = 15): LengthAwarePaginator
+use App\Domain\Post\DTO\PostFiltersData;
+
+public function getFiltered(PostFiltersData $filters): LengthAwarePaginator
 {
     $query = Post::with(['user', 'categories'])->withoutTrashed();
-    
-    if (isset($filters['search'])) {
+
+    if ($filters->search !== null) {
         $query->where(function($q) use ($filters) {
-            $q->where('title', 'like', "%{$filters['search']}%")
-              ->orWhere('content', 'like', "%{$filters['search']}%");
+            $q->where('title', 'like', "%{$filters->search}%")
+              ->orWhere('content', 'like', "%{$filters->search}%");
         });
     }
-    
-    return $query->paginate($perPage);
+
+    return $query->paginate($filters->perPage);
 }
 ```
 
