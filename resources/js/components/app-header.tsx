@@ -85,7 +85,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                     Navigation Menu
                                 </SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6" />
+                                    <Link
+                                        href="/blog"
+                                        prefetch
+                                        className="flex items-center"
+                                    >
+                                        <AppLogoIcon className="h-6 w-6" />
+                                    </Link>
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
@@ -133,7 +139,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
 
                     <Link
-                        href={dashboard()}
+                        href="/blog"
                         prefetch
                         className="flex items-center space-x-2"
                     >

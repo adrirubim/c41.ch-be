@@ -19,7 +19,7 @@ class DashboardTest extends TestCase
 
     public function test_authenticated_users_can_visit_the_dashboard(): void
     {
-        $this->actingAs($user = User::factory()->create());
+        $this->actingAs($user = User::factory()->create(['is_admin' => true]));
 
         $response = $this->get(route('dashboard'));
 
@@ -27,9 +27,18 @@ class DashboardTest extends TestCase
         $response->assertInertia(fn ($page) => $page->component('dashboard'));
     }
 
+    public function test_non_admin_users_are_redirected_to_blog_from_dashboard(): void
+    {
+        $this->actingAs($user = User::factory()->create(['is_admin' => false]));
+
+        $response = $this->get(route('dashboard'));
+
+        $response->assertRedirect(route('public.posts.index'));
+    }
+
     public function test_dashboard_displays_correct_statistics(): void
     {
-        $this->actingAs($user = User::factory()->create());
+        $this->actingAs($user = User::factory()->create(['is_admin' => true]));
 
         Post::factory()->count(10)->create(['published' => true]);
         Post::factory()->count(5)->create(['published' => false]);

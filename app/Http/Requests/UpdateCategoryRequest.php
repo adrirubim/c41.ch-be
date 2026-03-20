@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use App\Models\User;
-use App\Models\Category;
 
 class UpdateCategoryRequest extends FormRequest
 {

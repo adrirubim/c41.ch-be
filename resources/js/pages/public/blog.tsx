@@ -88,7 +88,10 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
             typeof filters.category === 'string' && filters.category !== ''
                 ? filters.category
                 : 'all',
-        featured: typeof filters.featured === 'string' ? filters.featured : '',
+        featured:
+            typeof filters.featured === 'string' && filters.featured !== ''
+                ? filters.featured
+                : 'all',
         sort_by:
             typeof filters.sort_by === 'string' && filters.sort_by !== ''
                 ? filters.sort_by
@@ -113,12 +116,7 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
         )
             params.search = data.search;
         if (data.category !== 'all') params.category = data.category;
-        if (
-            data.featured !== null &&
-            data.featured !== undefined &&
-            data.featured !== ''
-        )
-            params.featured = data.featured;
+        if (data.featured !== 'all') params.featured = data.featured;
         if (data.sort_by !== 'published_at') params.sort_by = data.sort_by;
         if (data.sort_order !== 'desc') params.sort_order = data.sort_order;
         if (data.per_page !== '12') params.per_page = data.per_page;
@@ -215,7 +213,7 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                         <SelectValue placeholder="Featured" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">
+                                        <SelectItem value="all">
                                             All Posts
                                         </SelectItem>
                                         <SelectItem value="true">

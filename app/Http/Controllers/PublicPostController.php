@@ -17,7 +17,9 @@ class PublicPostController extends Controller
     public function __construct(
         private PostRepository $postRepository,
         private CategoryRepository $categoryRepository
-    ) {}
+    ) {
+        // Access control is enforced by route middleware.
+    }
 
     /**
      * Display a listing of published posts for public view.

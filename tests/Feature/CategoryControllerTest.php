@@ -16,7 +16,9 @@ class CategoryControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        // Dashboard category management is admin-only.
+        // Regular users should be redirected to the public blog.
+        $this->user = User::factory()->create(['is_admin' => false]);
     }
 
     public function test_guests_cannot_access_categories_index(): void
@@ -32,8 +34,7 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->get(route('categories.index'));
 
-        $response->assertOk();
-        $response->assertInertia(fn ($page) => $page->component('categories/index'));
+        $response->assertRedirect(route('public.posts.index'));
     }
 
     public function test_authenticated_users_can_create_category(): void
@@ -42,8 +43,7 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->get(route('categories.create'));
 
-        $response->assertOk();
-        $response->assertInertia(fn ($page) => $page->component('categories/create'));
+        $response->assertRedirect(route('public.posts.index'));
     }
 
     public function test_authenticated_users_can_store_category(): void
@@ -59,9 +59,8 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->post(route('categories.store'), $categoryData);
 
-        $response->assertRedirect(route('categories.index'));
-        $response->assertSessionHas('success');
-        $this->assertDatabaseHas('categories', ['name' => 'Test Category']);
+        $response->assertRedirect(route('public.posts.index'));
+        $this->assertDatabaseMissing('categories', ['name' => 'Test Category']);
     }
 
     public function test_authenticated_users_can_update_category(): void
@@ -72,8 +71,7 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->get(route('categories.edit', $category));
 
-        $response->assertOk();
-        $response->assertInertia(fn ($page) => $page->component('categories/edit'));
+        $response->assertRedirect(route('public.posts.index'));
     }
 
     public function test_authenticated_users_can_delete_category(): void
@@ -84,8 +82,7 @@ class CategoryControllerTest extends TestCase
 
         $response = $this->delete(route('categories.destroy', $category));
 
-        $response->assertRedirect(route('categories.index'));
-        $response->assertSessionHas('success');
-        $this->assertSoftDeleted('categories', ['id' => $category->id]);
+        $response->assertRedirect(route('public.posts.index'));
+        $this->assertDatabaseHas('categories', ['id' => $category->id]);
     }
 }

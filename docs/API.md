@@ -8,6 +8,15 @@ Use this document as a **route reference** (paths, auth requirements, rate limit
 
 Most API routes require authentication via Laravel Fortify. Public routes (homepage, blog, categories) are accessible without authentication.
 
+### Post-login Redirect Rules
+
+On successful login (Fortify login), the browser is redirected based on the authenticated user:
+
+- Administrator (`email === admin@example.com` OR `is_admin=true`): redirect to `/dashboard`
+- Regular user: redirect to `/blog`
+
+The implementation is provided by `App\\Responses\\ConditionalLoginResponse` and wired in `App\\Providers\\FortifyServiceProvider`.
+
 ## Public Endpoints (No Authentication Required)
 
 ### Homepage

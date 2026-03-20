@@ -19,4 +19,3 @@ class RequestIdProcessor
         return $record;
     }
 }
-

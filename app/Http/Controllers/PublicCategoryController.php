@@ -16,7 +16,9 @@ class PublicCategoryController extends Controller
     public function __construct(
         private CategoryRepository $categoryRepository,
         private PostRepository $postRepository
-    ) {}
+    ) {
+        // Access control is enforced by route middleware.
+    }
 
     /**
      * Display all categories for public view.

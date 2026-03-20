@@ -12,7 +12,17 @@ import {
 import { dashboard, login, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { ArrowRight, Calendar, Eye, Star, Tag, User } from 'lucide-react';
+import {
+    ArrowRight,
+    Calendar,
+    Eye,
+    FileText,
+    LockKeyhole,
+    ShieldCheck,
+    Star,
+    Tag,
+    User,
+} from 'lucide-react';
 
 interface Post {
     id: number;
@@ -69,6 +79,9 @@ export default function Home({
     stats,
 }: HomeProps) {
     const { auth } = usePage<SharedData>().props;
+    const user = auth?.user as unknown as { id?: unknown; is_admin?: unknown };
+    const isAuthenticated = user != null && user.id != null;
+    const isAdmin = isAuthenticated && user.is_admin === true;
 
     return (
         <>
@@ -103,6 +116,13 @@ export default function Home({
                         <section className="relative overflow-hidden border-b bg-gradient-to-br from-primary/5 via-background/80 to-primary/5 py-20 backdrop-blur-sm md:py-32">
                             <div className="container mx-auto px-4 md:max-w-7xl">
                                 <div className="mx-auto max-w-3xl text-center">
+                                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/60 px-4 py-1 text-xs text-muted-foreground shadow-sm">
+                                        <span className="font-medium text-foreground">
+                                            Enterprise-ready
+                                        </span>
+                                        <span aria-hidden="true">•</span>
+                                        <span>Demo content included.</span>
+                                    </div>
                                     <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
                                         Welcome to{' '}
                                         <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
@@ -115,26 +135,6 @@ export default function Home({
                                         development, and business. Join our
                                         community of readers and writers.
                                     </p>
-                                    <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                                        <Link href="/blog">
-                                            <Button
-                                                size="lg"
-                                                className="w-full sm:w-auto"
-                                            >
-                                                Explore Blog
-                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Button>
-                                        </Link>
-                                        <Link href="/categories">
-                                            <Button
-                                                size="lg"
-                                                variant="outline"
-                                                className="w-full sm:w-auto"
-                                            >
-                                                Browse Categories
-                                            </Button>
-                                        </Link>
-                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -154,7 +154,7 @@ export default function Home({
                                                 {stats.totalPosts}
                                             </div>
                                             <p className="mt-1 text-xs text-muted-foreground">
-                                                Published articles
+                                                Published articles.
                                             </p>
                                         </CardContent>
                                     </Card>
@@ -169,7 +169,7 @@ export default function Home({
                                                 {stats.totalCategories}
                                             </div>
                                             <p className="mt-1 text-xs text-muted-foreground">
-                                                Topics covered
+                                                Topics covered.
                                             </p>
                                         </CardContent>
                                     </Card>
@@ -184,9 +184,88 @@ export default function Home({
                                                 {stats.totalViews.toLocaleString()}
                                             </div>
                                             <p className="mt-1 text-xs text-muted-foreground">
-                                                Page views
+                                                Page views.
                                             </p>
                                         </CardContent>
+                                    </Card>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Features Section */}
+                        <section className="relative z-10 py-14 md:py-20">
+                            <div className="container mx-auto px-4 md:max-w-7xl">
+                                <div className="mx-auto max-w-4xl text-center">
+                                    <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                                        Built for enterprise-ready demos
+                                    </h2>
+                                    <p className="mt-3 text-muted-foreground">
+                                        Built like production UX: safe previews
+                                        and auth-gated access.
+                                    </p>
+                                </div>
+
+                                <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+                                    <Card className="bg-background/70 shadow-sm">
+                                        <CardHeader className="pb-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="rounded-md border bg-background p-2">
+                                                    <LockKeyhole className="h-5 w-5 text-primary" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <CardTitle className="text-lg">
+                                                        Auth-gated access
+                                                    </CardTitle>
+                                                    <p className="mt-1 text-sm text-muted-foreground">
+                                                        Blog and categories are
+                                                        protected and require
+                                                        verified authentication.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </CardHeader>
+                                    </Card>
+
+                                    <Card className="bg-background/70 shadow-sm">
+                                        <CardHeader className="pb-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="rounded-md border bg-background p-2">
+                                                    <ShieldCheck className="h-5 w-5 text-primary" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <CardTitle className="text-lg">
+                                                        Sanitized previews
+                                                    </CardTitle>
+                                                    <p className="mt-1 text-sm text-muted-foreground">
+                                                        Rich text is sanitized
+                                                        to keep previews safe,
+                                                        consistent, and
+                                                        readable.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </CardHeader>
+                                    </Card>
+
+                                    <Card className="bg-background/70 shadow-sm">
+                                        <CardHeader className="pb-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="rounded-md border bg-background p-2">
+                                                    <FileText className="h-5 w-5 text-primary" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <CardTitle className="text-lg">
+                                                        Realistic demo content
+                                                    </CardTitle>
+                                                    <p className="mt-1 text-sm text-muted-foreground">
+                                                        Seeded posts use
+                                                        realistic titles,
+                                                        excerpts, and structured
+                                                        metadata.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </CardHeader>
                                     </Card>
                                 </div>
                             </div>
@@ -202,16 +281,24 @@ export default function Home({
                                                 Featured Posts
                                             </h2>
                                             <p className="mt-2 text-muted-foreground">
-                                                Handpicked articles worth
-                                                reading
+                                                Validate tone and layout at a
+                                                glance.
                                             </p>
                                         </div>
-                                        <Link href="/blog?featured=true">
-                                            <Button variant="ghost">
-                                                View All
-                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Button>
-                                        </Link>
+                                        {isAuthenticated ? (
+                                            <Link href="/blog?featured=true">
+                                                <Button variant="ghost">
+                                                    View All
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <Link href={login()}>
+                                                <Button variant="outline">
+                                                    Log in
+                                                </Button>
+                                            </Link>
+                                        )}
                                     </div>
                                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                                         {featuredPosts.map((post) => (
@@ -222,11 +309,17 @@ export default function Home({
                                                 <CardHeader>
                                                     <div className="flex items-start justify-between gap-2">
                                                         <CardTitle className="line-clamp-2 transition-colors group-hover:text-primary">
-                                                            <Link
-                                                                href={`/blog/${post.slug}`}
-                                                            >
-                                                                {post.title}
-                                                            </Link>
+                                                            {isAuthenticated ? (
+                                                                <Link
+                                                                    href={`/blog/${post.slug}`}
+                                                                >
+                                                                    {post.title}
+                                                                </Link>
+                                                            ) : (
+                                                                <span>
+                                                                    {post.title}
+                                                                </span>
+                                                            )}
                                                         </CardTitle>
                                                         <Star className="h-5 w-5 flex-shrink-0 text-yellow-500" />
                                                     </div>
@@ -242,13 +335,8 @@ export default function Home({
                                                 <CardContent>
                                                     <div className="mb-4 flex flex-wrap items-center gap-2">
                                                         {post.categories.map(
-                                                            (category) => (
-                                                                <Link
-                                                                    key={
-                                                                        category.id
-                                                                    }
-                                                                    href={`/categories/${category.slug}`}
-                                                                >
+                                                            (category) => {
+                                                                const badge = (
                                                                     <Badge
                                                                         variant="secondary"
                                                                         style={{
@@ -277,8 +365,27 @@ export default function Home({
                                                                             category.name
                                                                         }
                                                                     </Badge>
-                                                                </Link>
-                                                            ),
+                                                                );
+
+                                                                return isAuthenticated ? (
+                                                                    <Link
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                        href={`/categories/${category.slug}`}
+                                                                    >
+                                                                        {badge}
+                                                                    </Link>
+                                                                ) : (
+                                                                    <span
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                    >
+                                                                        {badge}
+                                                                    </span>
+                                                                );
+                                                            },
                                                         )}
                                                     </div>
                                                     <div className="flex items-center justify-between text-sm text-muted-foreground">
@@ -316,15 +423,13 @@ export default function Home({
                                             Explore Categories
                                         </h2>
                                         <p className="mt-2 text-muted-foreground">
-                                            Discover content by topic
+                                            Explore a realistic taxonomy with
+                                            real category counts.
                                         </p>
                                     </div>
                                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-                                        {categories.map((category) => (
-                                            <Link
-                                                key={category.id}
-                                                href={`/categories/${category.slug}`}
-                                            >
+                                        {categories.map((category) => {
+                                            const card = (
                                                 <Card className="group transition-all hover:scale-105 hover:shadow-lg">
                                                     <CardHeader>
                                                         <div className="flex items-center gap-3">
@@ -376,8 +481,25 @@ export default function Home({
                                                         </div>
                                                     </CardHeader>
                                                 </Card>
-                                            </Link>
-                                        ))}
+                                            );
+
+                                            if (isAuthenticated) {
+                                                return (
+                                                    <Link
+                                                        key={category.id}
+                                                        href={`/categories/${category.slug}`}
+                                                    >
+                                                        {card}
+                                                    </Link>
+                                                );
+                                            }
+
+                                            return (
+                                                <div key={category.id}>
+                                                    {card}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </section>
@@ -393,15 +515,24 @@ export default function Home({
                                                 Recent Posts
                                             </h2>
                                             <p className="mt-2 text-muted-foreground">
-                                                Latest articles from our blog
+                                                Consistent ordering and reliable
+                                                paging.
                                             </p>
                                         </div>
-                                        <Link href="/blog">
-                                            <Button variant="ghost">
-                                                View All
-                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Button>
-                                        </Link>
+                                        {isAuthenticated ? (
+                                            <Link href="/blog">
+                                                <Button variant="ghost">
+                                                    View All
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <Link href={login()}>
+                                                <Button variant="outline">
+                                                    Log in
+                                                </Button>
+                                            </Link>
+                                        )}
                                     </div>
                                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                                         {recentPosts.map((post) => (
@@ -411,11 +542,17 @@ export default function Home({
                                             >
                                                 <CardHeader>
                                                     <CardTitle className="line-clamp-2 transition-colors group-hover:text-primary">
-                                                        <Link
-                                                            href={`/blog/${post.slug}`}
-                                                        >
-                                                            {post.title}
-                                                        </Link>
+                                                        {isAuthenticated ? (
+                                                            <Link
+                                                                href={`/blog/${post.slug}`}
+                                                            >
+                                                                {post.title}
+                                                            </Link>
+                                                        ) : (
+                                                            <span>
+                                                                {post.title}
+                                                            </span>
+                                                        )}
                                                     </CardTitle>
                                                     <CardDescription className="line-clamp-2">
                                                         {post.excerpt !==
@@ -430,13 +567,8 @@ export default function Home({
                                                     <div className="mb-4 flex flex-wrap items-center gap-2">
                                                         {post.categories
                                                             .slice(0, 2)
-                                                            .map((category) => (
-                                                                <Link
-                                                                    key={
-                                                                        category.id
-                                                                    }
-                                                                    href={`/categories/${category.slug}`}
-                                                                >
+                                                            .map((category) => {
+                                                                const badge = (
                                                                     <Badge
                                                                         variant="secondary"
                                                                         style={{
@@ -465,8 +597,27 @@ export default function Home({
                                                                             category.name
                                                                         }
                                                                     </Badge>
-                                                                </Link>
-                                                            ))}
+                                                                );
+
+                                                                return isAuthenticated ? (
+                                                                    <Link
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                        href={`/categories/${category.slug}`}
+                                                                    >
+                                                                        {badge}
+                                                                    </Link>
+                                                                ) : (
+                                                                    <span
+                                                                        key={
+                                                                            category.id
+                                                                        }
+                                                                    >
+                                                                        {badge}
+                                                                    </span>
+                                                                );
+                                                            })}
                                                     </div>
                                                     <div className="flex items-center justify-between text-sm text-muted-foreground">
                                                         <div className="flex items-center gap-4">
@@ -502,16 +653,28 @@ export default function Home({
                                         Ready to explore more?
                                     </h2>
                                     <p className="mt-4 text-lg text-muted-foreground">
-                                        Browse our complete collection of
-                                        articles and discover something new.
+                                        Sign in to browse the blog—only admins
+                                        can access the dashboard.
                                     </p>
                                     <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                                        <Link href="/blog">
-                                            <Button size="lg">
-                                                View All Posts
-                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Button>
-                                        </Link>
+                                        {isAuthenticated ? (
+                                            <Link href="/blog">
+                                                <Button size="lg">
+                                                    View All Posts
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <Link href={login()}>
+                                                <Button
+                                                    size="lg"
+                                                    variant="outline"
+                                                >
+                                                    Log in
+                                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -536,22 +699,26 @@ export default function Home({
                                         Quick Links
                                     </h3>
                                     <ul className="space-y-2 text-sm">
-                                        <li>
-                                            <Link
-                                                href="/blog"
-                                                className="text-muted-foreground hover:text-foreground"
-                                            >
-                                                Blog
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link
-                                                href="/categories"
-                                                className="text-muted-foreground hover:text-foreground"
-                                            >
-                                                Categories
-                                            </Link>
-                                        </li>
+                                        {isAuthenticated && (
+                                            <>
+                                                <li>
+                                                    <Link
+                                                        href="/blog"
+                                                        className="text-muted-foreground hover:text-foreground"
+                                                    >
+                                                        Blog
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        href="/categories"
+                                                        className="text-muted-foreground hover:text-foreground"
+                                                    >
+                                                        Categories
+                                                    </Link>
+                                                </li>
+                                            </>
+                                        )}
                                     </ul>
                                 </div>
                                 <div>
@@ -561,14 +728,16 @@ export default function Home({
                                     <ul className="space-y-2 text-sm">
                                         {auth?.user !== null &&
                                         auth?.user !== undefined ? (
-                                            <li>
-                                                <Link
-                                                    href={dashboard()}
-                                                    className="text-muted-foreground hover:text-foreground"
-                                                >
-                                                    Dashboard
-                                                </Link>
-                                            </li>
+                                            isAdmin ? (
+                                                <li>
+                                                    <Link
+                                                        href={dashboard()}
+                                                        className="text-muted-foreground hover:text-foreground"
+                                                    >
+                                                        Dashboard
+                                                    </Link>
+                                                </li>
+                                            ) : null
                                         ) : (
                                             <>
                                                 <li>

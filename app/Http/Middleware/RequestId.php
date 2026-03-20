@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequestId
 {
@@ -16,11 +16,10 @@ class RequestId
         $request->headers->set('X-Request-Id', $requestId);
         app()->instance('request_id', $requestId);
 
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        /** @var Response $response */
         $response = $next($request);
         $response->headers->set('X-Request-Id', $requestId);
 
         return $response;
     }
 }
-

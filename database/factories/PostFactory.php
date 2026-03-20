@@ -36,7 +36,8 @@ class PostFactory extends Factory
 
         return [
             'title' => rtrim($title, '.').'.', // Ensure title ends with period
-            'slug' => Str::slug($title),
+            // Include a random suffix to avoid unique slug collisions.
+            'slug' => Str::slug($title).'-'.Str::lower(Str::random(6)),
             'content' => $formattedContent,
             'excerpt' => $excerpt,
             'published' => $isPublished,

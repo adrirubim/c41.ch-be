@@ -27,15 +27,21 @@ if (app()->environment('local')) {
     })->where('path', '.*');
 }
 
-// Public routes (no authentication required)
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/blog', [PublicPostController::class, 'index'])->name('public.posts.index');
-Route::get('/blog/{slug}', [PublicPostController::class, 'show'])->name('public.posts.show');
+// Enterprise: protect Blog and Categories
 
 // Public sitemap
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// Landing public homepage
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Protected Blog and Categories
+    Route::get('/blog', [PublicPostController::class, 'index'])->name('public.posts.index');
+    Route::get('/blog/{slug}', [PublicPostController::class, 'show'])->name('public.posts.show');
+    Route::get('/categories', [PublicCategoryController::class, 'index'])->name('public.categories.index');
+    Route::get('/categories/{slug}', [PublicCategoryController::class, 'show'])->name('public.categories.show');
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Image upload
@@ -83,9 +89,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('categories.destroy')
         ->where('category', '[0-9]+');
 });
-
-// Public category routes
-Route::get('/categories', [PublicCategoryController::class, 'index'])->name('public.categories.index');
-Route::get('/categories/{slug}', [PublicCategoryController::class, 'show'])->name('public.categories.show');
 
 require __DIR__.'/settings.php';

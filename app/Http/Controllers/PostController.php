@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Domain\Post\DTO\PostFiltersData;
 use App\Domain\Post\DTO\PostEditorialSuggestionInputData;
+use App\Domain\Post\DTO\PostFiltersData;
 use App\Domain\Post\DTO\PostUpsertData;
 use App\Http\Requests\PostEditorialSuggestionRequest;
 use App\Http\Requests\StorePostRequest;
@@ -19,9 +19,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 class PostController extends Controller
 {
@@ -82,6 +82,10 @@ class PostController extends Controller
         }
 
         $validated = $request->validated();
+        // Non-admins can publish, but they cannot impersonate other authors.
+        if ($user->is_admin !== true && array_key_exists('user_id', $validated)) {
+            unset($validated['user_id']);
+        }
         $postData = PostUpsertData::fromValidated(
             validated: $validated,
             defaultUserId: $user->id,
@@ -145,6 +149,10 @@ class PostController extends Controller
         }
 
         $validated = $request->validated();
+        // Non-admins can update their own posts, but cannot reassign author_id.
+        if ($user->is_admin !== true && array_key_exists('user_id', $validated)) {
+            unset($validated['user_id']);
+        }
         $postData = PostUpsertData::fromValidated(
             validated: $validated,
             defaultUserId: $user->id,

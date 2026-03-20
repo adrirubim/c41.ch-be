@@ -248,6 +248,15 @@ if ($user->is_admin) {
 $this->authorize('update', $post);
 ```
 
+### Post-login Redirect Rules
+
+After a successful Fortify login, users are redirected based on their role:
+
+- Administrator (`email === admin@example.com` OR `is_admin=true`): redirect to `/dashboard`
+- Regular user: redirect to `/blog`
+
+Implementation: `App\\Responses\\ConditionalLoginResponse` registered via `App\\Providers\\FortifyServiceProvider`.
+
 ## Migrations
 
 ### Running Migrations
@@ -281,6 +290,7 @@ npm run dev:frontend                # Vite dev server only
 # Database
 php artisan migrate                 # Run migrations
 php artisan migrate:fresh --seed    # Reset and seed
+php artisan db:seed --class=DatabaseSeeder # Seed demo users/categories/posts (see env flags)
 php artisan tinker                  # Interactive console
 
 # Testing
@@ -300,6 +310,16 @@ php artisan route:list              # List all routes
 php artisan make:model Post -m      # Create model with migration
 php artisan make:controller PostController --resource  # Resource controller
 ```
+
+### Demo Seed Flags (Development)
+
+- `SEED_DEMO_USERS_COUNT` — number of demo users (in addition to `admin@example.com` and `test@example.com`).
+- `SEED_DEMO_RESET`
+  - `true`: clears demo data (`posts` and `category_post` pivot) before re-generating the demo dataset.
+  - `false` (default): removes only previous demo posts/legacy data to avoid accumulation.
+
+- `SEED_POST_TONE` — demo post title tone (`mixed`, `tecnico`, `ux`, `marketing`). Affects only `PostSeeder`.
+  - Recommended (default in this repo): `tecnico`.
 
 ## Best Practices
 

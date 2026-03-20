@@ -13,4 +13,3 @@ class ErrorsTest extends TestCase
         $response->assertNotFound();
     }
 }
-

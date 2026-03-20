@@ -487,7 +487,10 @@ A public-facing header component for unauthenticated users, displayed on public 
 **Features**:
 - Logo on the left
 - Navigation links (Home, Blog, Categories) in the center
-- Login/Register buttons on the right (or Dashboard if authenticated)
+- Guest (not authenticated): `Log in` and `Sign up` actions
+- Authenticated admin (`is_admin=true`): `Dashboard`
+- Authenticated regular user: `Account`
+- On the landing page (`/`), mobile auth actions are shown only inside the hamburger menu dropdown (not on the sticky top bar)
 - Responsive mobile menu with sheet component
 - Sticky positioning with backdrop blur
 

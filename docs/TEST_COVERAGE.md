@@ -22,7 +22,7 @@ Unit tests are kept minimal; most logic is covered by Feature tests with real HT
 
 | Area | Tests | What is covered |
 |------|--------|------------------|
-| **Auth** | `AuthenticationTest` | Login screen, login/logout, invalid password, rate limiting, two-factor redirect |
+| **Auth** | `AuthenticationTest` | Login screen, login/logout, invalid password, rate limiting, two-factor redirect, conditional post-login redirect (admin->`/dashboard`, regular->`/blog`) |
 | | `EmailVerificationTest` | Verification screen, verify email, invalid hash/user, redirect when already verified |
 | | `PasswordConfirmationTest` | Confirm password screen, auth required |
 | | `PasswordResetTest` | Reset link screen, request link, reset screen, reset with valid/invalid token |

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Repositories\CategoryRepository;
 use App\Services\PostService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,13 +17,25 @@ class DashboardController extends Controller
     public function __construct(
         private PostService $postService,
         private CategoryRepository $categoryRepository
-    ) {}
+    ) {
+        // Access control is enforced at method-level (no $this->middleware()).
+    }
 
     /**
      * Display the dashboard.
      */
-    public function index(): Response
+    public function index(): Response|RedirectResponse
     {
+        $user = request()->user();
+        if ($user === null) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if ($user->is_admin !== true) {
+            // Non-admins should land in the blog.
+            return redirect()->route('public.posts.index');
+        }
+
         // Cache statistics (5 minutes)
         $stats = Cache::remember('dashboard.stats', 300, function () {
             $postsCount = Post::withoutTrashed()->count();
