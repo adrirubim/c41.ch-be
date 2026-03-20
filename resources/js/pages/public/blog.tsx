@@ -1,5 +1,7 @@
+import { EmptyState } from '@/components/empty-state';
 import { Link } from '@/components/link';
 import { PublicHeader } from '@/components/public-header';
+import { SkeletonPostList } from '@/components/skeleton-loaders';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,9 +19,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 import { withBasePath } from '@/lib/utils';
 import { Head, router, useForm } from '@inertiajs/react';
-import { Calendar, Eye, Search, Star, User } from 'lucide-react';
+import { Calendar, Eye, FileText, Search, Star, User } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface Post {
     id: number;
@@ -107,7 +111,35 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                 : '12',
     });
 
+    const [isApplyingFilters, setIsApplyingFilters] = useState(false);
+
+    const selectedCategory = useMemo(() => {
+        if (data.category === 'all') return null;
+        const id = String(data.category);
+        return categories.find((c) => String(c.id) === id) ?? null;
+    }, [data.category, categories]);
+
+    const hasActiveFilters = useMemo(() => {
+        return (
+            (typeof data.search === 'string' && data.search.trim() !== '') ||
+            data.category !== 'all' ||
+            data.featured !== 'all' ||
+            data.sort_by !== 'published_at' ||
+            data.sort_order !== 'desc' ||
+            data.per_page !== '12'
+        );
+    }, [
+        data.search,
+        data.category,
+        data.featured,
+        data.sort_by,
+        data.sort_order,
+        data.per_page,
+    ]);
+
     const handleFilter = () => {
+        if (isApplyingFilters) return;
+
         const params: Record<string, string> = {};
         if (
             data.search !== null &&
@@ -121,9 +153,13 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
         if (data.sort_order !== 'desc') params.sort_order = data.sort_order;
         if (data.per_page !== '12') params.per_page = data.per_page;
 
+        setIsApplyingFilters(true);
         router.get(withBasePath('/blog'), params, {
             preserveState: true,
             preserveScroll: true,
+            onFinish: () => {
+                setIsApplyingFilters(false);
+            },
         });
     };
 
@@ -245,8 +281,16 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                 <Button
                                     onClick={handleFilter}
                                     className="w-full"
+                                    disabled={isApplyingFilters}
                                 >
-                                    Apply Filters
+                                    {isApplyingFilters ? (
+                                        <span className="inline-flex items-center justify-center gap-2">
+                                            <Spinner className="animate-spin" />
+                                            Applying...
+                                        </span>
+                                    ) : (
+                                        'Apply Filters'
+                                    )}
                                 </Button>
                             </div>
                         </div>
@@ -255,7 +299,9 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                     {/* Posts Grid */}
                     <section className="py-12 md:py-16">
                         <div className="container mx-auto px-4 md:max-w-7xl">
-                            {posts.data.length > 0 ? (
+                            {isApplyingFilters ? (
+                                <SkeletonPostList count={6} />
+                            ) : posts.data.length > 0 ? (
                                 <>
                                     <div className="mb-6 flex items-center justify-between">
                                         <p className="text-sm text-muted-foreground">
@@ -392,19 +438,27 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                     )}
                                 </>
                             ) : (
-                                <div className="py-16 text-center">
-                                    <p className="text-lg text-muted-foreground">
-                                        No posts found.
-                                    </p>
-                                    <Link
-                                        href="/blog"
-                                        className="mt-4 inline-block"
-                                    >
-                                        <Button variant="outline">
-                                            Clear Filters
-                                        </Button>
-                                    </Link>
-                                </div>
+                                <EmptyState
+                                    icon={FileText}
+                                    title="No posts found"
+                                    description={
+                                        hasActiveFilters
+                                            ? `No results${
+                                                  data.search.trim()
+                                                      ? ` for "${data.search.trim()}"`
+                                                      : ''
+                                              }. Try clearing filters${
+                                                  selectedCategory
+                                                      ? ` (category: ${selectedCategory.name})`
+                                                      : ''
+                                              }.`
+                                            : 'Start by exploring our latest posts - new articles appear here regularly.'
+                                    }
+                                    action={{
+                                        label: 'Clear Filters',
+                                        href: '/blog',
+                                    }}
+                                />
                             )}
                         </div>
                     </section>

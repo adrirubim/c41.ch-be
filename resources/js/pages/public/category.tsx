@@ -1,5 +1,7 @@
+import { EmptyState } from '@/components/empty-state';
 import { Link } from '@/components/link';
 import { PublicHeader } from '@/components/public-header';
+import { SkeletonPostList } from '@/components/skeleton-loaders';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,17 +19,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Spinner } from '@/components/ui/spinner';
 import { withBasePath } from '@/lib/utils';
 import { Head, router, useForm } from '@inertiajs/react';
 import {
     ArrowLeft,
     Calendar,
     Eye,
+    FileText,
     Search,
     Star,
     Tag,
     User,
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 interface Post {
     id: number;
@@ -111,7 +116,20 @@ export default function CategoryPage({
                 : '12',
     });
 
+    const [isApplyingFilters, setIsApplyingFilters] = useState(false);
+
+    const hasActiveFilters = useMemo(() => {
+        return (
+            (typeof data.search === 'string' && data.search.trim() !== '') ||
+            data.sort_by !== 'published_at' ||
+            data.sort_order !== 'desc' ||
+            data.per_page !== '12'
+        );
+    }, [data.search, data.sort_by, data.sort_order, data.per_page]);
+
     const handleFilter = () => {
+        if (isApplyingFilters) return;
+
         const params: Record<string, string> = {};
         if (
             data.search !== null &&
@@ -123,9 +141,13 @@ export default function CategoryPage({
         if (data.sort_order !== 'desc') params.sort_order = data.sort_order;
         if (data.per_page !== '12') params.per_page = data.per_page;
 
+        setIsApplyingFilters(true);
         router.get(withBasePath(`/categories/${category.slug}`), params, {
             preserveState: true,
             preserveScroll: true,
+            onFinish: () => {
+                setIsApplyingFilters(false);
+            },
         });
     };
 
@@ -151,16 +173,17 @@ export default function CategoryPage({
                     {/* Category Header */}
                     <section className="border-b bg-gradient-to-br from-primary/5 via-background to-primary/5 py-12 md:py-16">
                         <div className="container mx-auto px-4 md:max-w-7xl">
-                            <Link href="/categories">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="mb-6"
-                                >
+                            <Button
+                                asChild
+                                variant="ghost"
+                                size="sm"
+                                className="mb-6"
+                            >
+                                <Link href="/categories">
                                     <ArrowLeft className="mr-2 h-4 w-4" />
                                     All Categories
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                             <div className="flex items-center gap-4">
                                 <div
                                     className="flex h-16 w-16 items-center justify-center rounded-lg"
@@ -254,8 +277,16 @@ export default function CategoryPage({
                                 <Button
                                     onClick={handleFilter}
                                     className="w-full"
+                                    disabled={isApplyingFilters}
                                 >
-                                    Apply Filters
+                                    {isApplyingFilters ? (
+                                        <span className="inline-flex items-center justify-center gap-2">
+                                            <Spinner className="animate-spin" />
+                                            Applying...
+                                        </span>
+                                    ) : (
+                                        'Apply Filters'
+                                    )}
                                 </Button>
                             </div>
                         </div>
@@ -264,7 +295,9 @@ export default function CategoryPage({
                     {/* Posts Grid */}
                     <section className="py-12 md:py-16">
                         <div className="container mx-auto px-4 md:max-w-7xl">
-                            {posts.data.length > 0 ? (
+                            {isApplyingFilters ? (
+                                <SkeletonPostList count={6} />
+                            ) : posts.data.length > 0 ? (
                                 <>
                                     <div className="mb-6">
                                         <p className="text-sm text-muted-foreground">
@@ -399,19 +432,23 @@ export default function CategoryPage({
                                     )}
                                 </>
                             ) : (
-                                <div className="py-16 text-center">
-                                    <p className="text-lg text-muted-foreground">
-                                        No posts found in this category.
-                                    </p>
-                                    <Link
-                                        href="/blog"
-                                        className="mt-4 inline-block"
-                                    >
-                                        <Button variant="outline">
-                                            Browse All Posts
-                                        </Button>
-                                    </Link>
-                                </div>
+                                <EmptyState
+                                    icon={FileText}
+                                    title="No posts found"
+                                    description={
+                                        hasActiveFilters
+                                            ? `No results for ${
+                                                  data.search.trim()
+                                                      ? `"${data.search.trim()}"`
+                                                      : 'your current filters'
+                                              }. Try clearing filters to broaden the results.`
+                                            : `No posts are available right now in ${category.name}. Check back soon or browse all posts.`
+                                    }
+                                    action={{
+                                        label: 'Browse All Posts',
+                                        href: '/blog',
+                                    }}
+                                />
                             )}
                         </div>
                     </section>

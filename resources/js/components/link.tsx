@@ -18,6 +18,26 @@ export const Link = forwardRef<HTMLAnchorElement, InertiaLinkProps>(
             return <InertiaLink ref={ref} href={href} {...props} />;
         }
 
+        // Pagination helpers sometimes provide absolute URLs (e.g. `http://localhost:8000/...`).
+        // If we run those through `withBasePath()`, we end up with invalid paths like
+        // `/http://localhost:8000/...`. For any `scheme:` URL (http/https/mailto/tel/...), keep it as-is.
+        const hrefString =
+            typeof href === 'string'
+                ? href
+                : typeof href === 'object' &&
+                      href !== null &&
+                      'url' in href &&
+                      typeof href.url === 'string'
+                    ? href.url
+                    : null;
+
+        if (
+            hrefString != null &&
+            /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(hrefString)
+        ) {
+            return <InertiaLink ref={ref} href={href} {...props} />;
+        }
+
         // Automatically add the subdirectory prefix
         const hrefWithBase = withBasePath(href);
 

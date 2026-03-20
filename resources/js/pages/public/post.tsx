@@ -1,3 +1,4 @@
+import { EmptyState } from '@/components/empty-state';
 import { Link } from '@/components/link';
 import { PublicHeader } from '@/components/public-header';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +13,15 @@ import {
 import { dashboard, login, register } from '@/routes';
 import { type SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Eye, Star, Tag, User } from 'lucide-react';
+import {
+    ArrowLeft,
+    Calendar,
+    Eye,
+    FileText,
+    Star,
+    Tag,
+    User,
+} from 'lucide-react';
 
 interface Post {
     id: number;
@@ -71,6 +80,7 @@ function formatDate(dateString: string): string {
 
 export default function Post({ post, relatedPosts }: PostProps) {
     const { auth } = usePage<SharedData>().props;
+    const primaryCategoryName = post.categories[0]?.name;
 
     return (
         <>
@@ -222,12 +232,13 @@ export default function Post({ post, relatedPosts }: PostProps) {
                     </article>
 
                     {/* Related Posts */}
-                    {relatedPosts.length > 0 && (
-                        <section className="border-t bg-muted/30 py-12 md:py-16">
-                            <div className="container mx-auto px-4 md:max-w-7xl">
-                                <h2 className="mb-8 text-2xl font-bold">
-                                    Related Posts
-                                </h2>
+                    <section className="border-t bg-muted/30 py-12 md:py-16">
+                        <div className="container mx-auto px-4 md:max-w-7xl">
+                            <h2 className="mb-8 text-2xl font-bold">
+                                Related Posts
+                            </h2>
+
+                            {relatedPosts.length > 0 ? (
                                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                                     {relatedPosts.map((relatedPost) => (
                                         <Card
@@ -310,9 +321,24 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                         </Card>
                                     ))}
                                 </div>
-                            </div>
-                        </section>
-                    )}
+                            ) : (
+                                <EmptyState
+                                    icon={FileText}
+                                    title="No related posts yet"
+                                    description={
+                                        primaryCategoryName
+                                            ? `No related posts found for this article yet. Explore more in "${primaryCategoryName}" or go back to the blog.`
+                                            : 'No related posts found for this article yet. Go back to the blog to discover more posts.'
+                                    }
+                                    action={{
+                                        label: 'Back to Blog',
+                                        href: '/blog',
+                                    }}
+                                    className="mx-auto max-w-2xl"
+                                />
+                            )}
+                        </div>
+                    </section>
                 </main>
 
                 {/* Footer */}

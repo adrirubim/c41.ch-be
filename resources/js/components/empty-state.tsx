@@ -49,12 +49,12 @@ export function EmptyState({
                     )}
                 {action &&
                     (typeof action.href === 'string' && action.href !== '' ? (
-                        <Link href={action.href}>
-                            <Button>
+                        <Button asChild>
+                            <Link href={action.href}>
                                 <Plus className="mr-2 h-4 w-4" />
                                 {action.label}
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
                     ) : (
                         <Button onClick={action.onClick}>
                             <Plus className="mr-2 h-4 w-4" />
