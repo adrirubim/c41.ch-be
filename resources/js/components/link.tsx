@@ -25,11 +25,11 @@ export const Link = forwardRef<HTMLAnchorElement, InertiaLinkProps>(
             typeof href === 'string'
                 ? href
                 : typeof href === 'object' &&
-                      href !== null &&
-                      'url' in href &&
-                      typeof href.url === 'string'
-                    ? href.url
-                    : null;
+                    href !== null &&
+                    'url' in href &&
+                    typeof href.url === 'string'
+                  ? href.url
+                  : null;
 
         if (
             hrefString != null &&
