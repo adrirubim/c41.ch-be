@@ -8,15 +8,17 @@ use App\Infrastructure\Eloquent\Attributes\Cast;
 use App\Infrastructure\Eloquent\Attributes\Fillable;
 use App\Infrastructure\Eloquent\Concerns\HasModelAttributes;
 use App\Services\HtmlPurifierService;
+use Database\Factories\PostFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Builder<Post>
+ * @mixin Builder<Post>
  */
 #[Fillable([
     'title',
@@ -60,19 +62,25 @@ class Post extends Model
     }
 
     /**
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<User, Post>
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        /** @var BelongsTo<User, Post> $relation */
+        $relation = $this->belongsTo(User::class);
+
+        return $relation;
     }
 
     /**
-     * @return BelongsToMany<Category, $this, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
+     * @return BelongsToMany<Category, Post, Pivot, 'pivot'>
      */
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'category_post')
+        /** @var BelongsToMany<Category, Post, Pivot, 'pivot'> $relation */
+        $relation = $this->belongsToMany(Category::class, 'category_post')
             ->withTimestamps();
+
+        return $relation;
     }
 }

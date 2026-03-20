@@ -6,14 +6,16 @@ namespace App\Models;
 
 use App\Infrastructure\Eloquent\Attributes\Fillable;
 use App\Infrastructure\Eloquent\Concerns\HasModelAttributes;
+use Database\Factories\CategoryFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Builder<Category>
+ * @mixin Builder<Category>
  */
 #[Fillable([
     'name',
@@ -30,11 +32,14 @@ class Category extends Model
      * Many-to-many relationship with posts.
      */
     /**
-     * @return BelongsToMany<Post, $this, \Illuminate\Database\Eloquent\Relations\Pivot, 'pivot'>
+     * @return BelongsToMany<Post, Category, Pivot, 'pivot'>
      */
     public function posts(): BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'category_post')
+        /** @var BelongsToMany<Post, Category, Pivot, 'pivot'> $relation */
+        $relation = $this->belongsToMany(Post::class, 'category_post')
             ->withTimestamps();
+
+        return $relation;
     }
 }

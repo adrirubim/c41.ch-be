@@ -9,8 +9,8 @@ use App\Infrastructure\Eloquent\Attributes\Cast;
 use App\Infrastructure\Eloquent\Attributes\Fillable;
 use App\Infrastructure\Eloquent\Concerns\HasModelAttributes;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -48,10 +48,13 @@ class User extends Authenticatable
      * HasMany relationship with posts.
      */
     /**
-     * @return HasMany<Post, $this>
+     * @return HasMany<Post, User>
      */
     public function posts(): HasMany
     {
-        return $this->hasMany(Post::class);
+        /** @var HasMany<Post, User> $relation */
+        $relation = $this->hasMany(Post::class);
+
+        return $relation;
     }
 }
