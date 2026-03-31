@@ -1,5 +1,10 @@
 import { Button } from '#app/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from '#app/components/ui/card';
 import {
     Dialog,
     DialogContent,

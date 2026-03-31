@@ -1,10 +1,10 @@
 import { withBasePath } from '#app/lib/utils';
-import { Form as InertiaForm } from '@inertiajs/react';
 import type {
     FormComponentProps,
     FormComponentRef,
     FormComponentSlotProps,
 } from '@inertiajs/core';
+import { Form as InertiaForm } from '@inertiajs/react';
 import React, { type ReactNode } from 'react';
 
 type FormProps<TForm extends object = Record<string, unknown>> =

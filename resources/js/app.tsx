@@ -1,8 +1,8 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
-import { StrictMode } from 'react';
 import type { ComponentType } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 
