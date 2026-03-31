@@ -19,8 +19,8 @@
     "require": {
         "php": "^8.4",
         "ezyang/htmlpurifier": "^4.19",
-        "inertiajs/inertia-laravel": "^2.0",
-        "laravel/ai": "^0.3.2",
+        "inertiajs/inertia-laravel": "^3.0",
+        "laravel/ai": "^0.4",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^13.0",
         "laravel/tinker": "3.x-dev",
