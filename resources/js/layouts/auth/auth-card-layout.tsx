@@ -1,13 +1,13 @@
-import AppLogoIcon from '@/components/app-logo-icon';
-import { Link } from '@/components/link';
+import AppLogoIcon from '#app/components/app-logo-icon';
+import { Link } from '#app/components/link';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { home } from '@/routes';
+} from '#app/components/ui/card';
+import { home } from '#app/routes';
 import { type PropsWithChildren } from 'react';
 
 export default function AuthCardLayout({

@@ -1,4 +1,4 @@
-import { withBasePath } from '@/lib/utils';
+import { withBasePath } from '#app/lib/utils';
 import { router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 

@@ -1,13 +1,13 @@
-import { Link } from '@/components/link';
+import { Link } from '#app/components/link';
 import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { useActiveUrl } from '@/hooks/use-active-url';
-import { type NavItem } from '@/types';
+} from '#app/components/ui/sidebar';
+import { useActiveUrl } from '#app/hooks/use-active-url';
+import { type NavItem } from '#app/types';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { urlIsActive } = useActiveUrl();

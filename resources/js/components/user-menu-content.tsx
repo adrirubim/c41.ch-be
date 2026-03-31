@@ -1,16 +1,16 @@
-import { Link } from '@/components/link';
+import { Link } from '#app/components/link';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { UserInfo } from '@/components/user-info';
-import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
-import { withBasePath } from '@/lib/utils';
-import { logout } from '@/routes';
-import { edit } from '@/routes/profile';
-import { type User } from '@/types';
+} from '#app/components/ui/dropdown-menu';
+import { UserInfo } from '#app/components/user-info';
+import { useMobileNavigation } from '#app/hooks/use-mobile-navigation';
+import { withBasePath } from '#app/lib/utils';
+import { logout } from '#app/routes';
+import { edit } from '#app/routes/profile';
+import { type User } from '#app/types';
 import { router } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 

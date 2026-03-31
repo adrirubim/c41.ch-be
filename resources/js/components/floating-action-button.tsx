@@ -1,6 +1,6 @@
-import { Link } from '@/components/link';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Link } from '#app/components/link';
+import { Button } from '#app/components/ui/button';
+import { cn } from '#app/lib/utils';
 import { usePage } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 

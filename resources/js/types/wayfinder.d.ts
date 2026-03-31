@@ -10,7 +10,7 @@ interface RouteWithForm {
     form(): Record<string, unknown>;
 }
 
-declare module '@/routes' {
+declare module '#app/routes' {
     const home: () => string;
     const dashboard: () => string;
     const login: () => string;
@@ -19,34 +19,34 @@ declare module '@/routes' {
     export { dashboard, home, login, logout, register };
 }
 
-declare module '@/routes/login' {
+declare module '#app/routes/login' {
     const store: RouteWithForm;
     export { store };
 }
 
-declare module '@/routes/register' {
+declare module '#app/routes/register' {
     const store: RouteWithForm;
     export { store };
 }
 
-declare module '@/routes/password' {
+declare module '#app/routes/password' {
     const request: () => string;
     const email: RouteWithForm;
     const update: RouteWithForm;
     export { email, request, update };
 }
 
-declare module '@/routes/password/confirm' {
+declare module '#app/routes/password/confirm' {
     const store: RouteWithForm;
     export { store };
 }
 
-declare module '@/routes/verification' {
+declare module '#app/routes/verification' {
     const send: RouteWithForm;
     export { send };
 }
 
-declare module '@/routes/two-factor' {
+declare module '#app/routes/two-factor' {
     interface TwoFactorShow {
         (): string;
         url(): string;
@@ -71,27 +71,27 @@ declare module '@/routes/two-factor' {
     };
 }
 
-declare module '@/routes/two-factor/login' {
+declare module '#app/routes/two-factor/login' {
     const store: RouteWithForm;
     export { store };
 }
 
-declare module '@/routes/profile' {
+declare module '#app/routes/profile' {
     const edit: () => string;
     export { edit };
 }
 
-declare module '@/routes/user-password' {
+declare module '#app/routes/user-password' {
     const edit: () => string;
     export { edit };
 }
 
-declare module '@/routes/appearance' {
+declare module '#app/routes/appearance' {
     const edit: () => string;
     export { edit };
 }
 
-declare module '@/actions/App/Http/Controllers/Settings/ProfileController' {
+declare module '#app/actions/App/Http/Controllers/Settings/ProfileController' {
     const ProfileController: {
         update: { form: () => Record<string, unknown> };
         destroy: { form: () => Record<string, unknown> };
@@ -99,7 +99,7 @@ declare module '@/actions/App/Http/Controllers/Settings/ProfileController' {
     export default ProfileController;
 }
 
-declare module '@/actions/App/Http/Controllers/Settings/PasswordController' {
+declare module '#app/actions/App/Http/Controllers/Settings/PasswordController' {
     const PasswordController: {
         update: { form: () => Record<string, unknown> };
     };

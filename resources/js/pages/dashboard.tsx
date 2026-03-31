@@ -1,6 +1,6 @@
-import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
+import AppLayout from '#app/layouts/app-layout';
+import { dashboard } from '#app/routes';
+import { type BreadcrumbItem } from '#app/types';
 import { Head } from '@inertiajs/react';
 import { DashboardCharts } from '@modules/dashboard/components/DashboardCharts';
 import { DashboardPostsLists } from '@modules/dashboard/components/DashboardPostsLists';

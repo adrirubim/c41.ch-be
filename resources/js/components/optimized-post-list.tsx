@@ -1,7 +1,7 @@
-import { Link } from '@/components/link';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Link } from '#app/components/link';
+import { Badge } from '#app/components/ui/badge';
+import { Button } from '#app/components/ui/button';
+import { cn } from '#app/lib/utils';
 import { CheckCircle, Edit, Eye, Star, Trash2, XCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 

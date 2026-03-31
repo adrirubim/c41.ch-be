@@ -1,11 +1,11 @@
-import { Form } from '@/components/form';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { PasswordInput } from '@/components/ui/password-input';
-import { Spinner } from '@/components/ui/spinner';
-import AuthLayout from '@/layouts/auth-layout';
-import { store } from '@/routes/password/confirm';
+import { Form } from '#app/components/form';
+import InputError from '#app/components/input-error';
+import { Button } from '#app/components/ui/button';
+import { Label } from '#app/components/ui/label';
+import { PasswordInput } from '#app/components/ui/password-input';
+import { Spinner } from '#app/components/ui/spinner';
+import AuthLayout from '#app/layouts/auth-layout';
+import { store } from '#app/routes/password/confirm';
 import type { FormComponentSlotProps } from '@inertiajs/core';
 import { Head } from '@inertiajs/react';
 

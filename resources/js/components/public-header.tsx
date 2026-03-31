@@ -1,14 +1,14 @@
-import { Link } from '@/components/link';
-import { Button } from '@/components/ui/button';
+import { Link } from '#app/components/link';
+import { Button } from '#app/components/ui/button';
 import {
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@/components/ui/sheet';
-import { dashboard, login, register } from '@/routes';
-import { type SharedData } from '@/types';
+} from '#app/components/ui/sheet';
+import { dashboard, login, register } from '#app/routes';
+import { type SharedData } from '#app/types';
 import { usePage } from '@inertiajs/react';
 import { LogIn, Menu } from 'lucide-react';
 import AppLogo from './app-logo';

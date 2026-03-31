@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react';
 
-import AppearanceTabs from '@/components/appearance-tabs';
-import HeadingSmall from '@/components/heading-small';
-import { type BreadcrumbItem } from '@/types';
+import AppearanceTabs from '#app/components/appearance-tabs';
+import HeadingSmall from '#app/components/heading-small';
+import { type BreadcrumbItem } from '#app/types';
 
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
-import { edit as editAppearance } from '@/routes/appearance';
+import AppLayout from '#app/layouts/app-layout';
+import SettingsLayout from '#app/layouts/settings/layout';
+import { edit as editAppearance } from '#app/routes/appearance';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

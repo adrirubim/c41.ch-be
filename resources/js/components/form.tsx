@@ -1,8 +1,26 @@
-import { withBasePath } from '@/lib/utils';
+import { withBasePath } from '#app/lib/utils';
 import { Form as InertiaForm } from '@inertiajs/react';
-import type { ComponentPropsWithoutRef } from 'react';
+import type {
+    FormComponentProps,
+    FormComponentRef,
+    FormComponentSlotProps,
+} from '@inertiajs/core';
+import React, { type ReactNode } from 'react';
 
-type InertiaFormProps = ComponentPropsWithoutRef<typeof InertiaForm>;
+type FormProps<TForm extends object = Record<string, unknown>> =
+    FormComponentProps<TForm> &
+        Omit<
+            React.FormHTMLAttributes<HTMLFormElement>,
+            keyof FormComponentProps | 'children'
+        > &
+        Omit<
+            React.AllHTMLAttributes<HTMLFormElement>,
+            keyof FormComponentProps | 'children'
+        > & {
+            children:
+                | ReactNode
+                | ((props: FormComponentSlotProps<TForm>) => ReactNode);
+        };
 
 /**
  * Custom Form component that automatically adds the subdirectory prefix
@@ -16,11 +34,14 @@ type InertiaFormProps = ComponentPropsWithoutRef<typeof InertiaForm>;
  *
  * The action will be automatically corrected with the subdirectory prefix.
  */
-export function Form({ action, ...props }: InertiaFormProps) {
+export function Form<TForm extends object = Record<string, unknown>>({
+    action,
+    ...props
+}: FormProps<TForm> & React.RefAttributes<FormComponentRef<TForm>>) {
     const actionWithBase =
         typeof action === 'string' && action !== ''
             ? withBasePath(action)
             : action;
 
-    return <InertiaForm action={actionWithBase} {...props} />;
+    return <InertiaForm<TForm> action={actionWithBase} {...props} />;
 }

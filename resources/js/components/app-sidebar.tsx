@@ -1,7 +1,7 @@
-import { Link } from '@/components/link';
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+import { Link } from '#app/components/link';
+import { NavFooter } from '#app/components/nav-footer';
+import { NavMain } from '#app/components/nav-main';
+import { NavUser } from '#app/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -10,9 +10,9 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
+} from '#app/components/ui/sidebar';
+import { dashboard } from '#app/routes';
+import { type NavItem } from '#app/types';
 import { FileText, LayoutGrid, Tag } from 'lucide-react';
 import AppLogo from './app-logo';
 

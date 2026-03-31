@@ -1,14 +1,14 @@
-import AppLogo from '@/components/app-logo';
-import { Link } from '@/components/link';
-import { PublicHeader } from '@/components/public-header';
+import AppLogo from '#app/components/app-logo';
+import { Link } from '#app/components/link';
+import { PublicHeader } from '#app/components/public-header';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { home } from '@/routes';
+} from '#app/components/ui/card';
+import { home } from '#app/routes';
 import { type PropsWithChildren } from 'react';
 
 export default function AuthLayout({

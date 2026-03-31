@@ -1,12 +1,12 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '#app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card';
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-} from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
+} from '#app/components/ui/dialog';
+import { cn } from '#app/lib/utils';
 import { Eye, Maximize2, X } from 'lucide-react';
 import { useState } from 'react';
 

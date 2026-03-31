@@ -1,7 +1,7 @@
-import { ConfirmDialog } from '@/components/confirm-dialog';
-import { Badge } from '@/components/ui/badge';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import { ConfirmDialog } from '#app/components/confirm-dialog';
+import { Badge } from '#app/components/ui/badge';
+import AppLayout from '#app/layouts/app-layout';
+import { type BreadcrumbItem } from '#app/types';
 import { Head } from '@inertiajs/react';
 import {
     PostsFilters,

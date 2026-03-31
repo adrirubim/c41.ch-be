@@ -1,4 +1,4 @@
-import { withBasePath } from '@/lib/utils';
+import { withBasePath } from '#app/lib/utils';
 import { Link as InertiaLink, InertiaLinkProps } from '@inertiajs/react';
 import { forwardRef } from 'react';
 

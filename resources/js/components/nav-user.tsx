@@ -2,17 +2,17 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '#app/components/ui/dropdown-menu';
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from '@/components/ui/sidebar';
-import { UserInfo } from '@/components/user-info';
-import { UserMenuContent } from '@/components/user-menu-content';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { type SharedData } from '@/types';
+} from '#app/components/ui/sidebar';
+import { UserInfo } from '#app/components/user-info';
+import { UserMenuContent } from '#app/components/user-menu-content';
+import { useIsMobile } from '#app/hooks/use-mobile';
+import { type SharedData } from '#app/types';
 import { usePage } from '@inertiajs/react';
 import { ChevronsUpDown } from 'lucide-react';
 

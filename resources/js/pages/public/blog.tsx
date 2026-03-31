@@ -1,26 +1,26 @@
-import { EmptyState } from '@/components/empty-state';
-import { Link } from '@/components/link';
-import { PublicHeader } from '@/components/public-header';
-import { SkeletonPostList } from '@/components/skeleton-loaders';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { EmptyState } from '#app/components/empty-state';
+import { Link } from '#app/components/link';
+import { PublicHeader } from '#app/components/public-header';
+import { SkeletonPostList } from '#app/components/skeleton-loaders';
+import { Badge } from '#app/components/ui/badge';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+} from '#app/components/ui/card';
+import { Input } from '#app/components/ui/input';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
-import { withBasePath } from '@/lib/utils';
+} from '#app/components/ui/select';
+import { Spinner } from '#app/components/ui/spinner';
+import { withBasePath } from '#app/lib/utils';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Calendar, Eye, FileText, Search, Star, User } from 'lucide-react';
 import { useMemo, useState } from 'react';

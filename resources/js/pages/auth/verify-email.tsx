@@ -1,11 +1,11 @@
 // Components
-import { Form } from '@/components/form';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
-import AuthLayout from '@/layouts/auth-layout';
-import { withBasePath } from '@/lib/utils';
-import { logout } from '@/routes';
-import { send } from '@/routes/verification';
+import { Form } from '#app/components/form';
+import { Button } from '#app/components/ui/button';
+import { Spinner } from '#app/components/ui/spinner';
+import AuthLayout from '#app/layouts/auth-layout';
+import { withBasePath } from '#app/lib/utils';
+import { logout } from '#app/routes';
+import { send } from '#app/routes/verification';
 import type { FormComponentSlotProps } from '@inertiajs/core';
 import { Head, router } from '@inertiajs/react';
 

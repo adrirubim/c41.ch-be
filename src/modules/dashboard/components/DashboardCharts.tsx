@@ -1,5 +1,5 @@
-import { BarChart, PieChart } from '@/components/charts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { BarChart, PieChart } from '#app/components/charts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '#app/components/ui/card';
 import type { CategoryDistribution, DashboardStats } from '@modules/dashboard/types';
 import { BarChart3 } from 'lucide-react';
 

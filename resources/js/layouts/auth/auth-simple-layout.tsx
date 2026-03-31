@@ -1,6 +1,6 @@
-import AppLogoIcon from '@/components/app-logo-icon';
-import { Link } from '@/components/link';
-import { home } from '@/routes';
+import AppLogoIcon from '#app/components/app-logo-icon';
+import { Link } from '#app/components/link';
+import { home } from '#app/routes';
 import { type PropsWithChildren } from 'react';
 
 interface AuthLayoutProps {

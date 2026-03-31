@@ -1,5 +1,5 @@
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import AppLayout from '#app/layouts/app-layout';
+import { type BreadcrumbItem } from '#app/types';
 import { Head } from '@inertiajs/react';
 import { PostsShowLayout } from '@modules/posts/components/PostsShow/PostsShowLayout';
 import type { PostsShowProps } from '@modules/posts/hooks/use-posts-show-page';

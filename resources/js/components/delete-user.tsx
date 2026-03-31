@@ -1,8 +1,8 @@
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { Form } from '@/components/form';
-import HeadingSmall from '@/components/heading-small';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
+import ProfileController from '#app/actions/App/Http/Controllers/Settings/ProfileController';
+import { Form } from '#app/components/form';
+import HeadingSmall from '#app/components/heading-small';
+import InputError from '#app/components/input-error';
+import { Button } from '#app/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -11,9 +11,9 @@ import {
     DialogFooter,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { PasswordInput } from '@/components/ui/password-input';
+} from '#app/components/ui/dialog';
+import { Label } from '#app/components/ui/label';
+import { PasswordInput } from '#app/components/ui/password-input';
 import { useRef } from 'react';
 
 export default function DeleteUser() {

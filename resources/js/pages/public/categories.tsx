@@ -1,11 +1,11 @@
-import { Link } from '@/components/link';
-import { PublicHeader } from '@/components/public-header';
+import { Link } from '#app/components/link';
+import { PublicHeader } from '#app/components/public-header';
 import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from '#app/components/ui/card';
 import { Head } from '@inertiajs/react';
 import { ArrowRight, Tag } from 'lucide-react';
 

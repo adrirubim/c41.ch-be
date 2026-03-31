@@ -1,13 +1,13 @@
-import { Icon } from '@/components/icon';
+import { Icon } from '#app/components/icon';
 import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { toUrl } from '@/lib/utils';
-import { type NavItem } from '@/types';
+} from '#app/components/ui/sidebar';
+import { toUrl } from '#app/lib/utils';
+import { type NavItem } from '#app/types';
 import { type ComponentPropsWithoutRef } from 'react';
 
 export function NavFooter({

@@ -1,12 +1,12 @@
-import { AppContent } from '@/components/app-content';
-import { AppShell } from '@/components/app-shell';
-import { AppSidebar } from '@/components/app-sidebar';
-import { AppSidebarHeader } from '@/components/app-sidebar-header';
-import { CommandPalette } from '@/components/command-palette';
-import { FloatingActionButton } from '@/components/floating-action-button';
-import { Toaster } from '@/components/toaster';
-import { useCommonShortcuts } from '@/hooks/use-keyboard-shortcuts';
-import { type BreadcrumbItem } from '@/types';
+import { AppContent } from '#app/components/app-content';
+import { AppShell } from '#app/components/app-shell';
+import { AppSidebar } from '#app/components/app-sidebar';
+import { AppSidebarHeader } from '#app/components/app-sidebar-header';
+import { CommandPalette } from '#app/components/command-palette';
+import { FloatingActionButton } from '#app/components/floating-action-button';
+import { Toaster } from '#app/components/toaster';
+import { useCommonShortcuts } from '#app/hooks/use-keyboard-shortcuts';
+import { type BreadcrumbItem } from '#app/types';
 import { type PropsWithChildren } from 'react';
 
 export default function AppSidebarLayout({

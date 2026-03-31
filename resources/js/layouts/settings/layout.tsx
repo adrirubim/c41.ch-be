@@ -1,14 +1,14 @@
-import Heading from '@/components/heading';
-import { Link } from '@/components/link';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { useActiveUrl } from '@/hooks/use-active-url';
-import { cn, toUrl } from '@/lib/utils';
-import { edit as editAppearance } from '@/routes/appearance';
-import { edit } from '@/routes/profile';
-import { show } from '@/routes/two-factor';
-import { edit as editPassword } from '@/routes/user-password';
-import { type NavItem } from '@/types';
+import Heading from '#app/components/heading';
+import { Link } from '#app/components/link';
+import { Button } from '#app/components/ui/button';
+import { Separator } from '#app/components/ui/separator';
+import { useActiveUrl } from '#app/hooks/use-active-url';
+import { cn, toUrl } from '#app/lib/utils';
+import { edit as editAppearance } from '#app/routes/appearance';
+import { edit } from '#app/routes/profile';
+import { show } from '#app/routes/two-factor';
+import { edit as editPassword } from '#app/routes/user-password';
+import { type NavItem } from '#app/types';
 import { type PropsWithChildren } from 'react';
 
 const sidebarNavItems: NavItem[] = [

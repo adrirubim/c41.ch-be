@@ -1,18 +1,15 @@
-import { Form } from '@/components/form';
-import { update } from '@/routes/password';
-import type {
-    FormComponentSlotProps,
-    FormDataConvertible,
-} from '@inertiajs/core';
+import { Form } from '#app/components/form';
+import { update } from '#app/routes/password';
+import type { FormComponentSlotProps } from '@inertiajs/core';
 import { Head } from '@inertiajs/react';
 
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { PasswordInput } from '@/components/ui/password-input';
-import { Spinner } from '@/components/ui/spinner';
-import AuthLayout from '@/layouts/auth-layout';
+import InputError from '#app/components/input-error';
+import { Button } from '#app/components/ui/button';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
+import { PasswordInput } from '#app/components/ui/password-input';
+import { Spinner } from '#app/components/ui/spinner';
+import AuthLayout from '#app/layouts/auth-layout';
 
 interface ResetPasswordProps {
     token: string;
@@ -29,7 +26,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
             <Form
                 {...update.form()}
-                transform={(data: Record<string, FormDataConvertible>) => ({
+                transform={(data) => ({
                     ...data,
                     token,
                     email,

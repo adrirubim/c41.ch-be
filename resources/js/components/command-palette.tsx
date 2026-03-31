@@ -3,9 +3,9 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { cn, withBasePath } from '@/lib/utils';
+} from '#app/components/ui/dialog';
+import { Input } from '#app/components/ui/input';
+import { cn, withBasePath } from '#app/lib/utils';
 import { router } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
 import { FileText, Folder, LayoutGrid, Plus, Search } from 'lucide-react';

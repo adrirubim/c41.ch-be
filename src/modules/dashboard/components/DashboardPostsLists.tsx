@@ -1,13 +1,13 @@
-import { EmptyState } from '@/components/empty-state';
-import { Link } from '@/components/link';
-import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '#app/components/empty-state';
+import { Link } from '#app/components/link';
+import { Badge } from '#app/components/ui/badge';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from '#app/components/ui/card';
 import type { PostSummary } from '@modules/dashboard/types';
 import { Eye, FileText, Star } from 'lucide-react';
 import { formatDate } from '@modules/dashboard/utils/format-date';

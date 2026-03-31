@@ -4,8 +4,8 @@ import {
     ToastDescription,
     ToastTitle,
     ToastViewport,
-} from '@/components/ui/toast';
-import { useToast } from '@/hooks/use-toast';
+} from '#app/components/ui/toast';
+import { useToast } from '#app/hooks/use-toast';
 import { CheckCircle, Info, XCircle } from 'lucide-react';
 
 export function Toaster() {

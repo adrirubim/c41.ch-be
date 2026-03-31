@@ -1,13 +1,13 @@
-import { Form } from '@/components/form';
-import { Button } from '@/components/ui/button';
+import { Form } from '#app/components/form';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { regenerateRecoveryCodes } from '@/routes/two-factor';
+} from '#app/components/ui/card';
+import { regenerateRecoveryCodes } from '#app/routes/two-factor';
 import { useTwoFactorRecoveryCodes } from '@modules/settings/hooks/use-two-factor-recovery-codes';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
 import { useEffect, useRef } from 'react';

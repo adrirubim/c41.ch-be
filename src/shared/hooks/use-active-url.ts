@@ -1,4 +1,4 @@
-import { withBasePath } from '@/lib/utils';
+import { withBasePath } from '#app/lib/utils';
 import type { InertiaLinkProps } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 

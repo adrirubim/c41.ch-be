@@ -1,22 +1,22 @@
-import { Form } from '@/components/form';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
+import { Form } from '#app/components/form';
+import InputError from '#app/components/input-error';
+import { Button } from '#app/components/ui/button';
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-} from '@/components/ui/dialog';
+} from '#app/components/ui/dialog';
 import {
     InputOTP,
     InputOTPGroup,
     InputOTPSlot,
-} from '@/components/ui/input-otp';
-import { useAppearance } from '@/hooks/use-appearance';
-import { useClipboard } from '@/hooks/use-clipboard';
-import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
-import { confirm } from '@/routes/two-factor';
+} from '#app/components/ui/input-otp';
+import { useAppearance } from '#app/hooks/use-appearance';
+import { useClipboard } from '#app/hooks/use-clipboard';
+import { OTP_MAX_LENGTH } from '#app/hooks/use-two-factor-auth';
+import { confirm } from '#app/routes/two-factor';
 import { useTwoFactorSetupModal } from '@modules/settings/hooks/use-two-factor-setup-modal';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { Check, Copy, ScanLine } from 'lucide-react';

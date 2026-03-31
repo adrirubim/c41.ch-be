@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '#app/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -6,9 +6,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '#app/components/ui/dialog';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
 import { Editor } from '@tiptap/react';
 import {
     Bold,

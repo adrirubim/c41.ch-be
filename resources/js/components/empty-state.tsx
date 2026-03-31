@@ -1,7 +1,7 @@
-import { Link } from '@/components/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Link } from '#app/components/link';
+import { Button } from '#app/components/ui/button';
+import { Card, CardContent } from '#app/components/ui/card';
+import { cn } from '#app/lib/utils';
 import { FileText, Folder, Plus, Search } from 'lucide-react';
 
 interface EmptyStateProps {

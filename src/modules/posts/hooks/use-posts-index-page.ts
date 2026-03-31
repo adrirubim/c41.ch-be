@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { FormDataConvertible } from '@inertiajs/core';
 import { router, useForm } from '@inertiajs/react';
-import { withBasePath } from '@/lib/utils';
-import { useFilterPresets } from '@/hooks/use-filter-presets';
+import { withBasePath } from '#app/lib/utils';
+import { useFilterPresets } from '#app/hooks/use-filter-presets';
 import type {
     PostsIndexCategory,
     PostsIndexProps,

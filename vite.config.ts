@@ -46,7 +46,7 @@ export default defineConfig(({ mode, command }) => {
         ],
         resolve: {
             alias: {
-                '@': resolve(__dirname, 'resources/js'),
+                '#app': resolve(__dirname, 'resources/js'),
                 '@core': resolve(__dirname, 'src/core'),
                 '@modules': resolve(__dirname, 'src/modules'),
                 '@shared': resolve(__dirname, 'src/shared'),

@@ -1,19 +1,19 @@
-import { EmptyState } from '@/components/empty-state';
-import { OptimizedPostList } from '@/components/optimized-post-list';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { EmptyState } from '#app/components/empty-state';
+import { OptimizedPostList } from '#app/components/optimized-post-list';
+import { Badge } from '#app/components/ui/badge';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from '#app/components/ui/card';
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '#app/components/ui/collapsible';
 import {
     Dialog,
     DialogContent,
@@ -22,21 +22,21 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '#app/components/ui/dialog';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
+} from '#app/components/ui/select';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '#app/components/ui/tooltip';
 import { Bookmark, BookmarkCheck, ChevronDown, ChevronUp, FileText, HelpCircle, Search, X } from 'lucide-react';
 import type { PostsIndexCategory, PostsIndexPost } from '@modules/posts/types/posts-index-props';
 

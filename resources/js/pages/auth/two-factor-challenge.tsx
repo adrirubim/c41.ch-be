@@ -1,15 +1,15 @@
-import { Form } from '@/components/form';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Form } from '#app/components/form';
+import InputError from '#app/components/input-error';
+import { Button } from '#app/components/ui/button';
+import { Input } from '#app/components/ui/input';
 import {
     InputOTP,
     InputOTPGroup,
     InputOTPSlot,
-} from '@/components/ui/input-otp';
-import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
-import AuthLayout from '@/layouts/auth-layout';
-import { store } from '@/routes/two-factor/login';
+} from '#app/components/ui/input-otp';
+import { OTP_MAX_LENGTH } from '#app/hooks/use-two-factor-auth';
+import AuthLayout from '#app/layouts/auth-layout';
+import { store } from '#app/routes/two-factor/login';
 import type { FormComponentSlotProps } from '@inertiajs/core';
 import { Head } from '@inertiajs/react';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';

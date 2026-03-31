@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '#app/components/ui/card';
 import type { DashboardStats, PostSummary } from '@modules/dashboard/types';
 import { Calendar, Clock, TrendingUp } from 'lucide-react';
 import { formatDate } from '@modules/dashboard/utils/format-date';

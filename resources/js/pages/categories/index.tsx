@@ -1,18 +1,18 @@
-import { ConfirmDialog } from '@/components/confirm-dialog';
-import { EmptyState } from '@/components/empty-state';
-import { Link } from '@/components/link';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '#app/components/confirm-dialog';
+import { EmptyState } from '#app/components/empty-state';
+import { Link } from '#app/components/link';
+import { Badge } from '#app/components/ui/badge';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
-import { withBasePath } from '@/lib/utils';
-import { type BreadcrumbItem } from '@/types';
+} from '#app/components/ui/card';
+import AppLayout from '#app/layouts/app-layout';
+import { withBasePath } from '#app/lib/utils';
+import { type BreadcrumbItem } from '#app/types';
 import { Head, router } from '@inertiajs/react';
 import { BarChart3, Edit, Folder, Trash2 } from 'lucide-react';
 import { useState } from 'react';

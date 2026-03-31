@@ -1,16 +1,16 @@
-import { Link } from '@/components/link';
-import { PublicHeader } from '@/components/public-header';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Link } from '#app/components/link';
+import { PublicHeader } from '#app/components/public-header';
+import { Badge } from '#app/components/ui/badge';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { dashboard, login, register } from '@/routes';
-import { type SharedData } from '@/types';
+} from '#app/components/ui/card';
+import { dashboard, login, register } from '#app/routes';
+import { type SharedData } from '#app/types';
 import { Head, usePage } from '@inertiajs/react';
 import {
     ArrowRight,

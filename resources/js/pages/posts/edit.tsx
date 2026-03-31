@@ -1,35 +1,35 @@
-import { EditorPreview } from '@/components/editor-preview';
-import InputError from '@/components/input-error';
-import { Link } from '@/components/link';
-import { TagsInput } from '@/components/tags-input';
-import { Button } from '@/components/ui/button';
+import { EditorPreview } from '#app/components/editor-preview';
+import InputError from '#app/components/input-error';
+import { Link } from '#app/components/link';
+import { TagsInput } from '#app/components/tags-input';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '#app/components/ui/card';
+import { Checkbox } from '#app/components/ui/checkbox';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+} from '#app/components/ui/select';
+import { Textarea } from '#app/components/ui/textarea';
+import AppLayout from '#app/layouts/app-layout';
+import { type BreadcrumbItem } from '#app/types';
 import { Head, useForm } from '@inertiajs/react';
 import { EditorialSuggestionsPanel } from '@modules/posts/components/EditorialSuggestionsPanel';
 import { ArrowLeft, Save } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 
 const LazyRichTextEditor = lazy(async () => {
-    const mod = await import('@/components/rich-text-editor');
+    const mod = await import('#app/components/rich-text-editor');
     return { default: mod.RichTextEditor };
 });
 

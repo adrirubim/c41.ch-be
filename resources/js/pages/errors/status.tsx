@@ -1,7 +1,7 @@
-import { Link } from '@/components/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
+import { Link } from '#app/components/link';
+import { Button } from '#app/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '#app/components/ui/card';
+import AppLayout from '#app/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import {
     getErrorStatusCta,

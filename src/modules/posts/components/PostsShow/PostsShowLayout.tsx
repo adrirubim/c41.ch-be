@@ -1,12 +1,12 @@
-import { Link } from '@/components/link';
-import { Badge } from '@/components/ui/badge';
+import { Link } from '#app/components/link';
+import { Badge } from '#app/components/ui/badge';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
+} from '#app/components/ui/card';
 import { ArrowLeft, Calendar, Edit, Eye, Star, User } from 'lucide-react';
 import type { PostsShowPost } from '@modules/posts/hooks/use-posts-show-page';
 import type { PostsShowViewModel } from '@modules/posts/hooks/use-posts-show-page';

@@ -1,18 +1,18 @@
-import InputError from '@/components/input-error';
-import { Link } from '@/components/link';
-import { Button } from '@/components/ui/button';
+import InputError from '#app/components/input-error';
+import { Link } from '#app/components/link';
+import { Button } from '#app/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+} from '#app/components/ui/card';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
+import { Textarea } from '#app/components/ui/textarea';
+import AppLayout from '#app/layouts/app-layout';
+import { type BreadcrumbItem } from '#app/types';
 import { Head, useForm } from '@inertiajs/react';
 import { ArrowLeft, Save } from 'lucide-react';
 

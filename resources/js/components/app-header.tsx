@@ -1,38 +1,38 @@
-import { Breadcrumbs } from '@/components/breadcrumbs';
-import { Icon } from '@/components/icon';
-import { Link } from '@/components/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Breadcrumbs } from '#app/components/breadcrumbs';
+import { Icon } from '#app/components/icon';
+import { Link } from '#app/components/link';
+import { Avatar, AvatarFallback, AvatarImage } from '#app/components/ui/avatar';
+import { Button } from '#app/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '#app/components/ui/dropdown-menu';
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuList,
     navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+} from '#app/components/ui/navigation-menu';
 import {
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@/components/ui/sheet';
+} from '#app/components/ui/sheet';
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { UserMenuContent } from '@/components/user-menu-content';
-import { useActiveUrl } from '@/hooks/use-active-url';
-import { useInitials } from '@/hooks/use-initials';
-import { cn, toUrl } from '@/lib/utils';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
+} from '#app/components/ui/tooltip';
+import { UserMenuContent } from '#app/components/user-menu-content';
+import { useActiveUrl } from '#app/hooks/use-active-url';
+import { useInitials } from '#app/hooks/use-initials';
+import { cn, toUrl } from '#app/lib/utils';
+import { dashboard } from '#app/routes';
+import { type BreadcrumbItem, type NavItem, type SharedData } from '#app/types';
 import { usePage } from '@inertiajs/react';
 import { LayoutGrid, Menu, Search } from 'lucide-react';
 import AppLogo from './app-logo';

@@ -1,6 +1,6 @@
-import { Link } from '@/components/link';
-import { dashboard, login, register } from '@/routes';
-import { type SharedData } from '@/types';
+import { Link } from '#app/components/link';
+import { dashboard, login, register } from '#app/routes';
+import { type SharedData } from '#app/types';
 import { Head, usePage } from '@inertiajs/react';
 
 export default function Welcome() {
