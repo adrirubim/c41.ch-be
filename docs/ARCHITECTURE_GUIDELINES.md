@@ -253,7 +253,7 @@ Always use the configured **path aliases** instead of long relative imports.
   - `@shared` → `src/shared`
   - `@infra` → `src/infrastructure`
 
-### 5.1 Rules
+### 13.1 Rules
 
 - **Do not** use deep relative imports like:
   - ❌ `import { something } from '../../../shared/hooks/use-toast';`
