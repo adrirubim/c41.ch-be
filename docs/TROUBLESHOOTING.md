@@ -351,7 +351,7 @@ php artisan optimize:clear
 
 ### Vite Dev Server Not Starting
 
-**Problem**: `npm run dev` fails.
+**Problem**: `npm run dev` (or `npm run dev:frontend`) fails.
 
 **Solutions**:
 
@@ -571,8 +571,8 @@ php artisan view:clear
 
 1. **File permissions**:
    ```bash
-   # Use Windows paths
-   cd /mnt/c/path/to/project
+   # Prefer the Linux filesystem (better performance and fewer file-watch issues)
+   cd /var/www/c41.ch-be
    ```
 
 2. **Line endings**:
@@ -581,7 +581,7 @@ php artisan view:clear
    ```
 
 3. **Port forwarding**:
-   - Use `127.0.0.1:8000` instead of `localhost:8000`
+   - If `localhost` behaves oddly in your setup, try `127.0.0.1` (same port).
 
 ### Concurrently Not Working
 
@@ -633,5 +633,5 @@ If you're still experiencing issues:
 
 ---
 
-**Last Updated:** January 12, 2026  
+**Last Updated:** March 2026  
 **Version:** 1.0

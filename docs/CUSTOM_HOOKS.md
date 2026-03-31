@@ -683,5 +683,5 @@ function PostEditor() {
 
 ---
 
-**Last Updated:** January 12, 2026  
+**Last Updated:** March 2026  
 **Version:** 1.0
