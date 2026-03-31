@@ -7,7 +7,7 @@ This document provides comprehensive documentation for all custom React componen
 This project uses a split frontend architecture:
 
 - **Implementation** lives in `src/*` (`src/shared`, `src/modules`, `src/core`).
-- `resources/js/*` provides the Laravel/Inertia **view layer** and thin wrappers for stable `@/*` import paths.
+- `resources/js/*` provides the Laravel/Inertia **view layer** and thin wrappers for stable `#app/*` import paths.
 
 When a component is implemented in `src/*`, you may also find a thin wrapper under `resources/js/components/*` that forwards props or wires Laravel-specific concerns (for example, upload URLs).
 
@@ -28,7 +28,7 @@ When a component is implemented in `src/*`, you may also find a thin wrapper und
 
 A full-featured WYSIWYG editor built with Tiptap.
 
-**Public import**: `@/components/rich-text-editor`  
+**Public import**: `#app/components/rich-text-editor`  
 **Wrapper**: `resources/js/components/rich-text-editor.tsx`  
 **Implementation**: `src/shared/components/rich-text-editor/RichTextEditor.tsx`
 
@@ -54,7 +54,7 @@ interface RichTextEditorProps {
 
 **Usage**:
 ```tsx
-import { RichTextEditor } from '@/components/rich-text-editor';
+import { RichTextEditor } from '#app/components/rich-text-editor';
 
 function PostForm() {
     const [content, setContent] = useState('');
@@ -88,7 +88,7 @@ interface EditorPreviewProps {
 
 **Usage**:
 ```tsx
-import { EditorPreview } from '@/components/editor-preview';
+import { EditorPreview } from '#app/components/editor-preview';
 
 <EditorPreview content={htmlContent} title="Post Preview" />
 ```
@@ -109,7 +109,7 @@ Global search and command palette with keyboard shortcuts.
 
 **Usage**:
 ```tsx
-import { CommandPalette } from '@/components/command-palette';
+import { CommandPalette } from '#app/components/command-palette';
 
 // Automatically available via keyboard shortcut
 // Or render manually:
@@ -140,7 +140,7 @@ interface ConfirmDialogProps {
 
 **Usage**:
 ```tsx
-import { ConfirmDialog } from '@/components/confirm-dialog';
+import { ConfirmDialog } from '#app/components/confirm-dialog';
 
 const [open, setOpen] = useState(false);
 
@@ -188,7 +188,7 @@ interface TagsInputProps {
 
 **Usage**:
 ```tsx
-import { TagsInput } from '@/components/tags-input';
+import { TagsInput } from '#app/components/tags-input';
 
 const [tags, setTags] = useState<string[]>([]);
 
@@ -219,7 +219,7 @@ interface FloatingActionButtonProps {
 
 **Usage**:
 ```tsx
-import { FloatingActionButton } from '@/components/floating-action-button';
+import { FloatingActionButton } from '#app/components/floating-action-button';
 import { Plus } from 'lucide-react';
 
 <FloatingActionButton
@@ -254,7 +254,7 @@ interface OptimizedPostListProps {
 
 **Usage**:
 ```tsx
-import { OptimizedPostList } from '@/components/optimized-post-list';
+import { OptimizedPostList } from '#app/components/optimized-post-list';
 
 <OptimizedPostList
     posts={posts}
@@ -285,7 +285,7 @@ interface EmptyStateProps {
 
 **Usage**:
 ```tsx
-import { EmptyState } from '@/components/empty-state';
+import { EmptyState } from '#app/components/empty-state';
 import {FileText} from 'lucide-react';
 
 <EmptyState
@@ -307,8 +307,8 @@ Toast notification component.
 
 **Usage**:
 ```tsx
-import { Toaster } from '@/components/toaster';
-import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '#app/components/toaster';
+import { useToast } from '#app/hooks/use-toast';
 
 function App() {
     const { toasts, removeToast } = useToast();
@@ -335,10 +335,10 @@ The application uses shadcn/ui components located in `resources/js/components/ui
 
 **Usage Example**:
 ```tsx
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '#app/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '#app/components/ui/card';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
 
 <Card>
     <CardHeader>
@@ -407,7 +407,7 @@ interface BarChartProps {
 
 **Usage**:
 ```tsx
-import { BarChart } from '@/components/charts/bar-chart';
+import { BarChart } from '#app/components/charts/bar-chart';
 
 <BarChart
     data={[
@@ -457,7 +457,7 @@ Skeleton loader components for loading states.
 
 **Usage**:
 ```tsx
-import { SkeletonCard } from '@/components/skeleton-loaders';
+import { SkeletonCard } from '#app/components/skeleton-loaders';
 
 {loading ? (
     <SkeletonCard />
@@ -496,7 +496,7 @@ A public-facing header component for unauthenticated users, displayed on public 
 
 **Usage**:
 ```tsx
-import { PublicHeader } from '@/components/public-header';
+import { PublicHeader } from '#app/components/public-header';
 
 export default function PublicHome() {
     return (
@@ -519,12 +519,12 @@ export default function PublicHome() {
 ```tsx
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import { RichTextEditor } from '@/components/rich-text-editor';
-import { TagsInput } from '@/components/tags-input';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RichTextEditor } from '#app/components/rich-text-editor';
+import { TagsInput } from '#app/components/tags-input';
+import { Button } from '#app/components/ui/button';
+import { Input } from '#app/components/ui/input';
+import { Label } from '#app/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#app/components/ui/select';
 
 function PostForm() {
     const [title, setTitle] = useState('');
@@ -631,7 +631,7 @@ interface FloatingActionButtonProps {
 
 **Usage**:
 ```tsx
-import { FloatingActionButton } from '@/components/floating-action-button';
+import { FloatingActionButton } from '#app/components/floating-action-button';
 
 // Auto-detects route and shows appropriate button
 <FloatingActionButton />

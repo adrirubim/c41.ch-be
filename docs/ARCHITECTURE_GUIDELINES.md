@@ -53,7 +53,7 @@ This document defines the architectural standards and guardrails for **c41.ch-be
 - Compose layout, fetch data via props, and wire user interactions to HTTP actions.
 
 **Components**
-- **Wrappers** live in `resources/js/components/` (stable `@/components/*` imports).
+- **Wrappers** live in `resources/js/components/` (stable `#app/components/*` imports).
 - **Implementations** live in `src/shared` and `src/modules` (source of truth).
 - Wrappers may forward Laravel/Inertia-specific concerns (for example, upload URLs), but must remain thin.
 
@@ -62,7 +62,7 @@ This document defines the architectural standards and guardrails for **c41.ch-be
 - Wrap pages to provide consistent UX and state containers.
 
 **Hooks**
-- **Wrappers** live in `resources/js/hooks/` (stable `@/hooks/*` imports).
+- **Wrappers** live in `resources/js/hooks/` (stable `#app/hooks/*` imports).
 - **Implementations** live in `src/shared` and `src/modules`.
 
 **Types**
@@ -247,7 +247,7 @@ Any new code that violates these rules will fail ESLint and be rejected by CI.
 Always use the configured **path aliases** instead of long relative imports.
 
 - **Allowed aliases**:
-  - `@` → `resources/js`
+  - `#app` → `resources/js`
   - `@core` → `src/core`
   - `@modules` → `src/modules`
   - `@shared` → `src/shared`
@@ -262,7 +262,7 @@ Always use the configured **path aliases** instead of long relative imports.
   - ✅ `import { useFilterPresets } from '@modules/posts/hooks/use-filter-presets';`
   - ✅ `import { apiGet } from '@infra/api-client';`
 - Within `resources/js`, prefer:
-  - ✅ `import { useAppearance } from '@/hooks/use-appearance';`
+  - ✅ `import { useAppearance } from '#app/hooks/use-appearance';`
   - ✅ `import { DashboardStatsGrid } from '@modules/dashboard/components/DashboardStatsGrid';`
 
 If you catch yourself counting `../`, you are probably breaking this rule. Reach for an alias instead.

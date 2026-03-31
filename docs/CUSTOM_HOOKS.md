@@ -7,7 +7,7 @@ This document provides comprehensive documentation for all custom React hooks in
 This project uses a split frontend architecture:
 
 - **Implementation** lives in `src/*` (`src/shared`, `src/modules`, `src/core`).
-- `resources/js/*` provides the Laravel/Inertia **view layer** and thin **re-export wrappers** (stable import paths under `@/hooks/*`).
+- `resources/js/*` provides the Laravel/Inertia **view layer** and thin **re-export wrappers** (stable import paths under `#app/hooks/*`).
 
 Unless stated otherwise, the paths under `resources/js/hooks/*` are **wrappers** that re-export the real implementation from `src/*`.
 
@@ -33,7 +33,7 @@ Unless stated otherwise, the paths under `resources/js/hooks/*` are **wrappers**
 
 Toast notification hook for displaying temporary messages.
 
-**Public import**: `@/hooks/use-toast`  
+**Public import**: `#app/hooks/use-toast`  
 **Wrapper**: `resources/js/hooks/use-toast.tsx`  
 **Implementation**: `src/shared/hooks/use-toast.tsx`
 
@@ -64,7 +64,7 @@ interface Toast {
 
 **Usage**:
 ```tsx
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '#app/hooks/use-toast';
 
 function MyComponent() {
     const { addToast, toasts, removeToast } = useToast();
@@ -100,7 +100,7 @@ function MyComponent() {
 
 Automatic draft saving hook with localStorage persistence.
 
-**Public import**: `@/hooks/use-autosave`  
+**Public import**: `#app/hooks/use-autosave`  
 **Wrapper**: `resources/js/hooks/use-autosave.tsx`  
 **Implementation**: `src/shared/hooks/use-autosave.ts`
 
@@ -134,7 +134,7 @@ interface UseAutosaveOptions {
 
 **Usage**:
 ```tsx
-import { useAutosave } from '@/hooks/use-autosave';
+import { useAutosave } from '#app/hooks/use-autosave';
 
 function PostEditor() {
     const [title, setTitle] = useState('');
@@ -172,7 +172,7 @@ function PostEditor() {
 
 Hook for managing filter presets with localStorage persistence.
 
-**Public import**: `@/hooks/use-filter-presets`  
+**Public import**: `#app/hooks/use-filter-presets`  
 **Wrapper**: `resources/js/hooks/use-filter-presets.tsx`  
 **Implementation**: `src/modules/posts/hooks/use-filter-presets.ts`
 
@@ -204,7 +204,7 @@ interface FilterPreset {
 
 **Usage**:
 ```tsx
-import { useFilterPresets } from '@/hooks/use-filter-presets';
+import { useFilterPresets } from '#app/hooks/use-filter-presets';
 
 function PostFilters() {
     const [filters, setFilters] = useState({});
@@ -245,7 +245,7 @@ function PostFilters() {
 
 Hook for managing keyboard shortcuts.
 
-**Public import**: `@/hooks/use-keyboard-shortcuts`  
+**Public import**: `#app/hooks/use-keyboard-shortcuts`  
 **Wrapper**: `resources/js/hooks/use-keyboard-shortcuts.tsx`  
 **Implementation**: `src/shared/hooks/use-keyboard-shortcuts.tsx`
 
@@ -264,7 +264,7 @@ interface KeyboardShortcut {
 
 **Usage**:
 ```tsx
-import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { useKeyboardShortcuts } from '#app/hooks/use-keyboard-shortcuts';
 
 function MyComponent() {
     useKeyboardShortcuts([
@@ -298,7 +298,7 @@ function MyComponent() {
 
 Hook for managing loading states.
 
-**Public import**: `@/hooks/use-loading-state`  
+**Public import**: `#app/hooks/use-loading-state`  
 **Wrapper**: `resources/js/hooks/use-loading-state.tsx`  
 **Implementation**: `src/shared/hooks/use-loading-state.tsx`
 
@@ -314,7 +314,7 @@ Hook for managing loading states.
 
 **Usage**:
 ```tsx
-import { useLoadingState } from '@/hooks/use-loading-state';
+import { useLoadingState } from '#app/hooks/use-loading-state';
 
 function MyComponent() {
     const { isLoading, startLoading, stopLoading } = useLoadingState();
@@ -346,7 +346,7 @@ function MyComponent() {
 
 Hook for managing theme/appearance (light/dark mode).
 
-**Public import**: `@/hooks/use-appearance`  
+**Public import**: `#app/hooks/use-appearance`  
 **Wrapper**: `resources/js/hooks/use-appearance.tsx`  
 **Implementation**: `src/shared/hooks/use-appearance.tsx`
 
@@ -367,7 +367,7 @@ Hook for managing theme/appearance (light/dark mode).
 
 **Usage**:
 ```tsx
-import { useAppearance } from '@/hooks/use-appearance';
+import { useAppearance } from '#app/hooks/use-appearance';
 
 function ThemeToggle() {
     const { appearance, resolvedAppearance, updateAppearance } = useAppearance();
@@ -391,7 +391,7 @@ function ThemeToggle() {
 
 Hook for detecting mobile devices.
 
-**Public import**: `@/hooks/use-mobile`  
+**Public import**: `#app/hooks/use-mobile`  
 **Wrapper**: `resources/js/hooks/use-mobile.tsx`  
 **Implementation**: `src/shared/hooks/use-mobile.tsx`
 
@@ -404,7 +404,7 @@ Hook for detecting mobile devices.
 
 **Usage**:
 ```tsx
-import { useMobile } from '@/hooks/use-mobile';
+import { useMobile } from '#app/hooks/use-mobile';
 
 function ResponsiveComponent() {
     const { isMobile } = useMobile();
@@ -427,7 +427,7 @@ function ResponsiveComponent() {
 
 Hook for clipboard operations.
 
-**Public import**: `@/hooks/use-clipboard`  
+**Public import**: `#app/hooks/use-clipboard`  
 **Wrapper**: `resources/js/hooks/use-clipboard.ts`  
 **Implementation**: `src/shared/hooks/use-clipboard.ts`
 
@@ -441,7 +441,7 @@ Hook for clipboard operations.
 
 **Usage**:
 ```tsx
-import { useClipboard } from '@/hooks/use-clipboard';
+import { useClipboard } from '#app/hooks/use-clipboard';
 
 function CopyButton({ text }: { text: string }) {
     const [copied, copy] = useClipboard();
@@ -460,7 +460,7 @@ function CopyButton({ text }: { text: string }) {
 
 Hook for generating user initials from full name.
 
-**Public import**: `@/hooks/use-initials`  
+**Public import**: `#app/hooks/use-initials`  
 **Wrapper**: `resources/js/hooks/use-initials.tsx`  
 **Implementation**: `src/shared/hooks/use-initials.tsx`
 
@@ -471,7 +471,7 @@ Hook for generating user initials from full name.
 
 **Usage**:
 ```tsx
-import { useInitials } from '@/hooks/use-initials';
+import { useInitials } from '#app/hooks/use-initials';
 
 function UserAvatar({ name }: { name: string }) {
     const getInitials = useInitials();
@@ -490,7 +490,7 @@ function UserAvatar({ name }: { name: string }) {
 
 Hook for checking if a URL is active.
 
-**Public import**: `@/hooks/use-active-url`  
+**Public import**: `#app/hooks/use-active-url`  
 **Wrapper**: `resources/js/hooks/use-active-url.ts`  
 **Implementation**: `src/shared/hooks/use-active-url.ts`
 
@@ -501,7 +501,7 @@ Hook for checking if a URL is active.
 
 **Usage**:
 ```tsx
-import { useActiveUrl } from '@/hooks/use-active-url';
+import { useActiveUrl } from '#app/hooks/use-active-url';
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
     const isActive = useActiveUrl();
@@ -523,7 +523,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 
 Hook for managing mobile navigation state.
 
-**Public import**: `@/hooks/use-mobile-navigation`  
+**Public import**: `#app/hooks/use-mobile-navigation`  
 **Wrapper**: `resources/js/hooks/use-mobile-navigation.ts`  
 **Implementation**: `src/shared/hooks/use-mobile-navigation.ts`
 
@@ -539,7 +539,7 @@ Hook for managing mobile navigation state.
 
 **Usage**:
 ```tsx
-import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+import { useMobileNavigation } from '#app/hooks/use-mobile-navigation';
 
 function MobileNav() {
     const { isOpen, toggle, close } = useMobileNavigation();
@@ -564,7 +564,7 @@ function MobileNav() {
 
 Hook for managing two-factor authentication.
 
-**Public import**: `@/hooks/use-two-factor-auth`  
+**Public import**: `#app/hooks/use-two-factor-auth`  
 **Wrapper**: `resources/js/hooks/use-two-factor-auth.ts`  
 **Implementation**: `src/modules/auth/services/use-two-factor-auth.ts`
 
@@ -580,7 +580,7 @@ Hook for managing two-factor authentication.
 
 **Usage**:
 ```tsx
-import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
+import { useTwoFactorAuth } from '#app/hooks/use-two-factor-auth';
 
 function SecuritySettings() {
     const { enabled, enable, disable } = useTwoFactorAuth();
@@ -613,10 +613,10 @@ function SecuritySettings() {
 ### Combined Hook Usage
 
 ```tsx
-import { useToast } from '@/hooks/use-toast';
-import { useAutosave } from '@/hooks/use-autosave';
-import { useLoadingState } from '@/hooks/use-loading-state';
-import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { useToast } from '#app/hooks/use-toast';
+import { useAutosave } from '#app/hooks/use-autosave';
+import { useLoadingState } from '#app/hooks/use-loading-state';
+import { useKeyboardShortcuts } from '#app/hooks/use-keyboard-shortcuts';
 
 function PostEditor() {
     const [title, setTitle] = useState('');
