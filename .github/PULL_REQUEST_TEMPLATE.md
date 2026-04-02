@@ -8,6 +8,8 @@
 
 ## Test plan
 
+Select what you ran:
+
 - [ ] `composer install`
 - [ ] `npm ci`
 - [ ] `vendor/bin/pint`
@@ -19,9 +21,16 @@
 
 ## Screenshots (if applicable)
 
--
+- 
 
 ## Notes / risks
 
--
+- 
+
+## Breaking changes
+
+- [ ] No
+- [ ] Yes (describe impact and migration path below)
+
+If **Yes**, explain the impact and migration path:
 

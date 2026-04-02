@@ -3,6 +3,12 @@ set -euo pipefail
 
 echo "==> c41.ch-be – local quality gate"
 
+echo "==> 0/4 Lint / format / types (CI parity)"
+vendor/bin/pint
+npm run format:check
+npm run lint
+npm run types
+
 echo "==> 1/4 Composer install (no changes expected if already installed)"
 composer install --no-interaction --prefer-dist
 

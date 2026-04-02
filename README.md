@@ -12,8 +12,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.2-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-57%20passing-brightgreen?style=flat)](./tests)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
+[![Tests](https://img.shields.io/github/actions/workflow/status/adrirubim/c41.ch-be/tests.yml?branch=main&label=Tests&style=flat&color=brightgreen)](https://github.com/adrirubim/c41.ch-be/actions/workflows/tests.yml)
+[![Lint](https://img.shields.io/github/actions/workflow/status/adrirubim/c41.ch-be/lint.yml?branch=main&label=Lint&style=flat&color=blue)](https://github.com/adrirubim/c41.ch-be/actions/workflows/lint.yml)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat)](LICENSE)
 
 ## 📋 Table of Contents
 
@@ -379,7 +380,7 @@ Request → Controller → Service → Repository → Model
 - **Types** (`resources/js/types/`) - TypeScript type definitions
 
 <a id="project-status"></a>
-## 📊 Project status
+## 📊 Project Status
 
 **Overall Score: 10/10** - Production-ready, optimized, well-structured, fully tested, and professionally documented
 
