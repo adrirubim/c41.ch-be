@@ -1,4 +1,4 @@
-name: Enterprise Quality & CI 2026
+name: Lint
 
 on:
   push:
@@ -12,10 +12,15 @@ permissions:
   contents: read
 
 jobs:
-  quality:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Verify repository standard
+        run: |
+          chmod +x scripts/verify-repo-standard.sh
+          ./scripts/verify-repo-standard.sh
 
       - name: Setup Node
         uses: actions/setup-node@v6
