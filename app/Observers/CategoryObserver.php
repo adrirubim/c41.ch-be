@@ -52,38 +52,3 @@ class CategoryObserver
         $this->posts->invalidateSitemapCache();
     }
 }
-
-<?php
-
-declare(strict_types=1);
-
-namespace App\Observers;
-
-use App\Models\Category;
-use App\Repositories\PostRepository;
-
-class CategoryObserver
-{
-    public function __construct(
-        private PostRepository $postRepository
-    ) {}
-
-    public function saved(Category $category): void
-    {
-        $this->postRepository->invalidatePublicRelatedCache();
-        $this->postRepository->invalidateSitemapCache();
-    }
-
-    public function deleted(Category $category): void
-    {
-        $this->postRepository->invalidatePublicRelatedCache();
-        $this->postRepository->invalidateSitemapCache();
-    }
-
-    public function restored(Category $category): void
-    {
-        $this->postRepository->invalidatePublicRelatedCache();
-        $this->postRepository->invalidateSitemapCache();
-    }
-}
-
