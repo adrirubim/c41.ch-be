@@ -145,7 +145,7 @@ GET /blog
 
 **Query Parameters:**
 - `search` (string, optional): Search in title, content, excerpt
-- `category` (integer, optional): Filter by category ID
+- `category` (integer, optional): Filter by category ID (not slug)
 - `featured` (boolean, optional): Filter featured posts only
 - `sort_by` (string, optional): Field to sort by (`published_at`, `views_count`, `title`, default: `published_at`)
 - `sort_order` (string, optional): Sort order (`asc` or `desc`, default: `desc`)
@@ -340,7 +340,7 @@ POST /posts
 
 **Validation Rules:**
 - `title`: required, string, max:255
-- `slug`: required, string, max:255, unique
+- `slug`: optional in the UI; if omitted, it is auto-generated from `title` during request preparation (then validated as required), unique
 - `content`: nullable, string
 - `excerpt`: nullable, string, max:500
 - `published`: boolean
@@ -350,6 +350,7 @@ POST /posts
 - `tags.*`: string, max:50
 - `categories`: nullable, array
 - `categories.*`: exists:categories,id
+- `user_id`: nullable, exists:users,id (overriding author requires authorization)
 
 **Authorization:** User must have `create` permission on Post model
 
@@ -479,11 +480,25 @@ POST /dashboard/categories
 
 **Validation Rules:**
 - `name`: required, string, max:100, unique
-- `slug`: auto-generated from name if not provided
+- `slug`: optional in the UI; if omitted, it is auto-generated from `name` during request preparation (then validated as required)
 - `description`: nullable, string
 - `color`: nullable, string, regex:/^#[0-9A-Fa-f]{6}$/
 
 **Response:** `302 Redirect` to `/dashboard/categories` with success message
+
+#### Category Create Form (page)
+```
+GET /dashboard/categories/new
+```
+
+**Response:** Inertia page (dashboard category create form).
+
+#### Category Detail (redirect)
+```
+GET /dashboard/categories/{category}
+```
+
+**Behavior:** Redirects to the posts list filtered by this category: `GET /posts?category={id}`.
 
 #### Update Category
 ```
@@ -573,15 +588,16 @@ POST /upload-image
 **Response (JSON):**
 ```json
 {
-  "imageUrl": "/storage/posts/images/2026/01/09/image-name.jpg"
+  "success": true,
+  "url": "/storage/posts/images/<uuid>.<ext>"
 }
 ```
 
 **Auth:** Requires `auth` + `verified` middleware.
 
-**Rate Limit:** 10 requests per minute.
+**Rate Limit:** 10 requests per minute (limiter: `posts`).
 
-**Storage:** Images are stored in `storage/app/public/posts/images/`
+**Storage:** Images are stored in `storage/app/public/posts/images/` (public disk), and served via `public/storage` after running `php artisan storage:link`.
 
 ### Sitemap
 
@@ -676,6 +692,13 @@ Notes:
 
 Most mutations in this app return a **302 redirect** with flash messages (not JSON). Use Inertia's router:
 
+Flash message keys shared to the frontend are:
+- `flash.success`
+- `flash.error`
+- `flash.message`
+
+They are provided by `App\Http\Middleware\HandleInertiaRequests`.
+
 ```tsx
 import { router } from '@inertiajs/react';
 
@@ -720,7 +743,7 @@ const response = await fetch('/upload-image', {
   body: formData
 });
 
-const { imageUrl } = await response.json();
+const { url } = await response.json();
 ```
 
 ---

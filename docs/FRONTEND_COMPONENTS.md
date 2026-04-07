@@ -624,7 +624,7 @@ interface FloatingActionButtonProps {
 **Features**:
 - Automatically detects current route and shows appropriate action
 - Shows "Create Post" on `/posts` and `/dashboard` routes
-- Shows "Create Category" on `/categories` routes
+- Shows "Create Category" on `/dashboard/categories` routes (admin-only category management)
 - Responsive design (icon only on mobile, text + icon on desktop)
 - Smooth animations and hover effects
 - Fixed positioning in bottom-right corner
