@@ -56,6 +56,44 @@ export default defineConfig(({ mode, command }) => {
         build:
             command === 'build'
                 ? {
+                      rollupOptions: {
+                          output: {
+                              /**
+                               * Keep chunking stable and intention-revealing.
+                               * This avoids accidental app-named shared chunks (e.g. `user-menu-*`)
+                               * when small modules become the "first" importer of large deps.
+                               */
+                              manualChunks(id: string) {
+                                  if (!id.includes('node_modules')) return;
+
+                                  // React + Inertia
+                                  if (
+                                      /node_modules\/(@inertiajs|react|react-dom)\//.test(id)
+                                  ) {
+                                      return 'vendor-react';
+                                  }
+
+                                  // Radix UI primitives (dialogs, dropdowns, etc.)
+                                  if (/node_modules\/@radix-ui\//.test(id)) {
+                                      return 'vendor-radix';
+                                  }
+
+                                  // Editor stack is by far the biggest dependency group
+                                  if (/node_modules\/(@tiptap|prosemirror)/.test(id)) {
+                                      return 'vendor-editor';
+                                  }
+
+                                  // Icons
+                                  if (/node_modules\/lucide-react\//.test(id)) {
+                                      return 'vendor-icons';
+                                  }
+
+                                  // Everything else
+                                  return 'vendor';
+                              },
+                          },
+                      },
+
                       // When building to `public/build`, Vite's modulepreload helper uses absolute
                       // `/${dep}` URLs (e.g. `/assets/...`). We must prefix those deps with `build/`
                       // (and optionally a subdirectory base) so preloads resolve to `/build/assets/...`.
