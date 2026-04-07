@@ -56,14 +56,9 @@ export default [
                 '@eslint-react/purity': 'off',
                 '@eslint-react/use-state': 'off',
                 '@eslint-react/naming-convention/ref-name': 'off',
-                '@eslint-react/dom/no-dangerously-set-innerhtml': 'error',
-                '@eslint-react/web-api/no-leaked-timeout': 'off',
-            },
-        },
-        {
-            files: ['resources/js/components/safe-html.tsx'],
-            rules: {
-                '@eslint-react/dom/no-dangerously-set-innerhtml': 'off',
+
+                // Keep existing effects low-noise while migrating eslint-react rules.
+                '@eslint-react/set-state-in-effect': 'off',
             },
         },
         {
