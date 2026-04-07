@@ -12,32 +12,40 @@ import {
     SidebarMenuItem,
 } from '#app/components/ui/sidebar';
 import { dashboard } from '#app/routes';
-import { type NavItem } from '#app/types';
+import { type NavItem, type SharedData } from '#app/types';
+import { usePage } from '@inertiajs/react';
 import { FileText, LayoutGrid, Tag } from 'lucide-react';
 import AppLogo from './app-logo';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Posts',
-        href: '/posts',
-        icon: FileText,
-    },
-    {
-        title: 'Categories',
-        href: '/dashboard/categories',
-        icon: Tag,
-    },
-];
 
 // Footer navigation items removed - not needed for production
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
+    const isAdmin = auth.user?.is_admin === true;
+
+    const mainNavItems: NavItem[] = [
+        ...(isAdmin
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: dashboard(),
+                      icon: LayoutGrid,
+                  },
+              ]
+            : []),
+        {
+            title: 'Posts',
+            href: '/posts',
+            icon: FileText,
+        },
+        {
+            title: 'Categories',
+            href: '/dashboard/categories',
+            icon: Tag,
+        },
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

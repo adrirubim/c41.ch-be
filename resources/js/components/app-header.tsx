@@ -38,14 +38,6 @@ import { LayoutGrid, Menu, Search } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
-
 // Right navigation items removed - not needed for production
 const rightNavItems: NavItem[] = [];
 
@@ -59,8 +51,20 @@ interface AppHeaderProps {
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
+    const isAdmin = auth.user?.is_admin === true;
     const getInitials = useInitials();
     const { urlIsActive } = useActiveUrl();
+
+    const mainNavItems: NavItem[] = isAdmin
+        ? [
+              {
+                  title: 'Dashboard',
+                  href: dashboard(),
+                  icon: LayoutGrid,
+              },
+          ]
+        : [];
+
     return (
         <>
             <div className="border-b border-sidebar-border/80">
