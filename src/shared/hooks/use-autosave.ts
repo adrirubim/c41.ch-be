@@ -39,7 +39,6 @@ export function useAutosave({
             setIsSaving(false);
             onSave?.();
         } catch (error) {
-            console.error('Autosave failed:', error);
             setIsSaving(false);
         }
     }, [data, storageKey, enabled, onSave]);
@@ -94,7 +93,6 @@ export function useAutosave({
             lastSavedRef.current = '';
             setLastSaved(null);
         } catch (error) {
-            console.error('Failed to clear autosave:', error);
         }
     }, [storageKey]);
 

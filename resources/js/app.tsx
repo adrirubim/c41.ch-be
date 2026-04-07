@@ -5,6 +5,7 @@ import type { ComponentType } from 'react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
+import { AppErrorBoundary } from '#app/components/error-boundary';
 
 const appName: string =
     typeof import.meta.env.VITE_APP_NAME === 'string' &&
@@ -36,13 +37,15 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                <App {...props} />
+                <AppErrorBoundary>
+                    <App {...props} />
+                </AppErrorBoundary>
             </StrictMode>,
         );
     },
     progress: {
-        color: '#4B5563',
-        showSpinner: true,
+        color: '#0ea5e9',
+        showSpinner: false,
     },
 });
 

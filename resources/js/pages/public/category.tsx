@@ -22,7 +22,8 @@ import {
 import { Spinner } from '#app/components/ui/spinner';
 import { decodeHtmlEntities } from '#app/lib/html';
 import { withBasePath } from '#app/lib/utils';
-import { Head, router, useForm } from '@inertiajs/react';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
+import { router, useForm } from '@inertiajs/react';
 import {
     ArrowLeft,
     Calendar,
@@ -84,6 +85,7 @@ interface CategoryProps {
         sort_order?: string;
         per_page?: number;
     };
+    seo?: MetaHeadProps;
 }
 
 function formatDate(dateString: string): string {
@@ -99,6 +101,7 @@ export default function CategoryPage({
     category,
     posts,
     filters,
+    seo,
 }: CategoryProps) {
     const { data, setData } = useForm({
         search: typeof filters.search === 'string' ? filters.search : '',
@@ -154,18 +157,20 @@ export default function CategoryPage({
 
     return (
         <>
-            <Head title={`${category.name} - C41.ch Blog`}>
-                <meta
-                    name="description"
-                    content={
-                        category.description !== undefined &&
-                        category.description !== null &&
-                        category.description !== ''
-                            ? category.description
-                            : `Posts in ${category.name} category`
-                    }
-                />
-            </Head>
+            <MetaHead
+                title={seo?.title ?? category.name}
+                description={
+                    seo?.description ??
+                    (typeof category.description === 'string' &&
+                    category.description !== ''
+                        ? category.description
+                        : `Posts in ${category.name} category`)
+                }
+                canonicalUrl={seo?.canonicalUrl}
+                og={seo?.og}
+                twitter={seo?.twitter}
+                jsonLd={seo?.jsonLd}
+            />
 
             <div className="flex min-h-screen flex-col bg-background">
                 <PublicHeader />
@@ -317,6 +322,7 @@ export default function CategoryPage({
                                                         <CardTitle className="line-clamp-2 transition-colors group-hover:text-primary">
                                                             <Link
                                                                 href={`/blog/${post.slug}`}
+                                                                prefetch="hover"
                                                             >
                                                                 {post.title}
                                                             </Link>
@@ -344,6 +350,7 @@ export default function CategoryPage({
                                                                 <Link
                                                                     key={cat.id}
                                                                     href={`/categories/${cat.slug}`}
+                                                                    prefetch="hover"
                                                                 >
                                                                     <Badge
                                                                         variant="secondary"

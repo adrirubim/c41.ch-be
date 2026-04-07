@@ -54,14 +54,14 @@ function HeaderUserMenu() {
 }
 
 export function PublicHeader() {
-    const { auth } = usePage<SharedData>().props;
+    const page = usePage<SharedData>();
+    const { auth } = page.props;
     const cleanupMobileNavigation = useMobileNavigation();
-    const user = auth.user as unknown as { id?: unknown; is_admin?: unknown };
-    const isAuthenticated = user != null && user.id != null;
-    const isAdmin = isAuthenticated && user.is_admin === true;
+    const user = auth.user;
+    const isAuthenticated = user !== null;
+    const isAdmin = user?.is_admin === true;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const currentPath =
-        typeof window !== 'undefined' ? window.location.pathname : '';
+    const currentPath = page.url.split('?')[0] ?? '';
     const onHomePage = currentPath === '/';
     const showAuthActions = !isAuthenticated;
     // On the landing page (`/`), mobile auth actions should appear only inside
@@ -211,7 +211,7 @@ export function PublicHeader() {
                                             <div className="space-y-3">
                                                 <div className="flex items-center gap-2">
                                                     <UserInfo
-                                                        user={auth.user}
+                                                        user={user!}
                                                         showEmail={true}
                                                     />
                                                 </div>

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Domain\Post\DTO\PostFiltersData;
-use App\Models\Post;
 use App\Repositories\CategoryRepository;
 use App\Repositories\PostRepository;
 use Illuminate\Http\Request;
@@ -38,42 +37,123 @@ class PublicPostController extends Controller
             ],
             perPage: $perPage,
         );
-        $posts = $this->postRepository->getFiltered($postFilters);
+        $posts = $this->postRepository->getPublicFilteredCached($postFilters);
         $categories = $this->categoryRepository->getAll();
+
+        $breadcrumbs = [
+            ['name' => 'Home', 'item' => route('home')],
+            ['name' => 'Blog', 'item' => route('public.posts.index')],
+        ];
+
+        $jsonLd = [
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => array_map(
+                    static fn (array $b, int $i) => [
+                        '@type' => 'ListItem',
+                        'position' => $i + 1,
+                        'name' => $b['name'],
+                        'item' => $b['item'],
+                    ],
+                    $breadcrumbs,
+                    array_keys($breadcrumbs),
+                ),
+            ],
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'CollectionPage',
+                'name' => 'Blog',
+                'url' => route('public.posts.index'),
+            ],
+        ];
 
         return Inertia::render('public/blog', [
             'posts' => $posts,
             'categories' => $categories,
             'filters' => $postFilters->toViewArray(),
+            'seo' => [
+                'title' => 'Blog',
+                'description' => 'Explora los artículos publicados.',
+                'canonicalUrl' => route('public.posts.index'),
+                'jsonLd' => $jsonLd,
+            ],
         ]);
     }
 
     /**
      * Display a single published post for public view.
      */
-    public function show(string $slug): Response
+    public function show(string $slug, Request $request): Response
     {
-        $post = Post::where('slug', $slug)
-            ->where('published', true)
-            ->with(['user', 'categories'])
-            ->firstOrFail();
+        $post = $this->postRepository->findPublishedBySlugCached($slug);
 
-        // Increment views count
-        $post->increment('views_count');
+        // Debounced view increment to reduce write contention.
+        $viewerKey = (string) ($request->user()?->id ?? $request->ip() ?? $request->session()->getId());
+        $this->postRepository->incrementViewsDebounced($post, $viewerKey);
 
-        // Get related posts (same categories)
-        $relatedPosts = Post::where('published', true)
-            ->where('id', '!=', $post->id)
-            ->whereHas('categories', function ($query) use ($post) {
-                $query->whereIn('categories.id', $post->categories->pluck('id'));
-            })
-            ->with(['user', 'categories'])
-            ->limit(4)
-            ->get();
+        $relatedPosts = $this->postRepository->getRelatedPublishedCached($post, 4);
+
+        $breadcrumbs = [
+            ['name' => 'Home', 'item' => route('home')],
+            ['name' => 'Blog', 'item' => route('public.posts.index')],
+            ['name' => $post->title, 'item' => route('public.posts.show', ['slug' => $post->slug])],
+        ];
+
+        $jsonLd = [
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => array_map(
+                    static fn (array $b, int $i) => [
+                        '@type' => 'ListItem',
+                        'position' => $i + 1,
+                        'name' => $b['name'],
+                        'item' => $b['item'],
+                    ],
+                    $breadcrumbs,
+                    array_keys($breadcrumbs),
+                ),
+            ],
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'BlogPosting',
+                'headline' => $post->title,
+                'description' => $post->excerpt ?: $post->title,
+                'author' => [
+                    '@type' => 'Person',
+                    'name' => $post->user?->name,
+                ],
+                'datePublished' => optional($post->published_at)->toAtomString(),
+                'dateModified' => optional($post->updated_at)->toAtomString(),
+                'mainEntityOfPage' => [
+                    '@type' => 'WebPage',
+                    '@id' => route('public.posts.show', ['slug' => $post->slug]),
+                ],
+                'url' => route('public.posts.show', ['slug' => $post->slug]),
+            ],
+        ];
 
         return Inertia::render('public/post', [
             'post' => $post,
             'relatedPosts' => $relatedPosts,
+            'seo' => [
+                'title' => $post->title,
+                'description' => $post->excerpt ?: $post->title,
+                'canonicalUrl' => route('public.posts.show', ['slug' => $post->slug]),
+                'og' => [
+                    'type' => 'article',
+                    'title' => $post->title,
+                    'description' => $post->excerpt ?: $post->title,
+                    'url' => route('public.posts.show', ['slug' => $post->slug]),
+                ],
+                'twitter' => [
+                    'card' => 'summary_large_image',
+                    'title' => $post->title,
+                    'description' => $post->excerpt ?: $post->title,
+                ],
+                'jsonLd' => $jsonLd,
+            ],
         ]);
     }
 }

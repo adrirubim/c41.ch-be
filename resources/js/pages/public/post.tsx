@@ -4,6 +4,7 @@ import { PublicHeader } from '#app/components/public-header';
 import { SafeHtml } from '#app/components/safe-html';
 import { Badge } from '#app/components/ui/badge';
 import { Button } from '#app/components/ui/button';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import {
     Card,
     CardContent,
@@ -15,7 +16,7 @@ import { postContentHtmlFromServer } from '#app/lib/posts-html';
 import type { ServerSanitizedHtml } from '#app/lib/safe-html';
 import { dashboard, login, register } from '#app/routes';
 import { type SharedData } from '#app/types';
-import { Head, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import {
     ArrowLeft,
     Calendar,
@@ -70,6 +71,7 @@ interface RelatedPost {
 interface PostProps {
     post: Post;
     relatedPosts: RelatedPost[];
+    seo?: MetaHeadProps;
 }
 
 interface PostViewModel {
@@ -85,7 +87,7 @@ function formatDate(dateString: string): string {
     });
 }
 
-export default function Post({ post, relatedPosts }: PostProps) {
+export default function Post({ post, relatedPosts, seo }: PostProps) {
     const { auth } = usePage<SharedData>().props;
     const primaryCategoryName = post.categories[0]?.name;
     const viewModel: PostViewModel = {
@@ -94,30 +96,19 @@ export default function Post({ post, relatedPosts }: PostProps) {
 
     return (
         <>
-            <Head title={`${post.title} - C41.ch Blog`}>
-                <meta
-                    name="description"
-                    content={
-                        post.excerpt !== undefined &&
-                        post.excerpt !== null &&
-                        post.excerpt !== ''
-                            ? post.excerpt
-                            : post.title
-                    }
-                />
-                <meta property="og:title" content={post.title} />
-                <meta
-                    property="og:description"
-                    content={
-                        post.excerpt !== undefined &&
-                        post.excerpt !== null &&
-                        post.excerpt !== ''
-                            ? post.excerpt
-                            : post.title
-                    }
-                />
-                <meta property="og:type" content="article" />
-            </Head>
+            <MetaHead
+                title={seo?.title ?? post.title}
+                description={
+                    seo?.description ??
+                    (typeof post.excerpt === 'string' && post.excerpt !== ''
+                        ? post.excerpt
+                        : post.title)
+                }
+                canonicalUrl={seo?.canonicalUrl}
+                og={seo?.og ?? { type: 'article', title: post.title }}
+                twitter={seo?.twitter}
+                jsonLd={seo?.jsonLd}
+            />
 
             <div className="flex min-h-screen flex-col bg-background">
                 <PublicHeader />
@@ -143,6 +134,7 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                         <Link
                                             key={category.id}
                                             href={`/categories/${category.slug}`}
+                                            prefetch="hover"
                                         >
                                             <Badge
                                                 variant="secondary"
@@ -257,6 +249,7 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                                 <CardTitle className="line-clamp-2 transition-colors group-hover:text-primary">
                                                     <Link
                                                         href={`/blog/${relatedPost.slug}`}
+                                                        prefetch="hover"
                                                     >
                                                         {relatedPost.title}
                                                     </Link>
@@ -281,6 +274,7 @@ export default function Post({ post, relatedPosts }: PostProps) {
                                                                     category.id
                                                                 }
                                                                 href={`/categories/${category.slug}`}
+                                                                prefetch="hover"
                                                             >
                                                                 <Badge
                                                                     variant="secondary"

@@ -273,7 +273,6 @@ export function useRichTextEditor({
                 throw new Error(responseErrorMessage);
             }
         } catch (error) {
-            console.error('Error uploading image:', error);
             addToast({
                 title: 'Upload error',
                 description:

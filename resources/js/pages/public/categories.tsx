@@ -1,4 +1,5 @@
 import { Link } from '#app/components/link';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import { PublicHeader } from '#app/components/public-header';
 import {
     Card,
@@ -6,7 +7,6 @@ import {
     CardHeader,
     CardTitle,
 } from '#app/components/ui/card';
-import { Head } from '@inertiajs/react';
 import { ArrowRight, Tag } from 'lucide-react';
 
 interface Category {
@@ -20,14 +20,20 @@ interface Category {
 
 interface CategoriesProps {
     categories: Category[];
+    seo?: MetaHeadProps;
 }
 
-export default function Categories({ categories }: CategoriesProps) {
+export default function Categories({ categories, seo }: CategoriesProps) {
     return (
         <>
-            <Head title="Categories - C41.ch Blog">
-                <meta name="description" content="Browse all blog categories" />
-            </Head>
+            <MetaHead
+                title={seo?.title ?? 'Categories'}
+                description={seo?.description}
+                canonicalUrl={seo?.canonicalUrl}
+                og={seo?.og}
+                twitter={seo?.twitter}
+                jsonLd={seo?.jsonLd}
+            />
 
             <div className="flex min-h-screen flex-col bg-background">
                 <PublicHeader />
@@ -56,6 +62,7 @@ export default function Categories({ categories }: CategoriesProps) {
                                         <Link
                                             key={category.id}
                                             href={`/categories/${category.slug}`}
+                                            prefetch="hover"
                                         >
                                             <Card className="group h-full transition-all hover:scale-105 hover:shadow-lg">
                                                 <CardHeader>

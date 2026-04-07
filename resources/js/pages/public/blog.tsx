@@ -22,7 +22,8 @@ import {
 import { Spinner } from '#app/components/ui/spinner';
 import { decodeHtmlEntities } from '#app/lib/html';
 import { withBasePath } from '#app/lib/utils';
-import { Head, router, useForm } from '@inertiajs/react';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
+import { router, useForm } from '@inertiajs/react';
 import { Calendar, Eye, FileText, Search, Star, User } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -75,6 +76,7 @@ interface BlogProps {
         sort_order?: string;
         per_page?: number;
     };
+    seo?: MetaHeadProps;
 }
 
 function formatDate(dateString: string): string {
@@ -86,7 +88,7 @@ function formatDate(dateString: string): string {
     });
 }
 
-export default function Blog({ posts, categories, filters }: BlogProps) {
+export default function Blog({ posts, categories, filters, seo }: BlogProps) {
     const { data, setData } = useForm({
         search: typeof filters.search === 'string' ? filters.search : '',
         category:
@@ -166,12 +168,14 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
 
     return (
         <>
-            <Head title="Blog - C41.ch">
-                <meta
-                    name="description"
-                    content="Browse all published blog posts"
-                />
-            </Head>
+            <MetaHead
+                title={seo?.title ?? 'Blog'}
+                description={seo?.description}
+                canonicalUrl={seo?.canonicalUrl}
+                og={seo?.og}
+                twitter={seo?.twitter}
+                jsonLd={seo?.jsonLd}
+            />
 
             <div className="flex min-h-screen flex-col bg-background">
                 <PublicHeader />
@@ -321,6 +325,7 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                                         <CardTitle className="line-clamp-2 transition-colors group-hover:text-primary">
                                                             <Link
                                                                 href={`/blog/${post.slug}`}
+                                                                prefetch="hover"
                                                             >
                                                                 {post.title}
                                                             </Link>
@@ -350,6 +355,7 @@ export default function Blog({ posts, categories, filters }: BlogProps) {
                                                                         category.id
                                                                     }
                                                                     href={`/categories/${category.slug}`}
+                                                                    prefetch="hover"
                                                                 >
                                                                     <Badge
                                                                         variant="secondary"

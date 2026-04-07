@@ -59,6 +59,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => $messageText, 'author' => $authorText],
+            'requestId' => app()->bound('request_id') ? app('request_id') : null,
             'auth' => [
                 'user' => $request->user(),
             ],

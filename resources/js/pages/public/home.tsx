@@ -11,7 +11,8 @@ import {
 } from '#app/components/ui/card';
 import { dashboard, login, register } from '#app/routes';
 import { type SharedData } from '#app/types';
-import { Head, usePage } from '@inertiajs/react';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
+import { usePage } from '@inertiajs/react';
 import {
     ArrowRight,
     Calendar,
@@ -61,6 +62,7 @@ interface HomeProps {
         totalCategories: number;
         totalViews: number;
     };
+    seo?: MetaHeadProps;
 }
 
 function formatDate(dateString: string): string {
@@ -77,20 +79,22 @@ export default function Home({
     recentPosts,
     categories,
     stats,
+    seo,
 }: HomeProps) {
     const { auth } = usePage<SharedData>().props;
-    const user = auth?.user as unknown as { id?: unknown; is_admin?: unknown };
-    const isAuthenticated = user != null && user.id != null;
-    const isAdmin = isAuthenticated && user.is_admin === true;
+    const isAuthenticated = auth.user !== null;
+    const isAdmin = auth.user?.is_admin === true;
 
     return (
         <>
-            <Head title="Home - C41.ch Blog">
-                <meta
-                    name="description"
-                    content="Discover amazing blog posts about technology, design, marketing, development, and business."
-                />
-            </Head>
+            <MetaHead
+                title={seo?.title ?? 'Home'}
+                description={seo?.description}
+                canonicalUrl={seo?.canonicalUrl}
+                og={seo?.og}
+                twitter={seo?.twitter}
+                jsonLd={seo?.jsonLd}
+            />
 
             <div className="relative flex min-h-screen flex-col bg-background">
                 {/* Hybrid Elegant Fluid Background */}

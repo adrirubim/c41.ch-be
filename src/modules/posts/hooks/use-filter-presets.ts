@@ -29,8 +29,7 @@ export function useFilterPresets() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(newPresets));
             setPresets(newPresets);
         } catch (error) {
-             
-            console.error('Failed to save filter presets:', error);
+            // Storage can fail (quota, privacy mode); ignore and keep UI usable.
         }
     }, []);
 

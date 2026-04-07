@@ -5,12 +5,8 @@ import { Head, usePage } from '@inertiajs/react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
-    const user = auth.user as unknown as {
-        id?: number;
-        is_admin?: unknown;
-    } | null;
-    const isAuthenticated = user !== null && user.id !== undefined;
-    const isAdmin = isAuthenticated && user.is_admin === true;
+    const isAuthenticated = auth.user !== null;
+    const isAdmin = auth.user?.is_admin === true;
 
     return (
         <>
