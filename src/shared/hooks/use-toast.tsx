@@ -17,7 +17,7 @@ export function useToast() {
 
     const [toasts, setToasts] = useState<Toast[]>([]);
     const processedFlashRef = useRef<string>('');
-    const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map());
+    const timeoutByIdRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
     const addToast = useCallback(
         ({ title, description, variant }: Omit<Toast, 'id'>) => {
@@ -38,20 +38,20 @@ export function useToast() {
             // Auto-remove after 5 seconds
             const timeoutId = setTimeout(() => {
                 setToasts((prev) => prev.filter((toast) => toast.id !== id));
-                timeoutRefs.current.delete(id);
+                timeoutByIdRef.current.delete(id);
             }, 5000);
 
-            timeoutRefs.current.set(id, timeoutId);
+            timeoutByIdRef.current.set(id, timeoutId);
         },
         [],
     );
 
     const removeToast = useCallback((id: string) => {
         // Clear timeout if it exists
-        const timeoutId = timeoutRefs.current.get(id);
+        const timeoutId = timeoutByIdRef.current.get(id);
         if (timeoutId) {
             clearTimeout(timeoutId);
-            timeoutRefs.current.delete(id);
+            timeoutByIdRef.current.delete(id);
         }
 
         setToasts((prev) => prev.filter((toast) => toast.id !== id));
@@ -73,30 +73,28 @@ export function useToast() {
             flashKey.trim() !== '--'
         ) {
             processedFlashRef.current = flashKey;
-            const toAdd = { success, error, message };
-            setTimeout(() => {
-                if (typeof toAdd.success === 'string' && toAdd.success !== '') {
-                    addToast({
-                        title: 'Success',
-                        description: toAdd.success,
-                        variant: 'success',
-                    });
-                }
-                if (typeof toAdd.error === 'string' && toAdd.error !== '') {
-                    addToast({
-                        title: 'Error',
-                        description: toAdd.error,
-                        variant: 'destructive',
-                    });
-                }
-                if (typeof toAdd.message === 'string' && toAdd.message !== '') {
-                    addToast({
-                        title: 'Information',
-                        description: toAdd.message,
-                        variant: 'default',
-                    });
-                }
-            }, 0);
+
+            if (typeof success === 'string' && success !== '') {
+                addToast({
+                    title: 'Success',
+                    description: success,
+                    variant: 'success',
+                });
+            }
+            if (typeof error === 'string' && error !== '') {
+                addToast({
+                    title: 'Error',
+                    description: error,
+                    variant: 'destructive',
+                });
+            }
+            if (typeof message === 'string' && message !== '') {
+                addToast({
+                    title: 'Information',
+                    description: message,
+                    variant: 'default',
+                });
+            }
         } else if (flashKey === '--') {
             // If there's no flash, reset the ref to allow processing new messages
             processedFlashRef.current = '';
@@ -105,7 +103,7 @@ export function useToast() {
 
     // Clear timeouts on unmount
     useEffect(() => {
-        const ref = timeoutRefs;
+        const ref = timeoutByIdRef;
         return () => {
             ref.current.forEach((timeoutId) => clearTimeout(timeoutId));
             ref.current.clear();
