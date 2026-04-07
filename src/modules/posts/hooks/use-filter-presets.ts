@@ -28,7 +28,7 @@ export function useFilterPresets() {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(newPresets));
             setPresets(newPresets);
-        } catch (error) {
+        } catch {
             // Storage can fail (quota, privacy mode); ignore and keep UI usable.
         }
     }, []);

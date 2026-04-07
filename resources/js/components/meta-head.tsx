@@ -53,7 +53,8 @@ export function MetaHead({
 
             {/* Open Graph */}
             <meta property="og:title" content={ogTitle} />
-            {typeof ogDescription === 'string' && ogDescription.trim() !== '' ? (
+            {typeof ogDescription === 'string' &&
+            ogDescription.trim() !== '' ? (
                 <meta property="og:description" content={ogDescription} />
             ) : null}
             <meta property="og:type" content={ogType} />
@@ -71,7 +72,8 @@ export function MetaHead({
             twitterDescription.trim() !== '' ? (
                 <meta name="twitter:description" content={twitterDescription} />
             ) : null}
-            {typeof twitter?.image === 'string' && twitter.image.trim() !== '' ? (
+            {typeof twitter?.image === 'string' &&
+            twitter.image.trim() !== '' ? (
                 <meta name="twitter:image" content={twitter.image} />
             ) : null}
 
@@ -79,11 +81,10 @@ export function MetaHead({
             {typeof jsonLdString === 'string' ? (
                 <script
                     type="application/ld+json"
-                    // eslint-disable-next-line react/no-danger
+                    // eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml
                     dangerouslySetInnerHTML={{ __html: jsonLdString }}
                 />
             ) : null}
         </Head>
     );
 }
-

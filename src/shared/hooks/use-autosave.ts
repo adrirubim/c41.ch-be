@@ -38,7 +38,7 @@ export function useAutosave({
             setLastSaved(new Date());
             setIsSaving(false);
             onSave?.();
-        } catch (error) {
+        } catch {
             setIsSaving(false);
         }
     }, [data, storageKey, enabled, onSave]);
@@ -92,7 +92,8 @@ export function useAutosave({
             localStorage.removeItem(storageKey);
             lastSavedRef.current = '';
             setLastSaved(null);
-        } catch (error) {
+        } catch {
+            // Storage can fail (quota, privacy mode); ignore.
         }
     }, [storageKey]);
 

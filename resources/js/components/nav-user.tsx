@@ -23,6 +23,11 @@ export function NavUser() {
     const { auth } = usePage<SharedData>().props;
     const { state } = useSidebar();
     const isMobile = useIsMobile();
+    const user = auth.user;
+
+    if (user === null) {
+        return null;
+    }
 
     return (
         <SidebarMenu>
@@ -36,7 +41,7 @@ export function NavUser() {
                             onPointerEnter={() => preloadLazyUserMenuContent()}
                             onFocus={() => preloadLazyUserMenuContent()}
                         >
-                            <UserInfo user={auth.user} />
+                            <UserInfo user={user} />
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
@@ -51,7 +56,7 @@ export function NavUser() {
                                   : 'bottom'
                         }
                     >
-                        <LazyUserMenuContent user={auth.user} />
+                        <LazyUserMenuContent user={user} />
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>
