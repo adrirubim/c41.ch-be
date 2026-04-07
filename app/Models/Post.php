@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'tags',
     'views_count',
     'featured',
+    'hero_image_base',
+    'hero_image_alt_text',
 ])]
 #[Cast([
     'published' => 'boolean',
@@ -43,6 +45,8 @@ class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
     use HasFactory, HasModelAttributes, SoftDeletes;
+
+    protected $appends = ['hero_image_urls'];
 
     protected static function booted(): void
     {
@@ -82,5 +86,26 @@ class Post extends Model
             ->withTimestamps();
 
         return $relation;
+    }
+
+    /**
+     * @return array{thumb_webp: string, thumb_jpg: string, hero_webp: string, hero_jpg: string, original: string}|null
+     */
+    public function getHeroImageUrlsAttribute(): ?array
+    {
+        if (! is_string($this->hero_image_base) || $this->hero_image_base === '') {
+            return null;
+        }
+
+        $base = $this->hero_image_base;
+        $basePath = "media/posts/{$base}";
+
+        return [
+            'thumb_webp' => asset("storage/{$basePath}/thumb.webp"),
+            'thumb_jpg' => asset("storage/{$basePath}/thumb.jpg"),
+            'hero_webp' => asset("storage/{$basePath}/hero.webp"),
+            'hero_jpg' => asset("storage/{$basePath}/hero.jpg"),
+            'original' => asset("storage/{$basePath}/original"),
+        ];
     }
 }

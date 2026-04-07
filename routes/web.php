@@ -31,38 +31,58 @@ if (app()->environment('local')) {
 // Enterprise: protect Blog and Categories
 
 // Public sitemap
-Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('sitemap.xml', [SitemapController::class, 'index'])
+    ->middleware('throttle:public_content')
+    ->name('sitemap');
 
 // Landing public homepage
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->middleware('throttle:public_content')
+    ->name('home');
+
+// Public Blog and Categories (SEO friendly; no auth wall)
+Route::get('/blog', [PublicPostController::class, 'index'])
+    ->middleware('throttle:public_content')
+    ->name('public.posts.index');
+Route::get('/blog/{slug}', [PublicPostController::class, 'show'])
+    ->middleware('throttle:public_content')
+    ->name('public.posts.show');
+Route::get('/categories', [PublicCategoryController::class, 'index'])
+    ->middleware('throttle:public_content')
+    ->name('public.categories.index');
+Route::get('/categories/{slug}', [PublicCategoryController::class, 'show'])
+    ->middleware('throttle:public_content')
+    ->name('public.categories.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Protected Blog and Categories
-    Route::get('/blog', [PublicPostController::class, 'index'])->name('public.posts.index');
-    Route::get('/blog/{slug}', [PublicPostController::class, 'show'])->name('public.posts.show');
-    Route::get('/categories', [PublicCategoryController::class, 'index'])->name('public.categories.index');
-    Route::get('/categories/{slug}', [PublicCategoryController::class, 'show'])->name('public.categories.show');
-
     Route::middleware([EnsureAdmin::class])->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Category routes (dashboard prefix to avoid clashing with public /categories/{slug})
-        Route::get('dashboard/categories', [CategoryController::class, 'index'])->name('categories.index');
-        Route::get('dashboard/categories/new', [CategoryController::class, 'create'])->name('categories.create');
+        Route::get('dashboard/categories', [CategoryController::class, 'index'])
+            ->middleware('can:viewAny,App\\Models\\Category')
+            ->name('categories.index');
+        Route::get('dashboard/categories/new', [CategoryController::class, 'create'])
+            ->middleware('can:create,App\\Models\\Category')
+            ->name('categories.create');
         Route::post('dashboard/categories', [CategoryController::class, 'store'])
             ->middleware('throttle:categories')
+            ->middleware('can:create,App\\Models\\Category')
             ->name('categories.store');
         Route::get('dashboard/categories/{category}', [CategoryController::class, 'show'])
             ->name('categories.show')
             ->where('category', '[0-9]+');
         Route::get('dashboard/categories/{category}/edit', [CategoryController::class, 'edit'])
+            ->middleware('can:update,category')
             ->name('categories.edit')
             ->where('category', '[0-9]+');
         Route::put('dashboard/categories/{category}', [CategoryController::class, 'update'])
             ->middleware('throttle:categories')
+            ->middleware('can:update,category')
             ->name('categories.update');
         Route::delete('dashboard/categories/{category}', [CategoryController::class, 'destroy'])
             ->middleware('throttle:categories')
+            ->middleware('can:delete,category')
             ->name('categories.destroy')
             ->where('category', '[0-9]+');
     });
@@ -75,6 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rutas de Posts
     Route::get('posts', [PostController::class, 'index'])
         ->middleware('throttle:search')
+        ->middleware('throttle:api_expensive')
         ->name('posts.index');
     Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('posts', [PostController::class, 'store'])
@@ -82,6 +103,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('posts.store');
     Route::post('posts/editorial-suggestions', [PostController::class, 'editorialSuggestions'])
         ->middleware('throttle:ai-editorial')
+        ->middleware('throttle:api_expensive')
+        ->middleware('can:useEditorialSuggestions,App\\Models\\Post')
         ->name('posts.editorial-suggestions');
     Route::get('posts/{post}', [PostController::class, 'show'])->name('posts.show');
     Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');

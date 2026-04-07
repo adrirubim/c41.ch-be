@@ -12,7 +12,7 @@ class CategoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true; // All authenticated users can view categories
+        return $this->isAdmin($user);
     }
 
     /**
@@ -20,7 +20,7 @@ class CategoryPolicy
      */
     public function view(User $user, Category $category): bool
     {
-        return true; // Everyone can view individual categories
+        return $this->isAdmin($user);
     }
 
     /**
@@ -28,9 +28,7 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        // For now, any authenticated user can create categories.
-        // In the future, this could be restricted to administrators.
-        return true;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -38,9 +36,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category): bool
     {
-        // For now, any authenticated user can update categories.
-        // In the future, this could be restricted to administrators.
-        return true;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -48,17 +44,7 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category): bool
     {
-        // Check if category has associated posts
-        // If it has posts, only administrators can delete it
-        // phpstan cannot infer `withoutTrashed()` availability on BelongsToMany here.
-        $hasPosts = $category->posts()->whereNull('posts.deleted_at')->exists();
-
-        if ($hasPosts) {
-            return $this->isAdmin($user);
-        }
-
-        // If it has no posts, everyone can delete it
-        return true;
+        return $this->isAdmin($user);
     }
 
     /**
@@ -82,6 +68,6 @@ class CategoryPolicy
      */
     protected function isAdmin(User $user): bool
     {
-        return $user->is_admin ?? false;
+        return $user->is_admin === true;
     }
 }

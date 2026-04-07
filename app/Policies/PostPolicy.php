@@ -12,7 +12,7 @@ class PostPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true; // All authenticated users can view the list
+        return true;
     }
 
     /**
@@ -20,7 +20,7 @@ class PostPolicy
      */
     public function view(User $user, Post $post): bool
     {
-        return true; // Everyone can view individual posts
+        return true;
     }
 
     /**
@@ -28,7 +28,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        return true; // All authenticated users can create posts
+        return true;
     }
 
     /**
@@ -68,10 +68,35 @@ class PostPolicy
     }
 
     /**
+     * Allow setting/overriding author (`user_id`) for a post.
+     */
+    public function assignAuthor(User $user): bool
+    {
+        return $this->isAdmin($user);
+    }
+
+    /**
+     * Allow using editorial AI suggestions.
+     */
+    public function useEditorialSuggestions(User $user): bool
+    {
+        if (! config('services.ai.enabled', false)) {
+            return false;
+        }
+
+        $adminOnly = (bool) config('services.ai.editorial_admin_only', true);
+        if ($adminOnly) {
+            return $this->isAdmin($user);
+        }
+
+        return true;
+    }
+
+    /**
      * Check if user is admin
      */
     protected function isAdmin(User $user): bool
     {
-        return $user->is_admin ?? false;
+        return $user->is_admin === true;
     }
 }
