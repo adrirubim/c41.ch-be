@@ -21,6 +21,7 @@ import {
 import {
     Sheet,
     SheetContent,
+    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -88,10 +89,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 side="left"
                                 className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar"
                             >
-                                <SheetTitle className="sr-only">
-                                    Navigation Menu
-                                </SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
+                                    <SheetTitle className="sr-only">
+                                        Navigation Menu
+                                    </SheetTitle>
+                                    <SheetDescription className="sr-only">
+                                        Main navigation
+                                    </SheetDescription>
                                     <Link
                                         href="/blog"
                                         prefetch

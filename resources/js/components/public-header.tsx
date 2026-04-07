@@ -12,14 +12,20 @@ import {
 import {
     Sheet,
     SheetContent,
+    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
 } from '#app/components/ui/sheet';
-import { dashboard, login, register } from '#app/routes';
+import { UserInfo } from '#app/components/user-info';
+import { useMobileNavigation } from '#app/hooks/use-mobile-navigation';
+import { withBasePath } from '#app/lib/utils';
+import { dashboard, login, logout, register } from '#app/routes';
+import { edit } from '#app/routes/profile';
 import { type SharedData } from '#app/types';
-import { usePage } from '@inertiajs/react';
-import { LogIn, Menu } from 'lucide-react';
+import { router, usePage } from '@inertiajs/react';
+import { ChevronsUpDown, LogIn, LogOut, Menu, Settings } from 'lucide-react';
+import { useState } from 'react';
 import AppLogo from './app-logo';
 
 function HeaderUserMenu() {
@@ -49,9 +55,11 @@ function HeaderUserMenu() {
 
 export function PublicHeader() {
     const { auth } = usePage<SharedData>().props;
+    const cleanupMobileNavigation = useMobileNavigation();
     const user = auth.user as unknown as { id?: unknown; is_admin?: unknown };
     const isAuthenticated = user != null && user.id != null;
     const isAdmin = isAuthenticated && user.is_admin === true;
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const currentPath =
         typeof window !== 'undefined' ? window.location.pathname : '';
     const onHomePage = currentPath === '/';
@@ -129,7 +137,10 @@ export function PublicHeader() {
                     </div>
 
                     {/* Mobile Menu */}
-                    <Sheet>
+                    <Sheet
+                        open={mobileMenuOpen}
+                        onOpenChange={setMobileMenuOpen}
+                    >
                         <SheetTrigger asChild className="md:hidden">
                             <Button variant="ghost" size="icon">
                                 <Menu className="h-5 w-5" />
@@ -138,12 +149,19 @@ export function PublicHeader() {
                         <SheetContent side="right">
                             <SheetHeader>
                                 <SheetTitle>Navigation</SheetTitle>
+                                <SheetDescription className="sr-only">
+                                    Main navigation and account actions
+                                </SheetDescription>
                             </SheetHeader>
                             <nav className="mt-8 flex flex-col space-y-4 px-4">
                                 {!onHomePage && (
                                     <Link
                                         href="/"
                                         className="text-base font-medium"
+                                        onClick={() => {
+                                            cleanupMobileNavigation();
+                                            setMobileMenuOpen(false);
+                                        }}
                                     >
                                         Home
                                     </Link>
@@ -153,12 +171,20 @@ export function PublicHeader() {
                                         <Link
                                             href="/blog"
                                             className="text-base font-medium"
+                                            onClick={() => {
+                                                cleanupMobileNavigation();
+                                                setMobileMenuOpen(false);
+                                            }}
                                         >
                                             Blog
                                         </Link>
                                         <Link
                                             href="/categories"
                                             className="text-base font-medium"
+                                            onClick={() => {
+                                                cleanupMobileNavigation();
+                                                setMobileMenuOpen(false);
+                                            }}
                                         >
                                             Categories
                                         </Link>
@@ -171,25 +197,76 @@ export function PublicHeader() {
                                                 <Button
                                                     variant="default"
                                                     className="w-full"
+                                                    onClick={() => {
+                                                        cleanupMobileNavigation();
+                                                        setMobileMenuOpen(
+                                                            false,
+                                                        );
+                                                    }}
                                                 >
                                                     Dashboard
                                                 </Button>
                                             </Link>
                                         ) : (
-                                            <Link href="/settings/profile">
-                                                <Button
-                                                    variant="default"
-                                                    className="w-full"
-                                                >
-                                                    Account
-                                                </Button>
-                                            </Link>
+                                            <div className="space-y-3">
+                                                <div className="flex items-center gap-2">
+                                                    <UserInfo
+                                                        user={auth.user}
+                                                        showEmail={true}
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        className="w-full justify-start"
+                                                        asChild
+                                                    >
+                                                        <Link
+                                                            href={edit()}
+                                                            prefetch
+                                                            onClick={() => {
+                                                                cleanupMobileNavigation();
+                                                                setMobileMenuOpen(
+                                                                    false,
+                                                                );
+                                                            }}
+                                                        >
+                                                            <Settings className="mr-2 h-4 w-4" />
+                                                            Settings
+                                                        </Link>
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant="destructive"
+                                                        className="w-full justify-start"
+                                                        onClick={() => {
+                                                            cleanupMobileNavigation();
+                                                            setMobileMenuOpen(
+                                                                false,
+                                                            );
+                                                            router.post(
+                                                                withBasePath(
+                                                                    logout(),
+                                                                ),
+                                                            );
+                                                        }}
+                                                        data-test="logout-button"
+                                                    >
+                                                        <LogOut className="mr-2 h-4 w-4" />
+                                                        Log out
+                                                    </Button>
+                                                </div>
+                                            </div>
                                         )
                                     ) : showAuthActions ? (
                                         <>
                                             <Link
                                                 href={login()}
                                                 className="mb-2 block"
+                                                onClick={() => {
+                                                    cleanupMobileNavigation();
+                                                    setMobileMenuOpen(false);
+                                                }}
                                             >
                                                 <Button
                                                     variant="outline"
@@ -198,7 +275,13 @@ export function PublicHeader() {
                                                     Log in
                                                 </Button>
                                             </Link>
-                                            <Link href={register()}>
+                                            <Link
+                                                href={register()}
+                                                onClick={() => {
+                                                    cleanupMobileNavigation();
+                                                    setMobileMenuOpen(false);
+                                                }}
+                                            >
                                                 <Button
                                                     variant="default"
                                                     className="w-full"
