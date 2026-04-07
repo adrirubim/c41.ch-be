@@ -33,8 +33,18 @@ createServer((page) =>
             )().then((mod) => mod.default);
         },
         setup: ({ App, props }) => {
+            const requestId =
+                typeof props.initialPage?.props?.requestId === 'string'
+                    ? (props.initialPage.props.requestId as string)
+                    : null;
+            const user =
+                (props.initialPage?.props?.auth?.user as
+                    | import('#app/types').User
+                    | null
+                    | undefined) ?? null;
+
             return (
-                <AppErrorBoundary>
+                <AppErrorBoundary requestId={requestId} user={user}>
                     <App {...props} />
                 </AppErrorBoundary>
             );

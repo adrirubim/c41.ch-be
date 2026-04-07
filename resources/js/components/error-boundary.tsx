@@ -1,5 +1,4 @@
 import { type SharedData } from '#app/types';
-import { usePage } from '@inertiajs/react';
 import type { ErrorInfo, ReactNode } from 'react';
 import { Component } from 'react';
 
@@ -87,13 +86,17 @@ export class ErrorBoundary extends Component<
     }
 }
 
-export function AppErrorBoundary({ children }: { children: ReactNode }) {
-    const page = usePage<SharedData>();
+export function AppErrorBoundary({
+    children,
+    requestId,
+    user,
+}: {
+    children: ReactNode;
+    requestId: string | null;
+    user: SharedData['auth']['user'];
+}) {
     return (
-        <ErrorBoundary
-            requestId={page.props.requestId}
-            user={page.props.auth.user}
-        >
+        <ErrorBoundary requestId={requestId} user={user}>
             {children}
         </ErrorBoundary>
     );
