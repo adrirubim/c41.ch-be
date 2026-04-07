@@ -18,18 +18,7 @@ class CategoryController extends Controller
     public function __construct(
         private CategoryService $categoryService
     ) {
-        // Access control is enforced at method-level (no $this->middleware()).
-    }
-
-    private function ensureAdminOrRedirect(): ?RedirectResponse
-    {
-        $user = request()->user();
-
-        if ($user === null || $user->is_admin !== true) {
-            return redirect()->route('public.posts.index');
-        }
-
-        return null;
+        // Access control is enforced by route middleware + Policies.
     }
 
     /**
@@ -37,10 +26,7 @@ class CategoryController extends Controller
      */
     public function index(): Response|RedirectResponse
     {
-        $redirect = $this->ensureAdminOrRedirect();
-        if ($redirect !== null) {
-            return $redirect;
-        }
+        $this->authorize('viewAny', Category::class);
 
         $categories = $this->categoryService->getAllWithPostCount()
             ->sortBy('name')
@@ -56,10 +42,7 @@ class CategoryController extends Controller
      */
     public function create(): Response|RedirectResponse
     {
-        $redirect = $this->ensureAdminOrRedirect();
-        if ($redirect !== null) {
-            return $redirect;
-        }
+        $this->authorize('create', Category::class);
 
         return Inertia::render('categories/create');
     }
@@ -69,12 +52,6 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $redirect = $this->ensureAdminOrRedirect();
-        if ($redirect !== null) {
-            /** @var RedirectResponse $redirect */
-            return $redirect;
-        }
-
         $this->authorize('create', Category::class);
 
         $categoryData = CategoryUpsertData::fromValidated($request->validated());
@@ -98,11 +75,6 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): Response|RedirectResponse
     {
-        $redirect = $this->ensureAdminOrRedirect();
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
         $this->authorize('update', $category);
 
         return Inertia::render('categories/edit', [
@@ -115,12 +87,6 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        $redirect = $this->ensureAdminOrRedirect();
-        if ($redirect !== null) {
-            /** @var RedirectResponse $redirect */
-            return $redirect;
-        }
-
         $this->authorize('update', $category);
 
         $categoryData = CategoryUpsertData::fromValidated($request->validated());
@@ -135,12 +101,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        $redirect = $this->ensureAdminOrRedirect();
-        if ($redirect !== null) {
-            /** @var RedirectResponse $redirect */
-            return $redirect;
-        }
-
         $this->authorize('delete', $category);
 
         $this->categoryService->delete($category);

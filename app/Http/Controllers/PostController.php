@@ -82,9 +82,9 @@ class PostController extends Controller
         }
 
         $validated = $request->validated();
-        // Non-admins can publish, but they cannot impersonate other authors.
-        if ($user->is_admin !== true && array_key_exists('user_id', $validated)) {
-            unset($validated['user_id']);
+        // If author is being overridden, require explicit authorization.
+        if (array_key_exists('user_id', $validated) && (int) $validated['user_id'] !== (int) $user->id) {
+            $this->authorize('assignAuthor', Post::class);
         }
         $postData = PostUpsertData::fromValidated(
             validated: $validated,
@@ -149,9 +149,9 @@ class PostController extends Controller
         }
 
         $validated = $request->validated();
-        // Non-admins can update their own posts, but cannot reassign author_id.
-        if ($user->is_admin !== true && array_key_exists('user_id', $validated)) {
-            unset($validated['user_id']);
+        // If author is being overridden, require explicit authorization.
+        if (array_key_exists('user_id', $validated) && (int) $validated['user_id'] !== (int) $user->id) {
+            $this->authorize('assignAuthor', Post::class);
         }
         $postData = PostUpsertData::fromValidated(
             validated: $validated,
@@ -185,7 +185,7 @@ class PostController extends Controller
     ): JsonResponse {
         $startedAt = microtime(true);
         $user = $request->user();
-        $isAdminOnly = (bool) config('services.ai.editorial_admin_only', true);
+        $this->authorize('useEditorialSuggestions', Post::class);
 
         if (! config('services.ai.enabled', false)) {
             Log::info('ai_editorial_suggestions_disabled', [
@@ -196,18 +196,6 @@ class PostController extends Controller
             return response()->json([
                 'message' => 'AI assistant is currently disabled.',
             ], 503);
-        }
-
-        $isAdmin = $user !== null && $user->is_admin === true;
-        if ($isAdminOnly && ! $isAdmin) {
-            Log::warning('ai_editorial_suggestions_forbidden', [
-                'user_id' => $user?->id,
-                'request_id' => app()->bound('request_id') ? app('request_id') : null,
-            ]);
-
-            return response()->json([
-                'message' => 'You are not allowed to use editorial AI suggestions.',
-            ], 403);
         }
 
         $input = PostEditorialSuggestionInputData::fromValidated($request->validated());
@@ -231,7 +219,7 @@ class PostController extends Controller
                     'excerpt' => $input->excerpt,
                     'tags' => $input->tags,
                 ],
-            ]);
+            ], 500);
         }
 
         Log::info('ai_editorial_suggestions_success', [

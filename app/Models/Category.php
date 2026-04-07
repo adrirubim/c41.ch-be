@@ -22,11 +22,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'slug',
     'description',
     'color',
+    'image_base',
+    'image_alt_text',
 ])]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
     use HasFactory, HasModelAttributes, SoftDeletes;
+
+    protected $appends = ['image_urls'];
 
     /**
      * Many-to-many relationship with posts.
@@ -41,5 +45,26 @@ class Category extends Model
             ->withTimestamps();
 
         return $relation;
+    }
+
+    /**
+     * @return array{thumb_webp: string, thumb_jpg: string, hero_webp: string, hero_jpg: string, original: string}|null
+     */
+    public function getImageUrlsAttribute(): ?array
+    {
+        if (! is_string($this->image_base) || $this->image_base === '') {
+            return null;
+        }
+
+        $base = $this->image_base;
+        $basePath = "media/categories/{$base}";
+
+        return [
+            'thumb_webp' => asset("storage/{$basePath}/thumb.webp"),
+            'thumb_jpg' => asset("storage/{$basePath}/thumb.jpg"),
+            'hero_webp' => asset("storage/{$basePath}/hero.webp"),
+            'hero_jpg' => asset("storage/{$basePath}/hero.jpg"),
+            'original' => asset("storage/{$basePath}/original"),
+        ];
     }
 }

@@ -26,15 +26,7 @@ class DashboardController extends Controller
      */
     public function index(): Response|RedirectResponse
     {
-        $user = request()->user();
-        if ($user === null) {
-            abort(403, 'Unauthorized.');
-        }
-
-        if ($user->is_admin !== true) {
-            // Non-admins should land in the blog.
-            return redirect()->route('public.posts.index');
-        }
+        // Admin access is enforced by route middleware.
 
         // Cache statistics (5 minutes)
         $stats = Cache::remember('dashboard.stats', 300, function () {

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Domain\Post\DTO\PostEditorialSuggestionData;
 use App\Domain\Post\DTO\PostEditorialSuggestionInputData;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -77,7 +78,13 @@ class PostEditorialSuggestionService
                 'excerpt' => Str::limit($excerpt, 240, '...'),
                 'tags' => array_slice($normalizedTags, 0, 10),
             ];
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
+            Log::error('ai_editorial_suggestions_service_failed', [
+                'request_id' => app()->bound('request_id') ? app('request_id') : null,
+                'error_class' => $exception::class,
+                'error_message' => $exception->getMessage(),
+            ]);
+
             return null;
         }
     }

@@ -59,11 +59,42 @@ class HomeController extends Controller
             'totalViews' => Post::where('published', true)->sum('views_count'),
         ];
 
+        $breadcrumbs = [
+            ['name' => 'Home', 'item' => route('home')],
+        ];
+
+        $jsonLd = [
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    [
+                        '@type' => 'ListItem',
+                        'position' => 1,
+                        'name' => 'Home',
+                        'item' => route('home'),
+                    ],
+                ],
+            ],
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'CollectionPage',
+                'name' => 'Home',
+                'url' => route('home'),
+            ],
+        ];
+
         return Inertia::render('public/home', [
             'featuredPosts' => $featuredPosts,
             'recentPosts' => $recentPosts,
             'categories' => $categories,
             'stats' => $stats,
+            'seo' => [
+                'title' => 'Home',
+                'description' => 'Blog moderno para compartir conocimiento y demos enterprise.',
+                'canonicalUrl' => route('home'),
+                'jsonLd' => $jsonLd,
+            ],
         ]);
     }
 }
