@@ -20,6 +20,7 @@ import {
     SelectValue,
 } from '#app/components/ui/select';
 import { Spinner } from '#app/components/ui/spinner';
+import { decodeHtmlEntities } from '#app/lib/html';
 import { withBasePath } from '#app/lib/utils';
 import { Head, router, useForm } from '@inertiajs/react';
 import {
@@ -407,10 +408,11 @@ export default function CategoryPage({
                                                         <span
                                                             key={index}
                                                             className="px-3 py-2 text-sm text-muted-foreground"
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: link.label,
-                                                            }}
-                                                        />
+                                                        >
+                                                            {decodeHtmlEntities(
+                                                                link.label,
+                                                            )}
+                                                        </span>
                                                     );
                                                 }
                                                 return (
@@ -422,10 +424,11 @@ export default function CategoryPage({
                                                                 ? 'bg-primary text-primary-foreground'
                                                                 : 'bg-background hover:bg-muted'
                                                         }`}
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: link.label,
-                                                        }}
-                                                    />
+                                                    >
+                                                        {decodeHtmlEntities(
+                                                            link.label,
+                                                        )}
+                                                    </Link>
                                                 );
                                             })}
                                         </div>
