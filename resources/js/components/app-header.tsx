@@ -1,5 +1,9 @@
 import { Breadcrumbs } from '#app/components/breadcrumbs';
 import { Icon } from '#app/components/icon';
+import {
+    LazyUserMenuContent,
+    preloadLazyUserMenuContent,
+} from '#app/components/lazy-user-menu-content';
 import { Link } from '#app/components/link';
 import { Avatar, AvatarFallback, AvatarImage } from '#app/components/ui/avatar';
 import { Button } from '#app/components/ui/button';
@@ -27,7 +31,6 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '#app/components/ui/tooltip';
-import { UserMenuContent } from '#app/components/user-menu-content';
 import { useActiveUrl } from '#app/hooks/use-active-url';
 import { useInitials } from '#app/hooks/use-initials';
 import { cn, toUrl } from '#app/lib/utils';
@@ -232,6 +235,10 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <Button
                                     variant="ghost"
                                     className="size-10 rounded-full p-1"
+                                    onPointerEnter={() =>
+                                        preloadLazyUserMenuContent()
+                                    }
+                                    onFocus={() => preloadLazyUserMenuContent()}
                                 >
                                     <Avatar className="size-8 overflow-hidden rounded-full">
                                         <AvatarImage

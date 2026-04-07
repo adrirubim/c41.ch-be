@@ -1,4 +1,8 @@
 import {
+    LazyUserMenuContent,
+    preloadLazyUserMenuContent,
+} from '#app/components/lazy-user-menu-content';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
@@ -10,7 +14,6 @@ import {
     useSidebar,
 } from '#app/components/ui/sidebar';
 import { UserInfo } from '#app/components/user-info';
-import { UserMenuContent } from '#app/components/user-menu-content';
 import { useIsMobile } from '#app/hooks/use-mobile';
 import { type SharedData } from '#app/types';
 import { usePage } from '@inertiajs/react';
@@ -30,6 +33,8 @@ export function NavUser() {
                             size="lg"
                             className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
                             data-test="sidebar-menu-button"
+                            onPointerEnter={() => preloadLazyUserMenuContent()}
+                            onFocus={() => preloadLazyUserMenuContent()}
                         >
                             <UserInfo user={auth.user} />
                             <ChevronsUpDown className="ml-auto size-4" />
@@ -46,7 +51,7 @@ export function NavUser() {
                                   : 'bottom'
                         }
                     >
-                        <UserMenuContent user={auth.user} />
+                        <LazyUserMenuContent user={auth.user} />
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>

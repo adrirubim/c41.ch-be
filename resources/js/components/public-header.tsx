@@ -1,5 +1,14 @@
+import {
+    LazyUserMenuContent,
+    preloadLazyUserMenuContent,
+} from '#app/components/lazy-user-menu-content';
 import { Link } from '#app/components/link';
 import { Button } from '#app/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from '#app/components/ui/dropdown-menu';
 import {
     Sheet,
     SheetContent,
@@ -12,6 +21,31 @@ import { type SharedData } from '#app/types';
 import { usePage } from '@inertiajs/react';
 import { LogIn, Menu } from 'lucide-react';
 import AppLogo from './app-logo';
+
+function HeaderUserMenu() {
+    const { auth } = usePage<SharedData>().props;
+
+    if (auth.user == null) return null;
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button
+                    type="button"
+                    className="flex h-8 items-center gap-2 overflow-hidden rounded-md px-2 text-left text-sm font-medium transition-[color,box-shadow] outline-none hover:bg-muted focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                    onPointerEnter={() => preloadLazyUserMenuContent()}
+                    onFocus={() => preloadLazyUserMenuContent()}
+                >
+                    <UserInfo user={auth.user} />
+                    <ChevronsUpDown className="ml-auto size-4" />
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-56 rounded-lg" align="end">
+                <LazyUserMenuContent user={auth.user} />
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
 
 export function PublicHeader() {
     const { auth } = usePage<SharedData>().props;
@@ -75,11 +109,7 @@ export function PublicHeader() {
                                     </Button>
                                 </Link>
                             ) : (
-                                <Link href="/settings/profile">
-                                    <Button variant="default" size="sm">
-                                        Account
-                                    </Button>
-                                </Link>
+                                <HeaderUserMenu />
                             )
                         ) : showAuthActions ? (
                             <div className="flex items-center space-x-2">
