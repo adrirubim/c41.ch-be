@@ -30,6 +30,7 @@ export type SharedData = PageProps & {
     quote: { message: string; author: string };
     auth: Auth;
     requestId: string | null;
+    cspNonce: string | null;
     sidebarOpen: boolean;
     flash: {
         success: string | null;

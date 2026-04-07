@@ -60,6 +60,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => $messageText, 'author' => $authorText],
             'requestId' => app()->bound('request_id') ? app('request_id') : null,
+            'cspNonce' => app()->bound('csp_nonce') ? app('csp_nonce') : null,
             'auth' => [
                 'user' => $request->user(),
             ],

@@ -5,8 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        @php($cspNonce = app()->bound('csp_nonce') ? app('csp_nonce') : null)
+
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
-        <script>
+        <script @if(is_string($cspNonce) && $cspNonce !== '') nonce="{{ $cspNonce }}" @endif>
             (function() {
                 const appearance = '{{ $appearance ?? "system" }}';
 
@@ -21,7 +23,7 @@
         </script>
 
         {{-- Inline style to set the HTML background color based on the theme defined in app.css --}}
-        <style>
+        <style @if(is_string($cspNonce) && $cspNonce !== '') nonce="{{ $cspNonce }}" @endif>
             html {
                 background-color: oklch(1 0 0);
             }

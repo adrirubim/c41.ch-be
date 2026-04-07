@@ -1,4 +1,5 @@
-import { Head } from '@inertiajs/react';
+import { type SharedData } from '#app/types';
+import { Head, usePage } from '@inertiajs/react';
 
 type JsonLd = Record<string, unknown> | Array<Record<string, unknown>>;
 
@@ -30,6 +31,7 @@ export function MetaHead({
     twitter,
     jsonLd,
 }: MetaHeadProps) {
+    const { cspNonce } = usePage<SharedData>().props;
     const ogTitle = og?.title ?? title;
     const ogDescription = og?.description ?? description;
     const ogType = og?.type ?? 'website';
@@ -79,7 +81,9 @@ export function MetaHead({
 
             {/* JSON-LD */}
             {typeof jsonLdString === 'string' ? (
-                <script type="application/ld+json">{jsonLdString}</script>
+                <script nonce={cspNonce ?? undefined} type="application/ld+json">
+                    {jsonLdString}
+                </script>
             ) : null}
         </Head>
     );
