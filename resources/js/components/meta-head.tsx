@@ -79,11 +79,7 @@ export function MetaHead({
 
             {/* JSON-LD */}
             {typeof jsonLdString === 'string' ? (
-                <script
-                    type="application/ld+json"
-                    // eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml
-                    dangerouslySetInnerHTML={{ __html: jsonLdString }}
-                />
+                <script type="application/ld+json">{jsonLdString}</script>
             ) : null}
         </Head>
     );
