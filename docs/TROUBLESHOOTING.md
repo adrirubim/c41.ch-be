@@ -519,7 +519,7 @@ php artisan view:clear
 
 1. **Check cache driver in `.env`**:
    ```env
-   CACHE_DRIVER=file
+   CACHE_STORE=file
    ```
 
 2. **Verify cache directory is writable**:

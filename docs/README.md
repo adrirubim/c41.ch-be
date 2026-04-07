@@ -9,6 +9,9 @@ Public entry point for the project's technical documentation.
 - **[AI_RUNTIME_SETUP.md](AI_RUNTIME_SETUP.md)** — AI runtime configuration, rollout, and guardrails
 - **[FRONTEND_COMPONENTS.md](FRONTEND_COMPONENTS.md)** — React components
 - **[CUSTOM_HOOKS.md](CUSTOM_HOOKS.md)** — Custom hooks
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** — End-to-end request/response flow (middleware → controllers → services → repos), Inertia/SSR, traceability (`request_id`)
+- **[CACHING_AND_INVALIDATION.md](CACHING_AND_INVALIDATION.md)** — Cache keys/tags, keyset fallback, and Observer-driven invalidation
+- **[SECURITY_MODEL.md](SECURITY_MODEL.md)** — CSP/headers, rate limiting, policies (deny-by-default), and sanitization
 
 ## Reference
 
@@ -19,6 +22,7 @@ Public entry point for the project's technical documentation.
 ## Deployment
 
 - **[deployment/README.md](deployment/README.md)** — Production deployment (SSH servers and shared hosting/CDMON)
+- **[PRODUCTION_CHECKLIST.md](PRODUCTION_CHECKLIST.md)** — Production ops checklist (health checks, scheduler, backups, media cleanup)
 
 ## Support
 

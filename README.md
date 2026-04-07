@@ -4,7 +4,7 @@
 
 # C41.ch-be
 
-> A modern, enterprise-grade blog management system built with Laravel 13, React 19 (Inertia.js), and PostgreSQL. Featuring a professional UI/UX, comprehensive security, and optimized performance.
+> A modern, enterprise-grade blog management system built with **Laravel 13**, **React 19 (Inertia.js)**, and **PostgreSQL**. It ships with production-grade security headers (CSP), rate limiting, SSR-ready frontend rendering, and cache invalidation via Observers.
 
 [![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
@@ -19,6 +19,7 @@
 ## 📋 Table of Contents
 
 - [Operational Quickstart](#operational-quickstart)
+- [Docker (Production-like)](#docker-production-like)
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -61,6 +62,31 @@ For detailed docs: start from [docs/README.md](docs/README.md).
 
 For a full local quality gate before pushing, see [Before Pushing to GitHub](#before-pushing-to-github).
 
+<a id="docker-production-like"></a>
+## 🐳 Docker (Production-like)
+
+This repository includes a **production-like Docker setup**:
+
+- **`Dockerfile`**: multi-stage build (Composer vendor + Vite build + slim PHP-FPM runtime)
+- **`docker-compose.yml`**: `nginx` (port `8080`) → `app` (PHP-FPM) + `db` (Postgres 16)
+
+### Quick start
+
+```bash
+cp .env.example .env
+php artisan key:generate
+docker compose up --build
+```
+
+Then open:
+- App: `http://localhost:8080`
+- Infra health: `GET http://localhost:8080/api/health`
+
+Notes:
+- In production you should run `php artisan migrate --force` and `php artisan optimize` as part of your deploy procedure (see `docs/PRODUCTION_CHECKLIST.md`).
+- Optional SSR: set `INERTIA_SSR_ENABLED=true` and ensure the SSR server is reachable via `INERTIA_SSR_URL` (see `config/inertia.php` and `composer run dev:ssr`).
+  - The repo builds SSR via `npm run build:ssr` and includes the bundle in `bootstrap/ssr/`.
+
 <a id="overview"></a>
 ## 🎯 Overview
 
@@ -71,8 +97,8 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - **Modern Stack**: Laravel 13, React 19, TypeScript, TailwindCSS 4.2
 - **AI-Assisted Editorial Flow**: Optional excerpt/tag suggestions with feature flags, role guardrails, and dedicated throttling
 - **Professional UI/UX**: Enhanced with skeleton loaders, real-time previews, advanced filtering, and accessibility compliance
-- **Enterprise Security**: Authorization policies, rate limiting, HTML sanitization, and role-based access control
-- **Optimized Performance**: Database indexing, strategic caching, query optimization, and React memoization
+- **Enterprise Security**: CSP/security headers, authorization policies, rate limiting, HTML sanitization, and role-based access control
+- **Optimized Performance**: Public caching for high-traffic pages + **event-driven invalidation** via Eloquent Observers
 - **Comprehensive Testing**: Feature and Unit test suites covering all critical paths
 - **Full Documentation**: API docs, development guide, roadmap, and English code comments throughout
 
@@ -92,7 +118,8 @@ c41.ch-be is a production-ready content management system designed for modern bl
 ### ⚡ Performance
 
 - ✅ **Database Indexing** - Optimized indexes on frequently queried columns
-- ✅ **Strategic Caching** - Multi-level caching (5-10 minute TTL) for dashboard, posts, and categories
+- ✅ **Strategic Caching** - Public-page caching (tags with keyset fallback) + dashboard/category caching
+- ✅ **Event-driven invalidation** - `PostObserver` and `CategoryObserver` keep the public cache and sitemap fresh
 - ✅ **Query Optimization** - Eager loading, specific column selection, and optimized joins
 - ✅ **React Performance** - Memoized components, optimized re-renders (60-70% reduction)
 - ✅ **Configurable Pagination** - Flexible pagination (15, 25, 50, 100 items per page)
@@ -118,7 +145,7 @@ c41.ch-be is a production-ready content management system designed for modern bl
 - ✅ **Tags System** - Functional tagging with validation and limits
 - ✅ **Real-Time Search** - Debounced search across posts, categories, and users
 - ✅ **Image Management** - Upload system with progress tracking and preview
-- ✅ **Complete SEO** - Meta tags, Open Graph, Twitter Cards, Sitemap XML
+- ✅ **Complete SEO** - Meta tags, Open Graph, Twitter Cards, **JSON-LD injection**, Sitemap XML
 - ✅ **Category Management** - Full CRUD with color coding and post associations
 - ✅ **Post Management** - Create, edit, delete, publish, feature posts
 - ✅ **User Management** - Role-based user system with admin capabilities
@@ -253,6 +280,10 @@ This command starts:
 - **Never commit `.env`** — It is in `.gitignore`; use `.env.example` as a template and set your own `APP_KEY`, `DB_*`, and other secrets locally or via your deployment environment.
 - **Default users** — Created by `DatabaseSeeder` for development only. Use `SEEDER_ADMIN_PASSWORD` / `SEEDER_TEST_PASSWORD` in `.env` if needed, and change or remove these users before production.
 - **Production** — Set `APP_DEBUG=false`, use strong `APP_KEY`, restrict `APP_URL`, and configure proper DB and mail credentials outside the repository.
+- **CSP & security headers** — Enforced centrally by `app/Http/Middleware/SecurityHeadersMiddleware.php` (deny-by-default framing, strict referrer policy, and CSP rules; dev mode enables Vite HMR/eval only in local/debug).
+- **Rate limiting** — Defined in `AppServiceProvider` (`api_general`, `api_expensive`, `public_content`) and `FortifyServiceProvider` (`login`, `two-factor`, `ai-editorial`, etc.).
+- **Authorization** — Policies are used as a deny-by-default control plane (notably admin-only areas) and are applied via `can:*` middleware on protected routes.
+- **Client error reporting** — `POST /api/client-error` logs sanitized browser-side errors (includes `request_id` when available).
 
 <a id="documentation"></a>
 ## 📚 Documentation
@@ -518,6 +549,18 @@ php artisan view:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+```
+
+### Operations (scheduled maintenance)
+
+These Artisan commands are intended for production operations and are scheduled in `bootstrap/app.php`:
+
+```bash
+# Daily DB backup (compressed .sql.gz)
+php artisan app:db-backup
+
+# Weekly orphan media cleanup (storage/app/public/media/*)
+php artisan app:media-cleanup
 ```
 
 ### Storage

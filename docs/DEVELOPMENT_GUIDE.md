@@ -184,11 +184,13 @@ public function handle(PostCreated $event): void
 
 ### Cache Strategy
 
-- **Dashboard stats:** 5 minutes
-- **Recent posts:** 2 minutes
-- **Popular posts:** 2 minutes
-- **Category distribution:** 5 minutes
-- **Category list:** 10 minutes
+- **Public pages (high traffic):** cached in `App\Repositories\PostRepository` with tags + keyset fallback
+  - `/blog` (index) — short TTL (60s)
+  - `/blog/{slug}` (show) — 300s
+  - related posts — 300s
+  - `sitemap.xml` — 24h
+- **Dashboard stats & widgets:** cached via `Cache::remember(...)` (see `DashboardController`)
+- **Category lists:** cached via `Cache::flexible(...)` in `CategoryService`
 
 ### Cache Keys
 
@@ -197,14 +199,18 @@ public function handle(PostCreated $event): void
 'dashboard.recent_posts'
 'dashboard.popular_posts'
 'dashboard.categories_distribution'
-'categories.all'
+'categories.list'
+'categories.with_post_count'
 ```
 
 ### Clearing Cache
 
-Cache is automatically cleared when:
-- A post is created/updated/deleted
-- A category is created/updated/deleted
+Cache freshness is guaranteed by two mechanisms:
+
+- **Public caches**: invalidated via Eloquent Observers:
+  - `app/Observers/PostObserver.php`
+  - `app/Observers/CategoryObserver.php`
+- **Dashboard/category service caches**: cleared inside services after mutations, and also by `CategoryObserver` for cross-call-site safety.
 
 Manual clearing:
 ```bash
@@ -219,11 +225,14 @@ Currently implemented with `is_admin` field in `users` table:
 
 - **Regular User:** `is_admin = false`
   - Can only edit/delete own posts
-  - Can create posts and categories
+  - Can create posts
+  - Category management is admin-only (see `CategoryPolicy` and `EnsureAdmin`)
 
 - **Administrator:** `is_admin = true`
   - Can edit/delete any post
-  - Can delete categories with associated posts
+  - Can manage categories (CRUD)
+  - Can permanently delete posts
+  - Can access AI editorial suggestions when enabled and configured as admin-only
 
 ### Creating Admin User
 
@@ -301,6 +310,10 @@ php artisan test --filter=PostControllerTest  # Filter tests
 # Cache
 php artisan cache:clear             # Clear cache
 php artisan config:clear            # Clear config
+
+# Operations (scheduled in bootstrap/app.php)
+php artisan app:db-backup           # Create compressed DB dump (storage/app/backups/db/*.sql.gz)
+php artisan app:media-cleanup       # Remove orphaned media directories (storage/app/public/media/*)
 
 # Storage
 php artisan storage:link            # Create symbolic link

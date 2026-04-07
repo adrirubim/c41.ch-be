@@ -196,9 +196,12 @@ server {
     error_log /var/log/nginx/c41.ch-be-error.log;
 
     # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
+    #
+    # This application sets the authoritative security headers (including CSP)
+    # in `App\Http\Middleware\SecurityHeadersMiddleware`.
+    #
+    # Keep server-level headers minimal to avoid mismatches or double policies.
+    # (You may still add server-level hardening such as HSTS after HTTPS is enabled.)
 
     # Main location
     location / {
@@ -291,7 +294,7 @@ DB_DATABASE=c41_production
 DB_USERNAME=your_db_user
 DB_PASSWORD=your_secure_password
 
-CACHE_DRIVER=file
+CACHE_STORE=file
 SESSION_DRIVER=file
 QUEUE_CONNECTION=database
 
@@ -490,23 +493,28 @@ php artisan view:cache
 
 ### Backup Strategy
 
-1. **Database Backups**:
-   ```bash
-   # Daily backup script
-   pg_dump -U c41_user c41_production > backup_$(date +%Y%m%d).sql
-   ```
+This repository ships with two production-oriented Artisan commands (defined in `routes/console.php`) and schedules them in `bootstrap/app.php`:
 
-2. **File Backups**:
+1. **Database backups (compressed)**
    ```bash
-   # Backup storage directory
-   tar -czf storage_backup_$(date +%Y%m%d).tar.gz storage/
+   php artisan app:db-backup
    ```
+   - Writes `.sql.gz` dumps to `storage/app/backups/db/`
+   - Supports `sqlite`, `mysql`, and `pgsql` (uses native dump tools when applicable)
 
-3. **Automated Backups**: Use cron jobs or backup services
+2. **Orphan media cleanup**
+   ```bash
+   php artisan app:media-cleanup
+   ```
+   - Deletes unreferenced directories under `storage/app/public/media/` for posts and categories
+
+3. **Offsite sync (recommended)**
+   - Sync `storage/app/backups/` to an external location (S3, rsync target, etc.)
 
 ### Health Checks
 
 - Monitor application logs for errors
+- Infra endpoint: `GET /api/health` (expects `200` and JSON `{ ok: true, request_id, ... }`)
 - Check queue worker status: `sudo supervisorctl status`
 - Monitor database performance
 - Check disk space: `df -h`

@@ -2,8 +2,7 @@ name: Lint
 
 on:
   push:
-    branches:
-      - main
+    # Run on every push (all branches) to catch issues early.
   pull_request:
     branches:
       - main
@@ -42,6 +41,9 @@ jobs:
 
       - name: Run Pint
         run: vendor/bin/pint
+
+      - name: Run PHPStan (Larastan)
+        run: vendor/bin/phpstan analyse --no-progress
 
       - name: Check Frontend Format
         run: npm run format:check

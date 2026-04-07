@@ -19,6 +19,72 @@ The implementation is provided by `App\\Responses\\ConditionalLoginResponse` and
 
 ## Public Endpoints (No Authentication Required)
 
+### Infrastructure API (JSON)
+
+These endpoints live under `routes/api.php` and return **JSON** (not Inertia pages).
+
+#### Health Check (DB + Cache + Media)
+
+```
+GET /api/health
+```
+
+- **Auth**: none
+- **Rate limiting**: `throttle:api_general` (see `App\Providers\AppServiceProvider`)
+- **Purpose**: fast, production-safe signal for infra readiness. Used by `tests/Feature/InfrastructureTest.php` and the production checklist.
+- **Traceability**: the response includes `request_id` (also present in server logs) so you can correlate client checks with backend logs.
+
+**Response contract (200 OK):**
+
+```json
+{
+  "ok": true,
+  "request_id": "req_...",
+  "checks": {
+    "db": { "ok": true, "error": null },
+    "cache": { "ok": true, "error": null },
+    "media": { "ok": true, "error": null }
+  }
+}
+```
+
+**Response contract (503 Service Unavailable):** same JSON shape, but:
+- `ok: false`
+- one or more `checks.*.ok: false`
+- `checks.*.error` contains a masked error message suitable for ops triage
+
+#### Client Error Reporting (browser → server logs)
+
+```
+POST /api/client-error
+```
+
+- **Auth**: none
+- **Rate limiting**: `throttle:api_general`
+- **Behavior**: validates a small JSON payload and writes a structured log entry (`client_error`) including `request_id` when available.
+
+**Request body contract:**
+
+Required:
+- `message` (string, max 2000)
+
+Optional:
+- `url` (string, max 2000)
+- `stack` (string, max 20000)
+- `userAgent` (string, max 2000)
+- `componentStack` (string, max 20000)
+- `level` (`"error" | "warning" | "info"`)
+- `tags` (array)
+
+**Response contract (200 OK):**
+
+```json
+{
+  "ok": true,
+  "request_id": "req_..."
+}
+```
+
 ### Homepage
 
 #### Get Homepage Data
@@ -537,6 +603,8 @@ Rate limits are applied to prevent abuse:
 
 | Endpoint | Limit | Window |
 |----------|-------|--------|
+| GET /api/health | 120 requests | 1 minute |
+| POST /api/client-error | 120 requests | 1 minute |
 | POST /posts | 10 requests | 1 minute |
 | PUT /posts/{post} | 10 requests | 1 minute |
 | POST /posts/editorial-suggestions | Configurable (`AI_EDITORIAL_RATE_LIMIT_ATTEMPTS`, default 6) | 1 minute |
@@ -544,6 +612,9 @@ Rate limits are applied to prevent abuse:
 | PUT /dashboard/categories/{category} | 5 requests | 1 minute |
 | GET /posts (search) | 30 requests | 1 minute |
 | POST /upload-image | 10 requests | 1 minute |
+
+Notes:
+- The **API tier** limits above are enforced by `throttle:api_general` (`AppServiceProvider`) and are keyed by **user id when authenticated, otherwise client IP**.
 
 **Response when rate limited:**
 - Status Code: `429 Too Many Requests`

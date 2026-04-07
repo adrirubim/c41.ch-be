@@ -41,6 +41,7 @@ return [
         'editorial_rate_limit_attempts' => env('AI_EDITORIAL_RATE_LIMIT_ATTEMPTS', 6),
         'provider' => env('AI_PROVIDER', 'openai'),
         'model' => env('AI_MODEL', 'gpt-4o-mini'),
+        'openai_api_key' => env('OPENAI_API_KEY'),
     ],
 
     'search' => [
