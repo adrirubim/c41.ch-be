@@ -46,6 +46,9 @@ jobs:
       - name: Check Frontend Format
         run: npm run format:check
 
+      - name: Guardrail: no unsafe HTML rendering
+        run: npm run check:no-unsafe-html
+
       - name: Lint Frontend
         run: npm run lint
 
