@@ -1,4 +1,5 @@
 import { Link } from '#app/components/link';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import { PublicHeader } from '#app/components/public-header';
 import { Badge } from '#app/components/ui/badge';
 import { Button } from '#app/components/ui/button';
@@ -11,7 +12,6 @@ import {
 } from '#app/components/ui/card';
 import { dashboard, login, register } from '#app/routes';
 import { type SharedData } from '#app/types';
-import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import { usePage } from '@inertiajs/react';
 import {
     ArrowRight,

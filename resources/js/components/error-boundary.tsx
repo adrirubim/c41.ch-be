@@ -33,7 +33,11 @@ async function reportClientError(payload: ErrorReporterPayload): Promise<void> {
 }
 
 export class ErrorBoundary extends Component<
-    { children: ReactNode; requestId: string | null; user: SharedData['auth']['user'] },
+    {
+        children: ReactNode;
+        requestId: string | null;
+        user: SharedData['auth']['user'];
+    },
     { hasError: boolean }
 > {
     state = { hasError: false };
@@ -71,9 +75,7 @@ export class ErrorBoundary extends Component<
         if (this.state.hasError) {
             return (
                 <div className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-6 text-center">
-                    <h1 className="text-2xl font-semibold">
-                        Algo ha fallado.
-                    </h1>
+                    <h1 className="text-2xl font-semibold">Algo ha fallado.</h1>
                     <p className="mt-2 text-muted-foreground">
                         Se ha registrado el error. Por favor, recarga la página.
                     </p>
@@ -88,9 +90,11 @@ export class ErrorBoundary extends Component<
 export function AppErrorBoundary({ children }: { children: ReactNode }) {
     const page = usePage<SharedData>();
     return (
-        <ErrorBoundary requestId={page.props.requestId} user={page.props.auth.user}>
+        <ErrorBoundary
+            requestId={page.props.requestId}
+            user={page.props.auth.user}
+        >
             {children}
         </ErrorBoundary>
     );
 }
-

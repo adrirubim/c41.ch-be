@@ -1,10 +1,10 @@
 import { EmptyState } from '#app/components/empty-state';
 import { Link } from '#app/components/link';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import { PublicHeader } from '#app/components/public-header';
 import { SafeHtml } from '#app/components/safe-html';
 import { Badge } from '#app/components/ui/badge';
 import { Button } from '#app/components/ui/button';
-import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import {
     Card,
     CardContent,

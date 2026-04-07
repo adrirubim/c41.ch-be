@@ -1,11 +1,11 @@
 import '../css/app.css';
 
+import { AppErrorBoundary } from '#app/components/error-boundary';
 import { createInertiaApp } from '@inertiajs/react';
 import type { ComponentType } from 'react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
-import { AppErrorBoundary } from '#app/components/error-boundary';
 
 const appName: string =
     typeof import.meta.env.VITE_APP_NAME === 'string' &&

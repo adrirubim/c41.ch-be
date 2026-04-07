@@ -1,5 +1,6 @@
 import { EmptyState } from '#app/components/empty-state';
 import { Link } from '#app/components/link';
+import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import { PublicHeader } from '#app/components/public-header';
 import { SkeletonPostList } from '#app/components/skeleton-loaders';
 import { Badge } from '#app/components/ui/badge';
@@ -22,7 +23,6 @@ import {
 import { Spinner } from '#app/components/ui/spinner';
 import { decodeHtmlEntities } from '#app/lib/html';
 import { withBasePath } from '#app/lib/utils';
-import { MetaHead, type MetaHeadProps } from '#app/components/meta-head';
 import { router, useForm } from '@inertiajs/react';
 import { Calendar, Eye, FileText, Search, Star, User } from 'lucide-react';
 import { useMemo, useState } from 'react';

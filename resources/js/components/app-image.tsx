@@ -41,12 +41,13 @@ export function AppImage({
     const ratio =
         typeof aspectRatio === 'number' && aspectRatio > 0
             ? aspectRatio
-            : typeof width === 'number' && typeof height === 'number' && height > 0
+            : typeof width === 'number' &&
+                typeof height === 'number' &&
+                height > 0
               ? width / height
               : null;
 
-    const paddingBottom =
-        ratio !== null ? `${(1 / ratio) * 100}%` : undefined;
+    const paddingBottom = ratio !== null ? `${(1 / ratio) * 100}%` : undefined;
 
     return (
         <div
@@ -87,4 +88,3 @@ export function AppImage({
         </div>
     );
 }
-

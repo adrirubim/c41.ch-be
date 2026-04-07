@@ -1,8 +1,8 @@
+import { AppErrorBoundary } from '#app/components/error-boundary';
 import { createInertiaApp } from '@inertiajs/react';
 import createServer from '@inertiajs/react/server';
 import type { ComponentType } from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { AppErrorBoundary } from '#app/components/error-boundary';
 
 const appName: string =
     typeof import.meta.env.VITE_APP_NAME === 'string' &&
