@@ -2,7 +2,7 @@
 
 Exact versions used in this project (reference for development and CI). Update when upgrading major dependencies.
 
-## Current environment snapshot (March 2026)
+## Current environment snapshot (April 2026)
 
 Concrete versions captured from a verified local run (WSL). Treat them as reference values; CI and production should stay within the version ranges defined below.
 
@@ -10,10 +10,10 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 - PHP: **8.4.1** (`php -v`)
 - Composer: **2.9.5** (`composer -V`)
-- Laravel: **13.2.0** (`php artisan --version`)
-- PHPUnit: **13.0.6** (`./vendor/bin/phpunit --version`)
+- Laravel: **13.3.0** (`php artisan --version`)
+- PHPUnit: **13.1.0** (`./vendor/bin/phpunit --version`)
 - Inertia Laravel: **3.0.1** (`composer show inertiajs/inertia-laravel`)
-- Laravel AI: **0.4.2** (`composer show laravel/ai`)
+- Laravel AI: **0.4.4** (`composer show laravel/ai`)
 - Laravel Fortify: **1.36.2** (`composer show laravel/fortify`)
 - Laravel Wayfinder: **0.1.15** (`composer show laravel/wayfinder`)
 - Laravel Tinker: **dev-master** (`composer show laravel/tinker`)
@@ -27,10 +27,10 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 - React: **19.2.4** (`npm list react --depth=0`)
 - @inertiajs/react: **3.0.0** (`npm list @inertiajs/react --depth=0`)
 - TypeScript: **6.0.2** (`npm list typescript --depth=0`)
-- Vite: **8.0.3** (`npm list vite --depth=0`)
+- Vite: **8.0.5** (`npm list vite --depth=0` / `npx vite -v`)
 - @vitejs/plugin-react: **6.0.1** (`npm list @vitejs/plugin-react --depth=0`)
 - @rolldown/plugin-babel: **0.2.2** (`npm list @rolldown/plugin-babel --depth=0`)
-- @babel/core: **7.x** (`npm list @babel/core --depth=0`)
+- @babel/core: **7.29.0** (`npm list @babel/core --depth=0`)
 - Tailwind CSS: **4.2.2** (`npm list tailwindcss --depth=0`)
 
 > Note: the project uses `legacy-peer-deps=true` (see `.npmrc`) to allow Vite 8 with the current `@tailwindcss/vite` peer dependency constraints.
@@ -71,11 +71,20 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 | Component  | Version |
 |-------------|---------|
-| PostgreSQL  | 14+     |
+| PostgreSQL  | 16.13   |
 | Composer    | 2.x     |
 | NPM         | 10+     |
 | ESLint      | ^10.0   |
 | Prettier    | ^3.8    |
 | Laravel Pint| ^1.24   |
+
+### PostgreSQL version check (local)
+
+If `psql -c "select version();"` fails with `FATAL: role "<user>" does not exist`, it means PostgreSQL is running but the default OS username is not a PostgreSQL role.
+
+Use one of these instead:
+
+- `psql -U postgres -c "select version();"`
+- Or create a matching role once (example): `sudo -u postgres createuser -s $USER`
 
 For locked versions beyond this snapshot, run `composer show` and `npm list` in the project root.
