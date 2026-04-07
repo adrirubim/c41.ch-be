@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicPostController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
@@ -42,7 +43,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/categories', [PublicCategoryController::class, 'index'])->name('public.categories.index');
     Route::get('/categories/{slug}', [PublicCategoryController::class, 'show'])->name('public.categories.show');
 
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::middleware([EnsureAdmin::class])->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Category routes (dashboard prefix to avoid clashing with public /categories/{slug})
+        Route::get('dashboard/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('dashboard/categories/new', [CategoryController::class, 'create'])->name('categories.create');
+        Route::post('dashboard/categories', [CategoryController::class, 'store'])
+            ->middleware('throttle:categories')
+            ->name('categories.store');
+        Route::get('dashboard/categories/{category}', [CategoryController::class, 'show'])
+            ->name('categories.show')
+            ->where('category', '[0-9]+');
+        Route::get('dashboard/categories/{category}/edit', [CategoryController::class, 'edit'])
+            ->name('categories.edit')
+            ->where('category', '[0-9]+');
+        Route::put('dashboard/categories/{category}', [CategoryController::class, 'update'])
+            ->middleware('throttle:categories')
+            ->name('categories.update');
+        Route::delete('dashboard/categories/{category}', [CategoryController::class, 'destroy'])
+            ->middleware('throttle:categories')
+            ->name('categories.destroy')
+            ->where('category', '[0-9]+');
+    });
 
     // Image upload
     Route::post('upload-image', [ImageUploadController::class, 'upload'])
@@ -69,25 +92,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('throttle:posts')
         ->name('posts.destroy');
 
-    // Category routes (dashboard prefix to avoid clashing with public /categories/{slug})
-    Route::get('dashboard/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('dashboard/categories/new', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('dashboard/categories', [CategoryController::class, 'store'])
-        ->middleware('throttle:categories')
-        ->name('categories.store');
-    Route::get('dashboard/categories/{category}', [CategoryController::class, 'show'])
-        ->name('categories.show')
-        ->where('category', '[0-9]+');
-    Route::get('dashboard/categories/{category}/edit', [CategoryController::class, 'edit'])
-        ->name('categories.edit')
-        ->where('category', '[0-9]+');
-    Route::put('dashboard/categories/{category}', [CategoryController::class, 'update'])
-        ->middleware('throttle:categories')
-        ->name('categories.update');
-    Route::delete('dashboard/categories/{category}', [CategoryController::class, 'destroy'])
-        ->middleware('throttle:categories')
-        ->name('categories.destroy')
-        ->where('category', '[0-9]+');
 });
 
 require __DIR__.'/settings.php';
