@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Cache\TaggableStore;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
@@ -50,6 +51,13 @@ class InfrastructureTest extends TestCase
         $post->categories()->sync([$category->id]);
 
         $sitemapCacheKey = 'sitemap.xml.v1';
+        $hasSitemapCacheKey = function () use ($sitemapCacheKey): bool {
+            if (Cache::getStore() instanceof TaggableStore) {
+                return Cache::tags(['sitemap'])->has($sitemapCacheKey);
+            }
+
+            return Cache::has($sitemapCacheKey);
+        };
 
         // Act: first hit generates and caches
         $response1 = $this->get(route('sitemap'));
@@ -62,14 +70,14 @@ class InfrastructureTest extends TestCase
         $response1->assertSee(htmlspecialchars(route('public.posts.show', ['slug' => $post->slug])), false);
         $response1->assertSee(htmlspecialchars(route('public.categories.show', ['slug' => $category->slug])), false);
 
-        $this->assertTrue(Cache::has($sitemapCacheKey));
+        $this->assertTrue($hasSitemapCacheKey());
 
         // Act: second hit should serve cached value (key should still exist)
         $response2 = $this->get(route('sitemap'));
 
         // Assert
         $response2->assertOk();
-        $this->assertTrue(Cache::has($sitemapCacheKey));
+        $this->assertTrue($hasSitemapCacheKey());
     }
 }
 

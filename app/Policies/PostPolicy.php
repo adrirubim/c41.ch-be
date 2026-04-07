@@ -80,10 +80,6 @@ class PostPolicy
      */
     public function useEditorialSuggestions(User $user): bool
     {
-        if (! config('services.ai.enabled', false)) {
-            return false;
-        }
-
         $adminOnly = (bool) config('services.ai.editorial_admin_only', true);
         if ($adminOnly) {
             return $this->isAdmin($user);
