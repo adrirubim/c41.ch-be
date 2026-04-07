@@ -489,7 +489,7 @@ A public-facing header component for unauthenticated users, displayed on public 
 - Navigation links (Home, Blog, Categories) in the center
 - Guest (not authenticated): `Log in` and `Sign up` actions
 - Authenticated admin (`is_admin=true`): `Dashboard`
-- Authenticated regular user: `Account`
+- Authenticated regular user: user dropdown menu (settings + logout)
 - On the landing page (`/`), mobile auth actions are shown only inside the hamburger menu dropdown (not on the sticky top bar)
 - Responsive mobile menu with sheet component
 - Sticky positioning with backdrop blur
@@ -538,7 +538,7 @@ function PostForm() {
             title,
             content,
             tags,
-            category_id: category,
+            categories: category !== '' ? [Number(category)] : [],
         });
     };
 

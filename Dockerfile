@@ -1,121 +1,4 @@
-#
-# Production-grade multi-stage image for Laravel 13 + Vite (React/Inertia) + optional Inertia SSR.
-#
-# Goals:
-# - Small runtime image (no Node toolchain)
-# - Deterministic builds (composer/npm in build stages)
-# - Works with either SQLite (default) or Postgres (via env)
-#
-
-############################
-# Stage 1: PHP deps (vendor)
-############################
-FROM composer:2.8 AS vendor
-
-WORKDIR /app
-
-COPY composer.json composer.lock ./
-
-# Install PHP deps (no dev) into /app/vendor
-RUN composer install \
-  --no-dev \
-  --no-interaction \
-  --no-progress \
-  --prefer-dist \
-  --optimize-autoloader
-
-
-#####################################
-# Stage 2: Node build (Vite + SSR)
-#####################################
-FROM node:22-alpine AS frontend
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm ci
-
-COPY resources/ resources/
-COPY vite.config.ts tsconfig.json eslint.config.js ./
-COPY public/ public/
-
-# SSR build produces `bootstrap/ssr/*` by default (see `.gitignore` and Inertia config).
-RUN npm run build:ssr
-
-
-#####################################
-# Stage 3: Runtime (PHP-FPM)
-#####################################
-FROM php:8.4-fpm-alpine AS app
-
-WORKDIR /var/www/html
-
-ENV APP_ENV=production \
-  APP_DEBUG=false \
-  PHP_OPCACHE_ENABLE=1
-
-# System deps + PHP extensions commonly required by Laravel
-RUN apk add --no-cache \
-    bash \
-    curl \
-    icu-data-full \
-    icu-libs \
-    libpng \
-    libjpeg-turbo \
-    freetype \
-    libzip \
-    oniguruma \
-    postgresql-libs \
-  && apk add --no-cache --virtual .build-deps \
-    $PHPIZE_DEPS \
-    icu-dev \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    libzip-dev \
-    oniguruma-dev \
-    postgresql-dev \
-  && docker-php-ext-configure gd --with-freetype --with-jpeg \
-  && docker-php-ext-install -j"$(nproc)" \
-    bcmath \
-    intl \
-    opcache \
-    pdo \
-    pdo_pgsql \
-    pdo_sqlite \
-    zip \
-    gd \
-  && apk del .build-deps
-
-# Opcache tuned for prod (safe defaults; can be overridden via php.ini if needed)
-RUN { \
-    echo "opcache.enable=1"; \
-    echo "opcache.enable_cli=0"; \
-    echo "opcache.memory_consumption=256"; \
-    echo "opcache.interned_strings_buffer=16"; \
-    echo "opcache.max_accelerated_files=20000"; \
-    echo "opcache.validate_timestamps=0"; \
-  } > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
-# Copy app source
-COPY . .
-
-# Bring in built artifacts
-COPY --from=vendor /app/vendor ./vendor
-COPY --from=frontend /app/public/build ./public/build
-COPY --from=frontend /app/bootstrap/ssr ./bootstrap/ssr
-
-# Laravel expected writable dirs
-RUN mkdir -p storage bootstrap/cache \
-  && chown -R www-data:www-data storage bootstrap/cache
-
-EXPOSE 9000
-
-CMD ["php-fpm"]
-
-#
 # Multi-stage production Dockerfile for Laravel + Inertia (Vite)
-#
 # Stages:
 # 1) node-builder: builds Vite assets into public/build
 # 2) php-builder: installs PHP dependencies (no-dev) and optimizes autoloader
@@ -176,14 +59,15 @@ RUN apk add --no-cache \
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \
-    mysql-client \
+    postgresql-dev \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install -j"$(nproc)" \
     bcmath \
     gd \
     intl \
     opcache \
-    pdo_mysql \
+    pdo_pgsql \
+    pdo_sqlite \
     zip \
   && rm -rf /var/cache/apk/*
 

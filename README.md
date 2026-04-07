@@ -67,15 +67,17 @@ For a full local quality gate before pushing, see [Before Pushing to GitHub](#be
 
 This repository includes a **production-like Docker setup**:
 
-- **`Dockerfile`**: multi-stage build (Composer vendor + Vite build + slim PHP-FPM runtime)
-- **`docker-compose.yml`**: `nginx` (port `8080`) → `app` (PHP-FPM) + `db` (Postgres 16)
+- **`Dockerfile`**: multi-stage build (Vite build + Composer vendor + slim PHP-FPM runtime)
+- **`docker-compose.yml`**: `web` (Nginx, port `8080`) → `app` (PHP-FPM) + `db` (Postgres 16)
 
 ### Quick start
 
 ```bash
 cp .env.example .env
-php artisan key:generate
-docker compose up --build
+docker compose up --build -d
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan storage:link
 ```
 
 Then open:
@@ -84,8 +86,7 @@ Then open:
 
 Notes:
 - In production you should run `php artisan migrate --force` and `php artisan optimize` as part of your deploy procedure (see `docs/PRODUCTION_CHECKLIST.md`).
-- Optional SSR: set `INERTIA_SSR_ENABLED=true` and ensure the SSR server is reachable via `INERTIA_SSR_URL` (see `config/inertia.php` and `composer run dev:ssr`).
-  - The repo builds SSR via `npm run build:ssr` and includes the bundle in `bootstrap/ssr/`.
+- SSR is optional and can be enabled via `INERTIA_SSR_ENABLED=true` with a separate SSR server at `INERTIA_SSR_URL` (see `config/inertia.php`). The Docker setup above only builds the standard Vite assets (`npm run build:frontend`).
 
 <a id="overview"></a>
 ## 🎯 Overview

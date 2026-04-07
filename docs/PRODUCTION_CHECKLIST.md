@@ -1,85 +1,77 @@
 # Production Checklist
 
-## Database migrations (safe procedure)
-- Put the app into maintenance mode (optional but recommended): `php artisan down`
-- Pull the latest code and install dependencies:
-  - `composer install --no-dev --optimize-autoloader`
-  - Build frontend assets (if not prebuilt): `npm ci && npm run build:frontend`
-- Run migrations:
-  - `php artisan migrate --force`
-- Warm caches:
-  - `php artisan optimize`
-  - `php artisan view:cache`
-- Bring the app back:
-  - `php artisan up`
+Operational checklist for deploying and maintaining `c41.ch-be` in production.
 
-## Cache operations
-- Clear caches: `php artisan optimize:clear`
+## Pre-flight (before deploy)
+
+- **Environment**
+  - `APP_ENV=production`
+  - `APP_DEBUG=false`
+  - `APP_KEY` generated and stored securely
+  - Database credentials set (`DB_*`)
+  - Cache store configured (`CACHE_STORE`) (Redis recommended when available)
+- **Build**
+  - PHP deps installed with `--no-dev` and optimized autoloader
+  - Frontend assets built (`npm run build:frontend`)
+- **Permissions**
+  - `storage/` and `bootstrap/cache/` writable by the runtime user
+
+## Deploy steps (safe procedure)
+
+- (Optional) maintenance mode: `php artisan down`
+- Install/refresh deps: `composer install --no-dev --optimize-autoloader`
+- Build assets (if not prebuilt): `npm ci && npm run build:frontend`
+- Run migrations: `php artisan migrate --force`
 - Warm caches: `php artisan optimize && php artisan view:cache`
+- (If used) restart queue workers
+- Exit maintenance mode: `php artisan up`
 
 ## Health checks
-- App basic check: `GET /up`
-- Infra check (DB + Cache + Media disk writable): `GET /api/health`
-  - Expect `200` and JSON `{ ok: true, ... }`
-  - If it returns `503`, inspect `storage/logs/laravel.log` and the `request_id`.
 
-## Docker (production-like smoke check)
+- Framework health: `GET /up` → `200`
+- Infra health: `GET /api/health` → `200` with JSON `{ ok: true, request_id, checks: { db, cache, media } }`
+- Public pages:
+  - `GET /`
+  - `GET /blog` and `GET /blog/{slug}`
+  - `GET /categories` and `GET /categories/{slug}`
+  - `GET /sitemap.xml`
 
-If you deploy with containers, you can use the repository's `docker-compose.yml` as a production-like smoke test:
+If `GET /api/health` returns `503`, inspect `storage/logs/laravel.log` and correlate via `request_id`.
 
-```bash
-cp .env.example .env
-php artisan key:generate
-docker compose up --build
-curl -fsS http://localhost:8080/up
-curl -fsS http://localhost:8080/api/health
-```
+## Scheduler & maintenance
 
-## Scheduled maintenance
-- Ensure your system cron runs Laravel scheduler every minute:
+This repository schedules ops commands in `bootstrap/app.php`:
+
+- Daily DB backup (02:00): `php artisan app:db-backup`
+  - Writes compressed dumps to `storage/app/backups/db/`
+- Weekly media cleanup (Sunday 03:00): `php artisan app:media-cleanup`
+  - Deletes orphan directories under `storage/app/public/media/`
+
+Ensure the scheduler is executed every minute:
 
 ```bash
 * * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-- Daily DB backup: `app:db-backup` (02:00)
-  - Outputs `.sql.gz` files into `storage/app/backups/db/`
-- Weekly orphan media cleanup: `app:media-cleanup` (Sunday 03:00)
-  - Deletes unreferenced directories under `storage/app/public/media/`
+## Docker (production-like smoke check)
 
-### Bonus: sync backups to S3
-- Option A (recommended): configure an S3 Flysystem disk and write backups directly to it.
-- Option B (simple): cron an `aws s3 sync` of `storage/app/backups/`:
+Use `docker-compose.yml` as a production-like smoke test:
 
 ```bash
-aws s3 sync storage/app/backups s3://YOUR_BUCKET/c41/backups --storage-class STANDARD_IA
+cp .env.example .env
+docker compose up --build -d
+docker compose exec app php artisan key:generate
+curl -fsS http://localhost:8080/up
+curl -fsS http://localhost:8080/api/health
 ```
 
-## Logging (rotation & retention)
-- Default stack uses `daily` logs by default.
-- Configure retention via env:
-  - `LOG_DAILY_DAYS=14` (or `7`)
-- Ensure `storage/logs/` is writable by the web user.
+## Security verification
 
-## Required environment variables
-- **Laravel**
-  - `APP_ENV=production`
-  - `APP_DEBUG=false`
-  - `APP_KEY=base64:...` (must be set)
-  - `APP_URL=https://your-domain.tld`
-- **Database** (example)
-  - `DB_CONNECTION=mysql|pgsql`
-  - `DB_HOST=...`
-  - `DB_PORT=...`
-  - `DB_DATABASE=...`
-  - `DB_USERNAME=...`
-  - `DB_PASSWORD=...`
-- **Cache**
-  - `CACHE_STORE=redis` (recommended)
-  - `REDIS_HOST=...`
-  - `REDIS_PORT=6379`
-  - `REDIS_PASSWORD=...` (if applicable)
-- **AI (if enabled)**
-  - `SERVICES_AI_ENABLED=false|true`
-  - Provider keys must be set in your secret manager (never commit).
+- Security headers/CSP are set by `App\Http\Middleware\SecurityHeadersMiddleware` (avoid duplicating CSP at the web server level).
+- Rate limiting is enabled and routes apply `throttle:*` middlewares as documented in `docs/SECURITY_MODEL.md`.
+
+## Rollback readiness
+
+- A recent database backup exists and is retrievable (ideally synced offsite).
+- You have a rollback strategy for code + migrations (when applicable).
 
