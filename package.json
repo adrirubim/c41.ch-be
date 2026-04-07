@@ -17,6 +17,7 @@
         "build": "vite build",
         "build:frontend": "vite build",
         "build:ssr": "vite build && vite build --ssr",
+        "build:analyze": "npm run build:frontend && node scripts/analyze-bundle.mjs",
         "check:no-unsafe-html": "bash scripts/check-no-unsafe-html.sh",
         "check": "npm run format:check && npm run check:no-unsafe-html && npm run lint && npm run types && npm run build:frontend",
         "format": "prettier --write resources/",
