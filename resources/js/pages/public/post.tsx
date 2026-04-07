@@ -1,6 +1,7 @@
 import { EmptyState } from '#app/components/empty-state';
 import { Link } from '#app/components/link';
 import { PublicHeader } from '#app/components/public-header';
+import { SafeHtml } from '#app/components/safe-html';
 import { Badge } from '#app/components/ui/badge';
 import { Button } from '#app/components/ui/button';
 import {
@@ -10,6 +11,8 @@ import {
     CardHeader,
     CardTitle,
 } from '#app/components/ui/card';
+import { postContentHtmlFromServer } from '#app/lib/posts-html';
+import type { ServerSanitizedHtml } from '#app/lib/safe-html';
 import { dashboard, login, register } from '#app/routes';
 import { type SharedData } from '#app/types';
 import { Head, usePage } from '@inertiajs/react';
@@ -69,6 +72,10 @@ interface PostProps {
     relatedPosts: RelatedPost[];
 }
 
+interface PostViewModel {
+    contentHtml: ServerSanitizedHtml;
+}
+
 function formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -81,6 +88,9 @@ function formatDate(dateString: string): string {
 export default function Post({ post, relatedPosts }: PostProps) {
     const { auth } = usePage<SharedData>().props;
     const primaryCategoryName = post.categories[0]?.name;
+    const viewModel: PostViewModel = {
+        contentHtml: postContentHtmlFromServer(post.content),
+    };
 
     return (
         <>
@@ -196,11 +206,9 @@ export default function Post({ post, relatedPosts }: PostProps) {
                             </header>
 
                             {/* Post Content */}
-                            <div
+                            <SafeHtml
                                 className="prose prose-lg dark:prose-invert max-w-none"
-                                dangerouslySetInnerHTML={{
-                                    __html: post.content,
-                                }}
+                                html={viewModel.contentHtml}
                             />
 
                             {/* Categories Footer */}

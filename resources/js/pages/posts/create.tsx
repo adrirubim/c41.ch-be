@@ -22,6 +22,7 @@ import {
 } from '#app/components/ui/select';
 import { Textarea } from '#app/components/ui/textarea';
 import AppLayout from '#app/layouts/app-layout';
+import { editorPreviewHtml } from '#app/lib/posts-html';
 import { type BreadcrumbItem } from '#app/types';
 import { Head, useForm } from '@inertiajs/react';
 import { EditorialSuggestionsPanel } from '@modules/posts/components/EditorialSuggestionsPanel';
@@ -213,7 +214,9 @@ export default function PostsCreate({
                                                 Content
                                             </Label>
                                             <EditorPreview
-                                                content={data.content}
+                                                contentHtml={editorPreviewHtml(
+                                                    data.content,
+                                                )}
                                                 title={data.title}
                                                 excerpt={data.excerpt}
                                             />

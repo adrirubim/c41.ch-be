@@ -1,5 +1,6 @@
 import { Form } from '#app/components/form';
 import InputError from '#app/components/input-error';
+import { SafeHtml } from '#app/components/safe-html';
 import { Button } from '#app/components/ui/button';
 import {
     Dialog,
@@ -16,6 +17,7 @@ import {
 import { useAppearance } from '#app/hooks/use-appearance';
 import { useClipboard } from '#app/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '#app/hooks/use-two-factor-auth';
+import { trustedServerHtml } from '#app/lib/safe-html';
 import { confirm } from '#app/routes/two-factor';
 import { useTwoFactorSetupModal } from '@modules/settings/hooks/use-two-factor-setup-modal';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
@@ -82,9 +84,10 @@ function TwoFactorSetupStep({
                         {qrCodeSvg !== null &&
                         qrCodeSvg !== undefined &&
                         qrCodeSvg !== '' ? (
-                            <div
+                            <SafeHtml
+                                as="div"
                                 className="aspect-square w-full rounded-lg bg-white p-2 [&_svg]:size-full"
-                                dangerouslySetInnerHTML={{ __html: qrCodeSvg }}
+                                html={trustedServerHtml(qrCodeSvg)}
                                 style={{
                                     filter:
                                         resolvedAppearance === 'dark'

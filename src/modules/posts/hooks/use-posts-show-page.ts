@@ -1,3 +1,6 @@
+import type { ServerSanitizedHtml } from '#app/lib/safe-html';
+import { postContentHtmlFromServer } from '#app/lib/posts-html';
+
 export interface PostsShowPost {
     id: number;
     title: string;
@@ -36,7 +39,7 @@ export interface PostsShowViewModel {
     metaAuthor: string;
     metaPublishedAt: string;
     metaSection: string;
-    contentHtml: string;
+    contentHtml: ServerSanitizedHtml;
 }
 
 export function usePostsShowPage({ post }: PostsShowProps): PostsShowViewModel | null {
@@ -120,12 +123,11 @@ export function usePostsShowPage({ post }: PostsShowProps): PostsShowViewModel |
             ? String(post.categories[0].name)
             : '';
 
-    const contentHtml =
-        post.content !== null &&
-        post.content !== undefined &&
-        post.content !== ''
+    const contentHtml = postContentHtmlFromServer(
+        post.content !== null && post.content !== undefined && post.content !== ''
             ? post.content
-            : '<p>No content</p>';
+            : '<p>No content</p>',
+    );
 
     return {
         appName,

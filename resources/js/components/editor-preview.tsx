@@ -1,3 +1,4 @@
+import { SafeHtml } from '#app/components/safe-html';
 import { Button } from '#app/components/ui/button';
 import {
     Card,
@@ -11,19 +12,21 @@ import {
     DialogHeader,
     DialogTitle,
 } from '#app/components/ui/dialog';
+import { editorPreviewHtml } from '#app/lib/posts-html';
+import type { PreviewHtml } from '#app/lib/safe-html';
 import { cn } from '#app/lib/utils';
 import { Eye, Maximize2, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface EditorPreviewProps {
-    content: string;
+    contentHtml: PreviewHtml;
     title?: string;
     excerpt?: string;
     className?: string;
 }
 
 export function EditorPreview({
-    content,
+    contentHtml,
     title,
     excerpt,
     className,
@@ -31,7 +34,8 @@ export function EditorPreview({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [splitView, setSplitView] = useState(false);
 
-    const hasContent = typeof content === 'string' && content.trim() !== '';
+    const hasContent =
+        typeof contentHtml === 'string' && contentHtml.trim() !== '';
     const hasTitle = typeof title === 'string' && title.trim() !== '';
 
     if (!hasContent && !hasTitle) {
@@ -46,13 +50,12 @@ export function EditorPreview({
                     {excerpt}
                 </p>
             )}
-            <div
-                dangerouslySetInnerHTML={{
-                    __html:
-                        hasContent && typeof content === 'string'
-                            ? content
-                            : '<p>No content to preview</p>',
-                }}
+            <SafeHtml
+                html={editorPreviewHtml(
+                    hasContent && typeof contentHtml === 'string'
+                        ? contentHtml
+                        : '<p>No content to preview</p>',
+                )}
             />
         </div>
     );

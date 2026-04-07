@@ -1,4 +1,5 @@
 import { Link } from '#app/components/link';
+import { SafeHtml } from '#app/components/safe-html';
 import { Badge } from '#app/components/ui/badge';
 import {
     Card,
@@ -63,11 +64,9 @@ export function PostsShowLayout({ post, viewModel }: PostsShowLayoutProps) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div
+                            <SafeHtml
                                 className="prose dark:prose-invert max-w-none"
-                                dangerouslySetInnerHTML={{
-                                    __html: viewModel.contentHtml,
-                                }}
+                                html={viewModel.contentHtml}
                             />
                         </CardContent>
                     </Card>
