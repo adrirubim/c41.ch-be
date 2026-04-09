@@ -304,7 +304,7 @@ All documentation lives under `docs/`. The main index is [docs/README.md](docs/R
 | [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Custom hooks |
 | [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Errors and solutions |
 
-[SECURITY](SECURITY.md) · [LICENSE](LICENSE) · [VERSION_STACK](docs/VERSION_STACK.md)
+[SECURITY](SECURITY.md) · [LICENSE](LICENSE) · [VERSION_STACK](VERSION_STACK.md) · [TECHNICAL_GUIDE](TECHNICAL_GUIDE.md)
 
 <a id="cicd"></a>
 ## 🔄 CI/CD
@@ -677,4 +677,4 @@ MIT. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Last Updated:** March 2026 · **Status:** Production Ready ✅ · **Version:** v3.0.0 · **Stack:** [docs/VERSION_STACK.md](docs/VERSION_STACK.md)
+**Last Updated:** March 2026 · **Status:** Production Ready ✅ · **Version:** v3.0.0 · **Stack:** [VERSION_STACK.md](VERSION_STACK.md)

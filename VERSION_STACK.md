@@ -99,3 +99,4 @@ Use one of these instead:
 - Or create a matching role once (example): `sudo -u postgres createuser -s $USER`
 
 For locked versions beyond this snapshot, run `composer show` and `npm list` in the project root.
+
