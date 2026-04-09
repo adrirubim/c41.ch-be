@@ -1,0 +1,26 @@
+# docs/.gitignore
+#
+# This file only affects content inside `docs/`.
+# Goal: prevent accidental commits of large/binary artifacts that don't belong
+# in the documentation tree for a Laravel/React app.
+
+# Common archives / bundles
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.7z
+*.rar
+
+# Database exports / dumps
+*.sql
+*.dump
+*.bak
+
+# Random binary blobs (rarely intended in docs/)
+*.bin
+*.exe
+*.dll
+*.dmg
+*.iso

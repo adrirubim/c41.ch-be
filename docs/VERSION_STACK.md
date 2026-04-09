@@ -2,6 +2,17 @@
 
 Exact versions used in this project (reference for development and CI). Update when upgrading major dependencies.
 
+## Top Stack (quick visibility)
+
+| Layer | Component | Version |
+|------|-----------|---------|
+| Backend | PHP | 8.4.1 |
+| Backend | Laravel | 13.3.0 |
+| Frontend | React | 19.2.4 |
+| Frontend | TypeScript | 6.0.2 |
+| Frontend | Vite | 8.0.5 |
+| Database | PostgreSQL | 16.13 |
+
 ## Current environment snapshot (April 2026)
 
 Concrete versions captured from a verified local run (WSL). Treat them as reference values; CI and production should stay within the version ranges defined below.

@@ -304,8 +304,6 @@ All documentation lives under `docs/`. The main index is [docs/README.md](docs/R
 | [CUSTOM_HOOKS](docs/CUSTOM_HOOKS.md) | Custom hooks |
 | [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Errors and solutions |
 
-For a navigable, high-level overview, you can also use the [GitHub Wiki](https://github.com/adrirubim/c41.ch-be/wiki).
-
 [SECURITY](SECURITY.md) · [LICENSE](LICENSE) · [VERSION_STACK](docs/VERSION_STACK.md)
 
 <a id="cicd"></a>
