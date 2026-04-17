@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- N/A
+- Updated stack documentation (`VERSION_STACK.md`) to reflect current Laravel/React/Vite/TypeScript versions after dependency upgrades.
 
 ### Fixed
 

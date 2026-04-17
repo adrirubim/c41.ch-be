@@ -70,7 +70,7 @@ php artisan tinker
 
 ```bash
 # Increase memory limit
-php -d memory_limit=-1 /usr/local/bin/composer install
+php -d memory_limit=-1 "$(command -v composer)" install
 
 # Or set in php.ini
 memory_limit = -1
