@@ -1,11 +1,19 @@
 import '../css/app.css';
 
 import { AppErrorBoundary } from '#app/components/error-boundary';
+import type { User } from '#app/types';
 import { createInertiaApp } from '@inertiajs/react';
 import type { ComponentType } from 'react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
+
+type InertiaSharedProps = {
+    requestId?: string;
+    auth?: {
+        user?: User | null;
+    };
+};
 
 const appName: string =
     typeof import.meta.env.VITE_APP_NAME === 'string' &&
@@ -33,15 +41,15 @@ createInertiaApp({
         )().then((mod) => mod.default);
     },
     setup({ el, App, props }) {
+        const pageProps = props.initialPage?.props as unknown as
+            | InertiaSharedProps
+            | undefined;
+
         const requestId =
-            typeof props.initialPage?.props?.requestId === 'string'
-                ? (props.initialPage.props.requestId as string)
+            typeof pageProps?.requestId === 'string'
+                ? pageProps.requestId
                 : null;
-        const user =
-            (props.initialPage?.props?.auth?.user as
-                | import('#app/types').User
-                | null
-                | undefined) ?? null;
+        const user = (pageProps?.auth?.user as User | null | undefined) ?? null;
 
         const root = createRoot(el);
 
