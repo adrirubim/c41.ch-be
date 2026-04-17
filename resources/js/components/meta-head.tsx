@@ -81,7 +81,10 @@ export function MetaHead({
 
             {/* JSON-LD */}
             {typeof jsonLdString === 'string' ? (
-                <script nonce={cspNonce ?? undefined} type="application/ld+json">
+                <script
+                    nonce={cspNonce ?? undefined}
+                    type="application/ld+json"
+                >
                     {jsonLdString}
                 </script>
             ) : null}
