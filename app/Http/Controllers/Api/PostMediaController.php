@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class PostMediaController
@@ -28,7 +29,7 @@ class PostMediaController
             Storage::disk('public')->deleteDirectory('media/posts/'.$post->hero_image_base);
         }
 
-        /** @var \Illuminate\Http\UploadedFile $file */
+        /** @var UploadedFile $file */
         $file = $validated['image'];
         $base = $this->mediaService->storeResponsiveImage($file, 'posts');
 
@@ -44,4 +45,3 @@ class PostMediaController
         ]);
     }
 }
-

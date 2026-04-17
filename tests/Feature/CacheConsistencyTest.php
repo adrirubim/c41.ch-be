@@ -58,4 +58,3 @@ class CacheConsistencyTest extends TestCase
         $this->assertTrue($hasCacheKey());
     }
 }
-

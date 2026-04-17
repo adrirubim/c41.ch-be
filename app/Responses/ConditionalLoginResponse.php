@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Responses;
 
+use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,7 +14,7 @@ final class ConditionalLoginResponse implements LoginResponse
     {
         if ($request->wantsJson()) {
             // Preserve Fortify's default JSON payload used by XHR/AJAX login flows.
-            /** @var \Illuminate\Http\JsonResponse $jsonResponse */
+            /** @var JsonResponse $jsonResponse */
             $jsonResponse = response()->json(['two_factor' => false]);
 
             return $jsonResponse;
@@ -40,4 +41,3 @@ final class ConditionalLoginResponse implements LoginResponse
         return redirect($redirectPath);
     }
 }
-

@@ -69,4 +69,3 @@ class SecurityTest extends TestCase
         $this->assertTrue($admin->can('assignAuthor', Post::class));
     }
 }
-

@@ -7,8 +7,8 @@ use App\Models\Post;
 use App\Models\User;
 use App\Repositories\CategoryRepository;
 use App\Services\PostService;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 

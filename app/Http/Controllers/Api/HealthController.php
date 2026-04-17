@@ -67,4 +67,3 @@ class HealthController
         ], $allOk ? 200 : 503);
     }
 }
-

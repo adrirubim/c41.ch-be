@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Services\MediaService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryMediaController
@@ -27,7 +28,7 @@ class CategoryMediaController
             Storage::disk('public')->deleteDirectory('media/categories/'.$category->image_base);
         }
 
-        /** @var \Illuminate\Http\UploadedFile $file */
+        /** @var UploadedFile $file */
         $file = $validated['image'];
         $base = $this->mediaService->storeResponsiveImage($file, 'categories');
 
@@ -43,4 +44,3 @@ class CategoryMediaController
         ]);
     }
 }
-

@@ -131,4 +131,3 @@ class MediaService
         return $data;
     }
 }
-

@@ -43,4 +43,3 @@ class PostRepositoryTest extends TestCase
         $this->assertSame(2, (int) $post->views_count);
     }
 }
-

@@ -80,4 +80,3 @@ class InfrastructureTest extends TestCase
         $this->assertTrue($hasSitemapCacheKey());
     }
 }
-

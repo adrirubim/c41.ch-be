@@ -51,7 +51,7 @@ class SecurityHeadersMiddleware
                 : "style-src 'self' 'nonce-{$nonce}' https://fonts.googleapis.com https://fonts.bunny.net",
             $scriptSrc,
             $connectSrc,
-            $isLocal ? null : "upgrade-insecure-requests",
+            $isLocal ? null : 'upgrade-insecure-requests',
         ]));
 
         $response->headers->set('Content-Security-Policy', $csp);
@@ -62,4 +62,3 @@ class SecurityHeadersMiddleware
         return $response;
     }
 }
-

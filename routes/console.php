@@ -4,7 +4,6 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
@@ -21,11 +20,12 @@ Artisan::command('app:db-backup', function () {
 
     if (! is_array($dbConfig)) {
         $this->error("Unknown DB connection: {$connection}");
+
         return 1;
     }
 
     $timestamp = Carbon::now()->format('Y-m-d_His');
-    $dir = "backups/db";
+    $dir = 'backups/db';
     $disk = Storage::disk('local');
     $disk->makeDirectory($dir);
 
@@ -38,28 +38,33 @@ Artisan::command('app:db-backup', function () {
         $databasePath = (string) ($dbConfig['database'] ?? '');
         if ($databasePath === ':memory:' || $databasePath === '') {
             $this->warn('SQLite database is in-memory or missing; skipping backup.');
+
             return 0;
         }
 
         $raw = @file_get_contents($databasePath);
         if (! is_string($raw)) {
             $this->error("Failed to read sqlite db at {$databasePath}");
+
             return 1;
         }
 
         $gz = gzencode($raw, 9);
         if (! is_string($gz)) {
             $this->error('Failed to gzip sqlite backup.');
+
             return 1;
         }
 
         $disk->put($gzFilename, $gz);
         $this->info("Backup created: storage/app/{$gzFilename}");
+
         return 0;
     }
 
     if (! class_exists(Process::class)) {
         $this->error('Symfony Process is required for DB dumps.');
+
         return 1;
     }
 
@@ -95,6 +100,7 @@ Artisan::command('app:db-backup', function () {
 
         if (! $process->isSuccessful()) {
             $this->error('mysqldump failed: '.$process->getErrorOutput());
+
             return 1;
         }
 
@@ -119,23 +125,27 @@ Artisan::command('app:db-backup', function () {
 
         if (! $process->isSuccessful()) {
             $this->error('pg_dump failed: '.$process->getErrorOutput());
+
             return 1;
         }
 
         file_put_contents($tmpPath, $process->getOutput());
     } else {
         $this->warn("Unsupported driver for automated dump: {$driver}");
+
         return 0;
     }
 
     $raw = file_get_contents($tmpPath);
     if (! is_string($raw)) {
         $this->error('Failed to read dump for compression.');
+
         return 1;
     }
     $gz = gzencode($raw, 9);
     if (! is_string($gz)) {
         $this->error('Failed to gzip dump.');
+
         return 1;
     }
     file_put_contents($tmpGzPath, $gz);

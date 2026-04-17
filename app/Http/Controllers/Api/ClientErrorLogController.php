@@ -38,4 +38,3 @@ class ClientErrorLogController
         return response()->noContent();
     }
 }
-

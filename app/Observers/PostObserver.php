@@ -11,8 +11,7 @@ class PostObserver
 {
     public function __construct(
         private readonly PostRepository $posts
-    ) {
-    }
+    ) {}
 
     public function created(Post $post): void
     {

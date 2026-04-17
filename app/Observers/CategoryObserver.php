@@ -12,8 +12,7 @@ class CategoryObserver
 {
     public function __construct(
         private readonly PostRepository $posts
-    ) {
-    }
+    ) {}
 
     public function created(Category $category): void
     {

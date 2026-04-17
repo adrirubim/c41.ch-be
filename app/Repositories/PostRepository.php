@@ -11,18 +11,25 @@ use App\Models\Post;
 use Illuminate\Cache\TaggableStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Cache;
 
 class PostRepository
 {
     private const KEYSET_PUBLIC_INDEX = 'cache_keys:public.posts.index';
+
     private const KEYSET_PUBLIC_SHOW = 'cache_keys:public.posts.show';
+
     private const KEYSET_PUBLIC_RELATED = 'cache_keys:public.posts.related';
+
     private const KEY_SITEMAP_XML = 'sitemap.xml.v1';
+
     private const TAG_PUBLIC_INDEX = 'public_posts_index';
+
     private const TAG_PUBLIC_SHOW = 'public_posts_show';
+
     private const TAG_PUBLIC_RELATED = 'public_posts_related';
+
     private const TAG_SITEMAP = 'sitemap';
 
     /**
@@ -231,6 +238,7 @@ class PostRepository
 
     /**
      * @template T
+     *
      * @param  array<int, string>  $tags
      * @param  callable():T  $resolver
      * @return T
