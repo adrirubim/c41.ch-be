@@ -22,7 +22,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 - PHP: **8.4.20** (`php -v`)
 - Composer: **2.9.5** (`composer -V`)
 - Laravel: **13.5.0** (`php artisan --version`)
-- PHPUnit: **13.1.5** (`./vendor/bin/phpunit --version`)
+- PHPUnit: **13.1.6** (`./vendor/bin/phpunit --version`)
 - Inertia Laravel: **3.0.6** (`composer show inertiajs/inertia-laravel`)
 - Laravel AI: **0.4.5** (`composer show laravel/ai`)
 - Laravel Fortify: **1.36.2** (`composer show laravel/fortify`)
@@ -51,6 +51,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 - ESLint: **10.1.0** (`npm list eslint --depth=0`)
 - Prettier: **3.8.3** (`npm list prettier --depth=0`)
 - Laravel Pint: **1.29.0** (`vendor/bin/pint --version`)
+- PHPStan: **2.1.50** (`vendor/bin/phpstan --version`)
 
 ## Backend
 

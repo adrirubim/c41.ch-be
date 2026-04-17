@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated stack documentation (`VERSION_STACK.md`) to reflect current Laravel/React/Vite/TypeScript versions after dependency upgrades.
+- Updated `VERSION_STACK.md` with the latest local toolchain snapshot (PHP 8.4.20, PHPUnit, PHPStan).
 
 ### Fixed
 
