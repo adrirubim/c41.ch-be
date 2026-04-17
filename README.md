@@ -584,13 +584,18 @@ Fast path (recommended):
 USE_PG_FOR_TESTS=1 ./scripts/dev-verify.sh
 ```
 
-The script is documented in `scripts/README.md` and wraps dependency install, frontend build, SQLite tests, and optional PostgreSQL tests via ephemeral Docker.
+The script is documented in `scripts/README.md` and wraps dependency install, frontend build, and PHP tests (SQLite by default; PostgreSQL via ephemeral Docker when requested, or as an automatic fallback if SQLite is unavailable).
 
 Prerequisites:
 
 - Install dependencies: `composer install` and `npm ci`
 - CI runs tests against PostgreSQL 16 (database `c41_test`). Locally, tests default to **SQLite in-memory** via `phpunit.xml` (requires PDO SQLite).
   - Note: the repository uses `legacy-peer-deps=true` (see `.npmrc`) to keep installs reproducible with the current Vite/Tailwind plugin peer constraints.
+
+Note:
+
+- `./scripts/dev-verify.sh` treats SQLite as optional. If `pdo_sqlite/sqlite3` is missing locally, it skips the SQLite test phase and runs the PostgreSQL test phase (Docker, CI-like) instead.
+- You can override the ephemeral PostgreSQL port with `C41_TEST_PG_PORT` (default: `5433`).
 
 ### Lint pipeline (matches `.github/workflows/lint.yml`)
 

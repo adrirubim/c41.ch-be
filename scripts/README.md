@@ -16,11 +16,17 @@ Helper scripts for deployment and maintenance in environments with limited acces
 - **`dev-verify.sh`** — Runs the local quality gate for `c41.ch-be`:
 
   ```bash
-  # SQLite (default phpunit.xml)
+  # Default (fast path):
+  # - Runs formatter/lint/types/build
+  # - Runs PHP tests using SQLite in-memory (requires pdo_sqlite/sqlite3)
+  # - If SQLite driver is missing locally, it automatically falls back to PostgreSQL (Docker, CI-like)
   ./scripts/dev-verify.sh
 
-  # SQLite + PostgreSQL (ephemeral Docker, like CI)
+  # Force PostgreSQL test run (Docker, CI-like) even if SQLite is available
   USE_PG_FOR_TESTS=1 ./scripts/dev-verify.sh
+
+  # Optional: override PostgreSQL port (default: 5433)
+  C41_TEST_PG_PORT=55433 ./scripts/dev-verify.sh
   ```
 
 ## Local development usage

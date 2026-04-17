@@ -20,6 +20,8 @@ php artisan test
 
 This is defined in `phpunit.xml` (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`). Use this for local development when you don't need PostgreSQL.
 
+If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`pdo_sqlite/sqlite3`, package `php8.4-sqlite3` on Ubuntu/Debian).
+
 ## Optional: PostgreSQL (match CI)
 
 CI (GitHub Actions) runs tests against **PostgreSQL** with database `c41_test`. To run the same locally:
@@ -43,6 +45,8 @@ CI (GitHub Actions) runs tests against **PostgreSQL** with database `c41_test`. 
 ## Optional: PostgreSQL via Docker (ephemeral, like CI)
 
 If you don't have PostgreSQL local configured (or the `postgres` user/password differs), you can run the same database as CI with an ephemeral Docker container.
+
+This is also what `./scripts/dev-verify.sh` uses when you set `USE_PG_FOR_TESTS=1` (or when SQLite is not available locally).
 
 ```bash
 docker rm -f c41_test_pg >/dev/null 2>&1 || true

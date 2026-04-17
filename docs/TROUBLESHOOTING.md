@@ -116,6 +116,9 @@ sudo systemctl restart php8.4-fpm
 > Note: PHPUnit defaults to SQLite in-memory (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`) via `phpunit.xml`.  
 > If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`php8.4-sqlite3` on Ubuntu/Debian).
 
+> Note: `./scripts/dev-verify.sh` treats SQLite as optional. If `pdo_sqlite/sqlite3` is missing locally, it will skip the SQLite test phase and run the PostgreSQL test phase (Docker, CI-like) instead.
+> You can override the PostgreSQL port with `C41_TEST_PG_PORT` (default: `5433`).
+
 ---
 
 ## Database Issues
