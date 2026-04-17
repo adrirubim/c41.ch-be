@@ -645,5 +645,5 @@ import { FloatingActionButton } from '#app/components/floating-action-button';
 
 ---
 
-**Last Updated:** March 2026  
+**Last Updated:** April 2026  
 **Version:** 2.0

@@ -633,5 +633,5 @@ If you're still experiencing issues:
 
 ---
 
-**Last Updated:** March 2026  
+**Last Updated:** April 2026  
 **Version:** 1.0
