@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated stack documentation (`VERSION_STACK.md`) to reflect current Laravel/React/Vite/TypeScript versions after dependency upgrades.
 - Updated `VERSION_STACK.md` with the latest local toolchain snapshot (PHP 8.4.20, PHPUnit, PHPStan).
+- Updated dev tooling versions after `composer update` (PHPUnit 13.1.7, Pint 1.29.1).
+- Updated frontend tooling versions after npm updates (Vite 8.0.9, Tailwind CSS 4.2.3, ESLint 10.2.1).
+- Updated backend deps after Composer upgrade (Laravel AI 0.6.0, prism-php/prism 0.100.1).
 
 ### Fixed
 
