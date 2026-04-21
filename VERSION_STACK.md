@@ -20,7 +20,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 ### Backend
 
 - PHP: **8.4.20** (`php -v`)
-- Composer: **2.9.5** (`composer -V`)
+- Composer: **2.9.7** (`composer -V`)
 - Laravel: **13.5.0** (`php artisan --version`)
 - PHPUnit: **13.1.7** (`./vendor/bin/phpunit --version`)
 - Inertia Laravel: **3.0.6** (`composer show inertiajs/inertia-laravel`)
