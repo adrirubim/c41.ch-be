@@ -107,14 +107,14 @@ node --version
 php -m
 
 # Install missing extensions (Ubuntu/Debian)
-sudo apt-get install php8.4-pgsql php8.4-sqlite3 php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-gd
+sudo apt-get install php8.5-pgsql php8.5-sqlite3 php8.5-mbstring php8.5-xml php8.5-curl php8.5-zip php8.5-gd
 
 # Restart PHP-FPM
-sudo systemctl restart php8.4-fpm
+sudo systemctl restart php8.5-fpm
 ```
 
 > Note: PHPUnit defaults to SQLite in-memory (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`) via `phpunit.xml`.  
-> If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`php8.4-sqlite3` on Ubuntu/Debian).
+> If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`php8.5-sqlite3` on Ubuntu/Debian).
 
 > Note: `./scripts/dev-verify.sh` treats SQLite as optional. If `pdo_sqlite/sqlite3` is missing locally, it will skip the SQLite test phase and run the PostgreSQL test phase (Docker, CI-like) instead.
 > You can override the PostgreSQL port with `C41_TEST_PG_PORT` (default: `5433`).
@@ -359,7 +359,7 @@ php artisan optimize:clear
 **Solutions**:
 
 ```bash
-# Check Node.js version (22+ recommended; see .nvmrc)
+# Check Node.js version (24+ recommended; see .nvmrc)
 node --version
 
 # Clear node_modules and reinstall
@@ -631,7 +631,7 @@ If you're still experiencing issues:
    APP_DEBUG=true
    ```
 4. **Review error messages carefully**
-5. **Check Laravel documentation**: https://laravel.com/docs
+5. **Check Laravel documentation**: [Laravel docs](https://laravel.com/docs)
 6. **Search GitHub issues** (if applicable)
 
 ---

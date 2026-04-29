@@ -44,7 +44,7 @@ body:
     attributes:
       label: Environment
       description: PHP / Node / OS / DB versions if relevant.
-      placeholder: "PHP 8.4.x, Node 22.x, Ubuntu 24.04, Postgres 16"
+      placeholder: "PHP 8.5.x, Node 24.x, Ubuntu 24.04, Postgres 17"
     validations:
       required: false
 

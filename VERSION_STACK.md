@@ -57,7 +57,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 | Component      | Version | Notes                    |
 |----------------|---------|--------------------------|
-| PHP            | 8.4+    | `php -v`                 |
+| PHP            | 8.5+    | `php -v`                 |
 | Laravel        | ^13.0   | See `composer.lock`      |
 | Laravel Fortify| ^1.30   | Authentication           |
 | Laravel AI     | ^0.6    | AI SDK                   |
@@ -70,7 +70,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 | Component    | Version | Notes               |
 |-------------|---------|---------------------|
-| Node.js     | 22+     | CI uses Node 22     |
+| Node.js     | 24+     | CI uses Node 24     |
 | React       | ^19.2   | See `package.json`  |
 | Inertia React| ^3.0    | Client adapter      |
 | TypeScript  | ^6.0    |                     |

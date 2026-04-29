@@ -20,7 +20,7 @@ php artisan test
 
 This is defined in `phpunit.xml` (`DB_CONNECTION=sqlite`, `DB_DATABASE=:memory:`). Use this for local development when you don't need PostgreSQL.
 
-If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`pdo_sqlite/sqlite3`, package `php8.4-sqlite3` on Ubuntu/Debian).
+If you see `could not find driver` when running tests, you are missing the SQLite PDO extension (`pdo_sqlite/sqlite3`, package `php8.5-sqlite3` on Ubuntu/Debian).
 
 ## Optional: PostgreSQL (match CI)
 
@@ -50,7 +50,7 @@ This is also what `./scripts/dev-verify.sh` uses when you set `USE_PG_FOR_TESTS=
 
 ```bash
 docker rm -f c41_test_pg >/dev/null 2>&1 || true
-docker run -d --name c41_test_pg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=c41_test -p 5433:5432 postgres:16
+docker run -d --name c41_test_pg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=c41_test -p 5433:5432 postgres:17
 for i in {1..30}; do docker exec c41_test_pg pg_isready -U postgres >/dev/null 2>&1 && break; sleep 1; done
 
 DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5433 DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test
@@ -62,7 +62,7 @@ docker rm -f c41_test_pg >/dev/null 2>&1 || true
 
 In `.github/workflows/tests.yml`, the test database is configured as follows:
 
-- **Service:** `postgres:16`
+- **Service:** `postgres:17`
 - **Database:** `c41_test`
 - **User / password:** `postgres` / `postgres`
 - **Port:** `5432`

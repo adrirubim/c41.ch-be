@@ -6,11 +6,11 @@
 
 > A modern, enterprise-grade blog management system built with **Laravel 13**, **React 19 (Inertia.js)**, and **PostgreSQL**. It ships with production-grade security headers (CSP), rate limiting, SSR-ready frontend rendering, and cache invalidation via Observers.
 
-[![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
+[![PHP](https://img.shields.io/badge/PHP-8.5+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17+-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.2-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Tests](https://img.shields.io/github/actions/workflow/status/adrirubim/c41.ch-be/tests.yml?branch=main&label=Tests&style=flat&color=brightgreen)](https://github.com/adrirubim/c41.ch-be/actions/workflows/tests.yml)
 [![Lint](https://img.shields.io/github/actions/workflow/status/adrirubim/c41.ch-be/lint.yml?branch=main&label=Lint&style=flat&color=blue)](https://github.com/adrirubim/c41.ch-be/actions/workflows/lint.yml)
@@ -68,7 +68,7 @@ For a full local quality gate before pushing, see [Before Pushing to GitHub](#be
 This repository includes a **production-like Docker setup**:
 
 - **`Dockerfile`**: multi-stage build (Vite build + Composer vendor + slim PHP-FPM runtime)
-- **`docker-compose.yml`**: `web` (Nginx, port `8080`) → `app` (PHP-FPM) + `db` (Postgres 16)
+- **`docker-compose.yml`**: `web` (Nginx, port `8080`) → `app` (PHP-FPM) + `db` (Postgres 17)
 
 ### Quick start
 
@@ -175,8 +175,8 @@ c41.ch-be is a production-ready content management system designed for modern bl
 
 ### Backend
 - **Framework**: Laravel 13
-- **Language**: PHP 8.4+
-- **Database**: PostgreSQL 14+
+- **Language**: PHP 8.5+
+- **Database**: PostgreSQL 17+
 - **Authentication**: Laravel Fortify
 - **Validation**: Form Request classes
 - **Sanitization**: HTMLPurifier
@@ -199,11 +199,11 @@ c41.ch-be is a production-ready content management system designed for modern bl
 <a id="requirements"></a>
 ## 📦 Requirements
 
-- **PHP** >= 8.4
-- **PostgreSQL** >= 14
-- **Node.js** >= 22.0.0
+- **PHP** >= 8.5
+- **PostgreSQL** >= 17
+- **Node.js** >= 24.0.0
 - **Composer** >= 2.0
-- **NPM** >= 10.0
+- **NPM** >= 11.0
 
 <a id="installation"></a>
 ## 🚀 Installation
@@ -311,7 +311,7 @@ All documentation lives under `docs/`. The main index is [docs/README.md](docs/R
 
 GitHub Actions runs **tests**, **lint**, **type-checking**, and **production builds** on every push and pull request to `main`:
 
-- **Tests** (`.github/workflows/tests.yml`): PHP 8.4, Node 22, `composer install`, `npm run build:frontend`, `php artisan test` against PostgreSQL `c41_test`
+- **Tests** (`.github/workflows/tests.yml`): PHP 8.5, Node 24, `composer install`, `npm run build:frontend`, `php artisan test` against PostgreSQL `c41_test`
 - **Enterprise Quality & CI 2026** (`.github/workflows/lint.yml`):
   - Laravel Pint (PHP)
   - Prettier (frontend)
@@ -589,7 +589,7 @@ The script is documented in `scripts/README.md` and wraps dependency install, fr
 Prerequisites:
 
 - Install dependencies: `composer install` and `npm ci`
-- CI runs tests against PostgreSQL 16 (database `c41_test`). Locally, tests default to **SQLite in-memory** via `phpunit.xml` (requires PDO SQLite).
+- CI runs tests against PostgreSQL 17 (database `c41_test`). Locally, tests default to **SQLite in-memory** via `phpunit.xml` (requires PDO SQLite).
   - Note: the repository uses `legacy-peer-deps=true` (see `.npmrc`) to keep installs reproducible with the current Vite/Tailwind plugin peer constraints.
 
 Note:
@@ -637,7 +637,7 @@ By default tests use SQLite (`:memory:`). If you want to run the same PostgreSQL
 
 ```bash
 docker rm -f c41_test_pg >/dev/null 2>&1 || true
-docker run -d --name c41_test_pg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=c41_test -p 5433:5432 postgres:16
+docker run -d --name c41_test_pg -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=c41_test -p 5433:5432 postgres:17
 for i in {1..30}; do docker exec c41_test_pg pg_isready -U postgres >/dev/null 2>&1 && break; sleep 1; done
 DB_CONNECTION=pgsql DB_HOST=127.0.0.1 DB_PORT=5433 DB_DATABASE=c41_test DB_USERNAME=postgres DB_PASSWORD=postgres php artisan test
 docker rm -f c41_test_pg

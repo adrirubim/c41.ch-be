@@ -34,7 +34,7 @@ if has_sqlite_driver; then
   php artisan test
 else
   echo "==> 3/4 Skipping SQLite tests (missing pdo_sqlite/sqlite3 PHP extension)"
-  echo "==>     Fix: sudo apt install php8.4-sqlite3 && php -m | grep -iE 'pdo_sqlite|sqlite3'"
+  echo "==>     Fix: sudo apt install php8.5-sqlite3 && php -m | grep -iE 'pdo_sqlite|sqlite3'"
   run_pg_tests=1
 fi
 
@@ -58,7 +58,7 @@ if [[ "${USE_PG_FOR_TESTS:-0}" == "1" || "${run_pg_tests}" == "1" ]]; then
     -e POSTGRES_USER=postgres \
     -e POSTGRES_PASSWORD=postgres \
     -e POSTGRES_DB=c41_test \
-    -p "${pg_port}:5432" postgres:16
+    -p "${pg_port}:5432" postgres:17
 
   for i in {1..30}; do
     if docker exec "${pg_container_name}" pg_isready -U postgres >/dev/null 2>&1; then

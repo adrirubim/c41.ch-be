@@ -27,9 +27,9 @@ Before deploying, ensure you have:
 - ✅ Server with SSH access
 - ✅ Domain name configured (optional but recommended)
 - ✅ PostgreSQL database server
-- ✅ PHP 8.4+ installed
+- ✅ PHP 8.5+ installed
 - ✅ Composer 2.0+ installed
-- ✅ Node.js 22+ and NPM 10+ installed
+- ✅ Node.js 24+ and NPM 11+ installed
 - ✅ Git installed
 - ✅ Basic knowledge of server administration
 
@@ -49,12 +49,12 @@ Before deploying, ensure you have:
 - **CPU**: 4+ cores
 - **RAM**: 4GB+
 - **Storage**: 50GB+ SSD
-- **OS**: Ubuntu 22.04 LTS
+- **OS**: Ubuntu 24.04 LTS
 
 ### Software Stack
 
 - **Web Server**: Nginx 1.18+ or Apache 2.4+
-- **PHP**: 8.4+ with extensions:
+- **PHP**: 8.5+ with extensions:
   - `php-fpm`
   - `php-pgsql` or `php-pdo-pgsql`
   - `php-mbstring`
@@ -210,7 +210,7 @@ server {
 
     # PHP-FPM configuration
     location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.5-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         include fastcgi_params;
         fastcgi_hide_header X-Powered-By;
@@ -382,7 +382,7 @@ npm run build:frontend
 
 ### PHP-FPM Optimization
 
-Edit the PHP-FPM pool config (example for PHP 8.4 on Ubuntu/Debian): `/etc/php/8.4/fpm/pool.d/www.conf`.
+Edit the PHP-FPM pool config (example for PHP 8.5 on Ubuntu/Debian): `/etc/php/8.5/fpm/pool.d/www.conf`.
 
 ```ini
 pm = dynamic
@@ -531,7 +531,7 @@ This repository ships with two production-oriented Artisan commands (defined in 
 1. Check file permissions
 2. Check `.env` configuration
 3. Check application logs: `storage/logs/laravel.log`
-4. Verify PHP-FPM is running: `sudo systemctl status php8.4-fpm`
+4. Verify PHP-FPM is running: `sudo systemctl status php8.5-fpm`
 
 #### Permission Denied Errors
 
@@ -568,7 +568,7 @@ This section explains how to deploy **c41.ch-be** on hosting providers such as *
 
 ### 1. Requirements and limitations
 
-- PHP 8.4+ with `pdo_pgsql` or `pgsql` available.
+- PHP 8.5+ with `pdo_pgsql` or `pgsql` available.
 - Access to a **PostgreSQL** database (you can also use MySQL if you adapt the `.env` and migrations accordingly).
 - Ability to upload files via FTP/SFTP or a web file manager.
 - Optional but recommended: ability to run **scheduled tasks** (cron).
@@ -701,7 +701,7 @@ php artisan view:cache
 
 # Restart services
 sudo supervisorctl restart c41-queue:*
-sudo systemctl reload php8.4-fpm
+sudo systemctl reload php8.5-fpm
 sudo systemctl reload nginx
 
 echo "Deployment complete!"
