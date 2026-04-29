@@ -8,10 +8,10 @@ Exact versions used in this project (reference for development and CI). Update w
 |------|-----------|---------|
 | Backend | PHP | 8.5.x |
 | Backend | Laravel | 13.7.0 |
-| Frontend | React | 19.2.4 |
-| Frontend | TypeScript | 6.0.2 |
+| Frontend | React | 19.2.5 |
+| Frontend | TypeScript | 6.0.3 |
 | Frontend | Vite | 8.0.10 |
-| Database | PostgreSQL | 17.x |
+| Database | PostgreSQL | 17.9 |
 
 ## Current environment snapshot (April 2026)
 
@@ -34,10 +34,10 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 - Node.js (local): **24.x** (`node -v`)
 - Node.js (CI): **24.x** (see `.github/workflows/*.yml`)
-- npm: **(bundled with Node 24)** (`npm -v`)
-- React: **19.2.4** (`npm list react --depth=0`)
+- npm: **11.12.1** (`npm -v`)
+- React: **19.2.5** (`npm list react --depth=0`)
 - @inertiajs/react: **3.0.3** (`npm list @inertiajs/react --depth=0`)
-- TypeScript: **6.0.2** (`npm list typescript --depth=0`)
+- TypeScript: **6.0.3** (`npm list typescript --depth=0`)
 - Vite: **8.0.10** (`npm list vite --depth=0` / `npx vite -v`)
 - @vitejs/plugin-react: **6.0.1** (`npm list @vitejs/plugin-react --depth=0`)
 - @rolldown/plugin-babel: **0.2.3** (`npm list @rolldown/plugin-babel --depth=0`)
@@ -83,7 +83,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 | Component  | Version |
 |-------------|---------|
-| PostgreSQL  | 17.x    |
+| PostgreSQL  | 17.9    |
 | Composer    | 2.x     |
 | NPM         | 11+     |
 | ESLint      | ^10.0   |
