@@ -70,13 +70,19 @@ class MediaService
 
         $mime = (string) $file->getMimeType();
 
-        return match ($mime) {
+        $image = match ($mime) {
             'image/jpeg', 'image/jpg' => imagecreatefromjpeg($path),
             'image/png' => imagecreatefrompng($path),
             'image/gif' => imagecreatefromgif($path),
             'image/webp' => imagecreatefromwebp($path),
             default => throw new RuntimeException("Unsupported image mime type: {$mime}"),
         };
+
+        if (! ($image instanceof \GdImage)) {
+            throw new RuntimeException('Failed to load image via GD.');
+        }
+
+        return $image;
     }
 
     private function resizeToWidth(\GdImage $src, int $srcW, int $srcH, int $targetW): \GdImage
@@ -85,21 +91,34 @@ class MediaService
             throw new RuntimeException('Invalid source image dimensions.');
         }
 
+        if ($targetW <= 0) {
+            throw new RuntimeException('Invalid target width.');
+        }
+
         if ($targetW >= $srcW) {
             // Avoid upscaling; return a copy.
             $dst = imagecreatetruecolor($srcW, $srcH);
+            if (! ($dst instanceof \GdImage)) {
+                throw new RuntimeException('Failed to create GD image.');
+            }
             imagecopy($dst, $src, 0, 0, 0, 0, $srcW, $srcH);
 
             return $dst;
         }
 
         $ratio = $srcH / $srcW;
-        $targetH = (int) round($targetW * $ratio);
+        $targetH = max(1, (int) round($targetW * $ratio));
 
         $dst = imagecreatetruecolor($targetW, $targetH);
+        if (! ($dst instanceof \GdImage)) {
+            throw new RuntimeException('Failed to create GD image.');
+        }
 
         // Preserve transparency for PNG/GIF → fill background white for JPG fallback.
         $white = imagecolorallocate($dst, 255, 255, 255);
+        if ($white === false) {
+            throw new RuntimeException('Failed to allocate GD color.');
+        }
         imagefill($dst, 0, 0, $white);
 
         imagecopyresampled($dst, $src, 0, 0, 0, 0, $targetW, $targetH, $srcW, $srcH);

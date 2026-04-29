@@ -27,7 +27,7 @@ services:
       - app
 
   db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: ${DB_DATABASE:-c41}
       POSTGRES_USER: ${DB_USERNAME:-postgres}

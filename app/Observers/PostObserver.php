@@ -53,7 +53,7 @@ class PostObserver
         $this->posts->invalidateSitemapCache();
 
         // Invalidate show cache for current slug and, when relevant, the previous slug.
-        if (is_string($post->slug) && $post->slug !== '') {
+        if ($post->slug !== '') {
             $this->posts->invalidatePublicShowCacheForSlug($post->slug);
         }
 

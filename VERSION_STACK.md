@@ -6,12 +6,12 @@ Exact versions used in this project (reference for development and CI). Update w
 
 | Layer | Component | Version |
 |------|-----------|---------|
-| Backend | PHP | 8.4.20 |
-| Backend | Laravel | 13.5.0 |
-| Frontend | React | 19.2.5 |
-| Frontend | TypeScript | 6.0.3 |
-| Frontend | Vite | 8.0.9 |
-| Database | PostgreSQL | 16.13 |
+| Backend | PHP | 8.5.x |
+| Backend | Laravel | 13.7.0 |
+| Frontend | React | 19.2.4 |
+| Frontend | TypeScript | 6.0.2 |
+| Frontend | Vite | 8.0.10 |
+| Database | PostgreSQL | 17.x |
 
 ## Current environment snapshot (April 2026)
 
@@ -19,31 +19,30 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 ### Backend
 
-- PHP: **8.4.20** (`php -v`)
+- PHP: **8.5.x** (`php -v`)
 - Composer: **2.9.7** (`composer -V`)
-- Laravel: **13.5.0** (`php artisan --version`)
+- Laravel: **13.7.0** (`php artisan --version`)
 - PHPUnit: **13.1.7** (`./vendor/bin/phpunit --version`)
 - Inertia Laravel: **3.0.6** (`composer show inertiajs/inertia-laravel`)
-- Laravel AI: **0.6.0** (`composer show laravel/ai`)
-- Laravel Fortify: **1.36.2** (`composer show laravel/fortify`)
+- Laravel AI: **0.6.4** (`composer show laravel/ai`)
+- Laravel Fortify: **1.37.0** (`composer show laravel/fortify`)
 - Laravel Wayfinder: **0.1.16** (`composer show laravel/wayfinder`)
 - Laravel Tinker: **dev-master** (`composer show laravel/tinker`)
 - league/commonmark: **2.8.1** (`composer show league/commonmark`)
-- prism-php/prism: **0.100.1** (`composer show prism-php/prism`)
 
 ### Frontend
 
-- Node.js (local): **22.22.1** (`node -v`)
-- Node.js (CI): **22.x** (see `.github/workflows/*.yml`)
-- npm: **11.12.1** (`npm -v`)
-- React: **19.2.5** (`npm list react --depth=0`)
+- Node.js (local): **24.x** (`node -v`)
+- Node.js (CI): **24.x** (see `.github/workflows/*.yml`)
+- npm: **(bundled with Node 24)** (`npm -v`)
+- React: **19.2.4** (`npm list react --depth=0`)
 - @inertiajs/react: **3.0.3** (`npm list @inertiajs/react --depth=0`)
-- TypeScript: **6.0.3** (`npm list typescript --depth=0`)
-- Vite: **8.0.9** (`npm list vite --depth=0` / `npx vite -v`)
+- TypeScript: **6.0.2** (`npm list typescript --depth=0`)
+- Vite: **8.0.10** (`npm list vite --depth=0` / `npx vite -v`)
 - @vitejs/plugin-react: **6.0.1** (`npm list @vitejs/plugin-react --depth=0`)
 - @rolldown/plugin-babel: **0.2.3** (`npm list @rolldown/plugin-babel --depth=0`)
 - @babel/core: **7.29.0** (`npm list @babel/core --depth=0`)
-- Tailwind CSS: **4.2.3** (`npm list tailwindcss --depth=0`)
+- Tailwind CSS: **4.2.4** (`npm list tailwindcss --depth=0`)
 
 > Note: the project uses `legacy-peer-deps=true` (see `.npmrc`) to allow Vite 8 with the current `@tailwindcss/vite` peer dependency constraints.
 
@@ -52,7 +51,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 - ESLint: **10.2.1** (`npm list eslint --depth=0`)
 - Prettier: **3.8.3** (`npm list prettier --depth=0`)
 - Laravel Pint: **1.29.1** (`vendor/bin/pint --version`)
-- PHPStan: **2.1.50** (`vendor/bin/phpstan --version`)
+- PHPStan: **2.1.53** (`vendor/bin/phpstan --version`)
 
 ## Backend
 
@@ -84,7 +83,7 @@ Concrete versions captured from a verified local run (WSL). Treat them as refere
 
 | Component  | Version |
 |-------------|---------|
-| PostgreSQL  | 16.13   |
+| PostgreSQL  | 17.x    |
 | Composer    | 2.x     |
 | NPM         | 11+     |
 | ESLint      | ^10.0   |
