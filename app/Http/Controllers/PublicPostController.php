@@ -89,7 +89,8 @@ class PublicPostController extends Controller
         $post = $this->postRepository->findPublishedBySlugCached($slug);
 
         // Debounced view increment to reduce write contention.
-        $viewerKey = (string) ($request->user()?->id ?? $request->ip() ?? $request->session()->getId());
+        $user = $request->user();
+        $viewerKey = (string) (($user !== null ? $user->id : null) ?? $request->ip() ?? $request->session()->getId());
         $this->postRepository->incrementViewsDebounced($post, $viewerKey);
 
         $relatedPosts = $this->postRepository->getRelatedPublishedCached($post, 4);

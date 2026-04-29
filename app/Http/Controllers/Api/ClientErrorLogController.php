@@ -35,6 +35,6 @@ class ClientErrorLogController
             'component_stack' => $validated['componentStack'] ?? null,
         ]);
 
-        return response()->noContent();
+        return response()->json([], 204);
     }
 }

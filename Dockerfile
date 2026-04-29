@@ -8,7 +8,7 @@
 ############################################
 # 1) Node build stage
 ############################################
-FROM node:22-alpine AS node-builder
+FROM node:24-alpine AS node-builder
 
 WORKDIR /app
 
@@ -47,7 +47,7 @@ RUN composer dump-autoload --no-dev --classmap-authoritative
 ############################################
 # 3) Runtime stage
 ############################################
-FROM php:8.4-fpm-alpine AS runtime
+FROM php:8.5-fpm-alpine AS runtime
 
 WORKDIR /var/www/html
 

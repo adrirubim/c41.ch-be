@@ -17,7 +17,7 @@
         "issues": "https://github.com/adrirubim/c41.ch-be/issues"
     },
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "ezyang/htmlpurifier": "^4.19",
         "inertiajs/inertia-laravel": "^3.0",
         "laravel/ai": "^0.6",

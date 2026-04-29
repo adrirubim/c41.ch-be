@@ -79,7 +79,8 @@ class PostRepository
     public function getPublicFilteredCached(PostFiltersData $filters, int $ttlSeconds = 60): LengthAwarePaginator
     {
         $payload = $filters->toViewArray();
-        $cacheKey = 'public.posts.index.'.md5(json_encode($payload));
+        $encodedPayload = json_encode($payload);
+        $cacheKey = 'public.posts.index.'.md5($encodedPayload !== false ? $encodedPayload : '');
 
         /** @var LengthAwarePaginator<int, Post> $paginator */
         $paginator = $this->remember(
@@ -240,10 +241,10 @@ class PostRepository
      * @template T
      *
      * @param  array<int, string>  $tags
-     * @param  callable():T  $resolver
+     * @param  \Closure():T  $resolver
      * @return T
      */
-    private function remember(array $tags, string $cacheKey, int $ttlSeconds, ?string $keyset, callable $resolver): mixed
+    private function remember(array $tags, string $cacheKey, int $ttlSeconds, ?string $keyset, \Closure $resolver): mixed
     {
         if ($this->supportsTags()) {
             return Cache::tags($tags)->remember($cacheKey, $ttlSeconds, $resolver);
